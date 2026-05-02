@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Sistema Criminal - Registro de Envolvidos e Mandados</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Courier New', 'Fira Code', monospace;
+        }
+
+        body {
+            background: radial-gradient(circle at 20% 30%, #1e0f0a, #0a0502);
+            min-height: 100vh;
+            padding: 1.5rem;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(0deg, 
+                rgba(210, 105, 30, 0.08) 0px, 
+                rgba(210, 105, 30, 0.08) 2px,
+                transparent 2px,
+                transparent 8px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .code-rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .app {
+            max-width: 950px;
+            margin: 0 auto;
+            background: rgba(30, 15, 10, 0.94);
+            backdrop-filter: blur(3px);
+            border-radius: 2rem;
+            box-shadow: 0 0 20px rgba(210, 105, 30, 0.5), 0 10px 30px black;
+            overflow: hidden;
+            border: 1px solid #d2691e;
+            position: relative;
+            z-index: 2;
+        }
+
+        .top-header {
+            background: #1f0e08;
+            padding: 1rem 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border-bottom: 2px solid #d2691e;
+        }
+
+        .logo-circle {
+            flex-shrink: 0;
+            width: 52px;
+            height: 52px;
+        }
+
+        .logo-label {
+            display: block;
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: #2a150e;
+            cursor: pointer;
+            overflow: hidden;
+            border: 2px solid #d2691e;
+            box-shadow: 0 0 8px #d2691e;
+        }
+
+        .logo-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .logo-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #2a150e;
+            color: #d2691e;
+            font-size: 1.7rem;
+            font-weight: bold;
+        }
+
+        #logoFileInput {
+            display: none;
+        }
+
+        .app-title {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #d2691e;
+            text-shadow: 0 0 5px #b85c1a;
+            letter-spacing: 2px;
+        }
+
+        .medium-card {
+            background: #2f180ecc;
+            backdrop-filter: blur(4px);
+            margin: 1.5rem 1rem 0.5rem 1rem;
+            border-radius: 1.5rem;
+            border: 1px solid #d2691e;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .option-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+            background: #2a130ccc;
+            padding: 1rem;
+            border-radius: 1.2rem;
+            border: 1px solid #a0522d;
+            transition: 0.2s;
+        }
+
+        .option-item:hover {
+            border-color: #ff8c42;
+            background: #351a10cc;
+        }
+
+        .option-avatar {
+            width: 70px;
+            height: 70px;
+            cursor: pointer;
+        }
+
+        .option-avatar-label {
+            display: block;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: #2a150e;
+            cursor: pointer;
+            overflow: hidden;
+            border: 2px solid #d2691e;
+            box-shadow: 0 0 6px #d2691e;
+            transition: transform 0.1s;
+        }
+
+        .option-avatar-label:hover {
+            transform: scale(1.02);
+        }
+
+        .option-avatar-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .option-avatar-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #2a150e;
+            color: #d2691e;
+            font-size: 2rem;
+        }
+
+        .option-btn {
+            background: #1f0e08;
+            border: 1px solid #d2691e;
+            padding: 0.7rem 1rem;
+            border-radius: 2rem;
+            font-weight: bold;
+            font-size: 0.9rem;
+            color: #ffc087;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: monospace;
+            width: 100%;
+            text-align: center;
+        }
+
+        .option-btn:hover {
+            background: #ff8c1a;
+            border-color: #ffaa55;
+            box-shadow: 0 0 10px #ff8c1a;
+            transform: translateY(-2px);
+            color: #2a0a04;
+        }
+
+        .list-panel {
+            margin: 0 1rem 1.5rem 1rem;
+            background: #2d170fee;
+            backdrop-filter: blur(3px);
+            border-radius: 1.5rem;
+            border: 1px solid #d2691e;
+            padding: 0.5rem 0;
+        }
+
+        .list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            border-bottom: 1px solid #d2691e;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .list-header h3 {
+            color: #ffb347;
+            font-size: 1.2rem;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #1f0e08;
+            border: 1px solid #d2691e;
+            border-radius: 2rem;
+            padding: 0.3rem 0.8rem;
+        }
+
+        .search-box input {
+            background: transparent;
+            border: none;
+            color: #ffcf9a;
+            font-family: monospace;
+            padding: 0.4rem;
+            outline: none;
+            width: 180px;
+        }
+
+        .search-box span {
+            font-size: 1.2rem;
+            color: #ff8c42;
+        }
+
+        .close-list-btn {
+            background: #2a130c;
+            border: 1px solid #ff8c42;
+            color: #ffaa66;
+            border-radius: 30px;
+            padding: 0 12px;
+            cursor: pointer;
+        }
+        .close-list-btn:hover {
+            background: #ff8c1a;
+            color: #1f0e08;
+        }
+
+        .list-container {
+            max-height: 380px;
+            overflow-y: auto;
+            padding: 0.6rem;
+        }
+
+        .record-card {
+            background: #2b140eb3;
+            border: 1px solid #d2691e;
+            border-radius: 1rem;
+            padding: 0.8rem;
+            margin-bottom: 0.7rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .record-foto {
+            flex-shrink: 0;
+            width: 48px;
+            height: 48px;
+            cursor: pointer;
+        }
+
+        .record-foto-img {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #d2691e;
+            background: #2a150e;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .record-foto-img:hover {
+            transform: scale(1.05);
+        }
+
+        .record-foto-placeholder {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #2a150e;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            border: 2px solid #d2691e;
+            cursor: pointer;
+        }
+
+        .record-info {
+            flex: 2;
+            min-width: 150px;
+        }
+
+        .record-name {
+            font-weight: bold;
+            color: #ffc185;
+            font-size: 1rem;
+        }
+
+        .record-meta {
+            font-size: 0.7rem;
+            color: #e09d5e;
+        }
+
+        .record-actions {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .record-actions button {
+            background: #221007;
+            border: none;
+            font-size: 0.85rem;
+            cursor: pointer;
+            padding: 4px 10px;
+            border-radius: 20px;
+            color: #ffc98f;
+            background: #2c140e;
+            border: 1px solid #d2691e;
+            transition: 0.2s;
+        }
+        .edit-btn:hover { background: #ff8c1a; color: #1f0a04; border-color: #ffaa55; }
+        .delete-btn:hover { background: #ff5733; color: #1f0a04; }
+        .send-to-mandado-btn:hover { background: #ff8c1a; color: #1f0a04; }
+        .pdf-btn:hover { background: #ff8c1a; color: #1f0a04; }
+        .whatsapp-btn:hover { background: #25d366; color: #0a0a0a; }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+        .modal-content {
+            max-width: 90%;
+            max-height: 90%;
+        }
+        .modal-img {
+            width: auto;
+            max-width: 90vw;
+            max-height: 90vh;
+            border-radius: 20px;
+            border: 3px solid #d2691e;
+            box-shadow: 0 0 30px rgba(210,105,30,0.5);
+        }
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: #d2691e;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .form-panel {
+            margin: 0 1rem 1.5rem 1rem;
+            background: #2f170fe6;
+            backdrop-filter: blur(6px);
+            border-radius: 1.5rem;
+            border: 1px solid #d2691e;
+            padding: 1.2rem;
+        }
+
+        .form-header-flex {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #d2691e;
+            padding-bottom: 0.5rem;
+        }
+
+        .form-header-flex h3 {
+            color: #ffb86b;
+        }
+
+        .close-form {
+            background: #221008;
+            border: 1px solid #ff8c42;
+            color: #ffaa66;
+            padding: 0 12px;
+            border-radius: 30px;
+            cursor: pointer;
+        }
+        .close-form:hover {
+            background: #ff8c1a;
+            color: #1f0e08;
+        }
+
+        .form-avatar {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .circle-upload {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: #2a150e;
+            cursor: pointer;
+            overflow: hidden;
+            border: 3px solid #d2691e;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .circle-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .circle-placeholder {
+            font-size: 2rem;
+            color: #d2691e;
+        }
+
+        .form-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .field-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .field-group label {
+            font-size: 0.7rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #ffae6a;
+            letter-spacing: 1px;
+        }
+
+        .field-group input, .field-group textarea {
+            padding: 0.7rem;
+            border-radius: 1rem;
+            border: 1px solid #d2691e;
+            background: #1f0e08;
+            color: #ffe0bc;
+            font-family: monospace;
+        }
+
+        .field-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .double-row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .double-row .field-group { flex: 1; }
+
+        .save-btn {
+            background: #d2691e;
+            color: #2c0f06;
+            border: 1px solid #ffaa55;
+            padding: 0.8rem;
+            border-radius: 2rem;
+            font-weight: bold;
+            font-family: monospace;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: 0.2s;
+        }
+        .save-btn:hover {
+            background: #ff8c1a;
+            box-shadow: 0 0 12px #ff8c1a;
+            transform: scale(1.01);
+            color: #140602;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2f160fea;
+            color: #ffbc7a;
+            border: 1px solid #d2691e;
+            padding: 10px 20px;
+            border-radius: 40px;
+            font-family: monospace;
+            z-index: 1500;
+            opacity: 0;
+            transition: 0.2s;
+            pointer-events: none;
+            backdrop-filter: blur(8px);
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+            background: #1f0e08;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d2691e;
+            border-radius: 10px;
+        }
+
+        @media (max-width: 650px) {
+            .options-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            .option-item {
+                flex-direction: row;
+                justify-content: space-between;
+            }
+            .option-avatar {
+                width: 55px;
+                height: 55px;
+            }
+            .option-avatar-label {
+                width: 55px;
+                height: 55px;
+            }
+            .option-btn {
+                width: auto;
+                flex: 1;
+            }
+            .search-box input {
+                width: 120px;
+            }
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+<div class="code-rain" id="codeRain"></div>
+<div class="app">
+    <div class="top-header">
+        <div class="logo-circle">
+            <label for="logoFileInput" class="logo-label">
+                <div id="logoPreview" class="logo-placeholder">⚡</div>
+            </label>
+            <input type="file" id="logoFileInput" accept="image/*">
+        </div>
+        <div class="app-title">CADASTROS CRIMINAIS</div>
+    </div>
+
+    <div class="medium-card">
+        <div class="options-grid">
+            <div class="option-item">
+                <div class="option-avatar">
+                    <label class="option-avatar-label" id="avatarCadEnvolvidoLabel">
+                        <div id="avatarCadEnvolvidoPreview" class="option-avatar-placeholder">📸</div>
+                    </label>
+                    <input type="file" id="avatarCadEnvolvidoInput" accept="image/*" style="display:none">
+                </div>
+                <button class="option-btn" id="cadastrarEnvolvidoBtn">➕ CADASTRAR ENVOLVIDO</button>
+            </div>
+            <div class="option-item">
+                <div class="option-avatar">
+                    <label class="option-avatar-label" id="avatarCadMandadoLabel">
+                        <div id="avatarCadMandadoPreview" class="option-avatar-placeholder">📸</div>
+                    </label>
+                    <input type="file" id="avatarCadMandadoInput" accept="image/*" style="display:none">
+                </div>
+                <button class="option-btn" id="cadastrarMandadoBtn">📌 CADASTRAR MANDADO</button>
+            </div>
+            <div class="option-item">
+                <div class="option-avatar">
+                    <label class="option-avatar-label" id="avatarVerEnvolvidosLabel">
+                        <div id="avatarVerEnvolvidosPreview" class="option-avatar-placeholder">📸</div>
+                    </label>
+                    <input type="file" id="avatarVerEnvolvidosInput" accept="image/*" style="display:none">
+                </div>
+                <button class="option-btn" id="verEnvolvidosBtn">👁️ VER ENVOLVIDOS</button>
+            </div>
+            <div class="option-item">
+                <div class="option-avatar">
+                    <label class="option-avatar-label" id="avatarVerMandadosLabel">
+                        <div id="avatarVerMandadosPreview" class="option-avatar-placeholder">📸</div>
+                    </label>
+                    <input type="file" id="avatarVerMandadosInput" accept="image/*" style="display:none">
+                </div>
+                <button class="option-btn" id="verMandadosBtn">⚖️ VER MANDADOS</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="listPanel" class="list-panel hidden">
+        <div class="list-header">
+            <h3 id="listTitle">—— LISTA ——</h3>
+            <div class="search-box">
+                <span>🔍</span>
+                <input type="text" id="searchInput" placeholder="Pesquisar por nome...">
+            </div>
+            <button class="close-list-btn" id="closeListBtn">FECHAR</button>
+        </div>
+        <div id="listContent" class="list-container"></div>
+    </div>
+
+    <div id="formPanel" class="form-panel hidden">
+        <div class="form-header-flex">
+            <h3 id="formPanelTitle">NOVO REGISTRO</h3>
+            <button class="close-form" id="closeFormPanelBtn">X FECHAR</button>
+        </div>
+        <div class="form-avatar">
+            <label id="formAvatarLabel" class="circle-upload">
+                <div id="formAvatarPreview" class="circle-placeholder">📷</div>
+            </label>
+            <input type="file" id="formPhoto" accept="image/*" style="display: none;">
+        </div>
+        <div class="form-grid">
+            <div class="field-group"><label>NOME COMPLETO *</label><input type="text" id="formNome" placeholder="Nome do indivíduo"></div>
+            <div class="field-group"><label>ALCUNHA</label><input type="text" id="formAlcunha" placeholder="vulgo / apelido"></div>
+            <div class="double-row"><div class="field-group"><label>MÃE</label><input type="text" id="formMae"></div><div class="field-group"><label>PAI</label><input type="text" id="formPai"></div></div>
+            <div class="double-row"><div class="field-group"><label>DATA NASC.</label><input type="date" id="formDataNasc"></div><div class="field-group"><label>NATURALIDADE</label><input type="text" id="formNaturalidade"></div></div>
+            <div class="double-row"><div class="field-group"><label>CPF</label><input type="text" id="formCpf"></div><div class="field-group"><label>TELEFONE</label><input type="text" id="formTelefone"></div></div>
+            <div class="field-group"><label>RUA / AVENIDA</label><input type="text" id="formLogradouro"></div>
+            <div class="double-row"><div class="field-group"><label>CIDADE</label><input type="text" id="formCidade"></div><div class="field-group"><label>BAIRRO</label><input type="text" id="formBairro"></div></div>
+            <div class="field-group"><label>ESTADO</label><input type="text" id="formEstado" placeholder="UF"></div>
+            <div class="field-group"><label>ANOTAÇÕES CRIMINAIS / ARTIGOS</label><textarea id="formAnotacoes" placeholder="Ex: Art. 157 - Roubo, Art. 121 - Homicídio, etc..."></textarea></div>
+            <button class="save-btn" id="salvarRegistroBtn">💾 SALVAR REGISTRO</button>
+        </div>
+    </div>
+</div>
+
+<div id="photoModal" class="modal" onclick="closeModal()">
+    <span class="close-modal" onclick="closeModal()">&times;</span>
+    <div class="modal-content"><img id="modalImage" class="modal-img" src="" alt="Foto ampliada"></div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+    // ==================== PLANILHA GOOGLE SCRIPT URL ====================
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxy9ANwFxIL1cMdY2eHU42owUlxg2emmt0hrPLei95tWRge5H-uunAlihy8t27jEEY/exec';
+    
+    // ==================== BANCO DE DADOS LOCAL ====================
+    let envolvidos = [];
+    let mandados = [];
+
+    function loadFromStorage() {
+        const savedEnv = localStorage.getItem('criminais_envolvidos_v10');
+        const savedMand = localStorage.getItem('criminais_mandados_v10');
+        if (savedEnv) envolvidos = JSON.parse(savedEnv);
+        if (savedMand) mandados = JSON.parse(savedMand);
+    }
+    function saveEnvolvidos() { localStorage.setItem('criminais_envolvidos_v10', JSON.stringify(envolvidos)); }
+    function saveMandados() { localStorage.setItem('criminais_mandados_v10', JSON.stringify(mandados)); }
+
+    // ==================== FUNÇÃO CORRIGIDA PARA SALVAR NA PLANILHA ====================
+    async function salvarNaPlanilha(registro, tipo) {
+        try {
+            // Remove a fotoBase64 do envio para evitar payload muito grande
+            const { fotoBase64, ...dadosLimpos } = registro;
+            
+            const dadosParaEnviar = {
+                tipo: tipo,
+                nome: dadosLimpos.nome || '',
+                alcunha: dadosLimpos.alcunha || '',
+                mae: dadosLimpos.mae || '',
+                pai: dadosLimpos.pai || '',
+                dataNasc: dadosLimpos.dataNasc || '',
+                naturalidade: dadosLimpos.naturalidade || '',
+                cpf: dadosLimpos.cpf || '',
+                telefone: dadosLimpos.telefone || '',
+                logradouro: dadosLimpos.logradouro || '',
+                cidade: dadosLimpos.cidade || '',
+                bairro: dadosLimpos.bairro || '',
+                estado: dadosLimpos.estado || '',
+                anotacoes: dadosLimpos.anotacoes || '',
+                id: dadosLimpos.id,
+                dataHora: new Date().toLocaleString('pt-BR'),
+                timestamp: Date.now()
+            };
+            
+            console.log('📤 Enviando para planilha:', dadosParaEnviar);
+            showToast(`🔄 Enviando dados para a planilha...`, 2000);
+            
+            // Método 1: Tentativa com fetch normal
+            try {
+                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'cors',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(dadosParaEnviar)
+                });
+                
+                if (response.ok) {
+                    const resultado = await response.text();
+                    console.log('✅ Resposta do servidor:', resultado);
+                    showToast(`✅ Dados enviados com sucesso para a planilha!`, 3000);
+                    return true;
+                } else {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+            } catch (corsError) {
+                console.log('CORS error, tentando método POST com FormData:', corsError);
+                
+                // Método 2: Usando FormData (mais compatível)
+                try {
+                    const formData = new FormData();
+                    formData.append('dados', JSON.stringify(dadosParaEnviar));
+                    
+                    const formResponse = await fetch(GOOGLE_SCRIPT_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        body: formData
+                    });
+                    
+                    console.log('✅ Requisição FormData enviada');
+                    showToast(`✅ Dados encaminhados para a planilha!`, 3000);
+                    return true;
+                    
+                } catch (formError) {
+                    console.log('FormData error, tentando JSONP:', formError);
+                    
+                    // Método 3: JSONP com callback (última tentativa)
+                    return new Promise((resolve) => {
+                        const callbackName = 'googleScriptCallback_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                        const script = document.createElement('script');
+                        const timeoutId = setTimeout(() => {
+                            if (window[callbackName]) {
+                                delete window[callbackName];
+                                if (script.parentNode) script.parentNode.removeChild(script);
+                                console.warn('⚠️ Timeout na requisição JSONP');
+                                showToast(`⚠️ Timeout - Dado salvo localmente`, 4000);
+                                resolve(false);
+                            }
+                        }, 15000);
+                        
+                        window[callbackName] = function(data) {
+                            clearTimeout(timeoutId);
+                            delete window[callbackName];
+                            if (script.parentNode) script.parentNode.removeChild(script);
+                            console.log('✅ JSONP response:', data);
+                            showToast(`✅ Dados sincronizados com a planilha!`, 3000);
+                            resolve(true);
+                        };
+                        
+                        const params = new URLSearchParams();
+                        params.append('data', JSON.stringify(dadosParaEnviar));
+                        params.append('callback', callbackName);
+                        
+                        script.src = `${GOOGLE_SCRIPT_URL}?${params.toString()}`;
+                        script.onerror = function() {
+                            clearTimeout(timeoutId);
+                            delete window[callbackName];
+                            if (script.parentNode) script.parentNode.removeChild(script);
+                            console.error('❌ Erro no carregamento do script JSONP');
+                            showToast(`⚠️ Erro de conexão com a planilha`, 4000);
+                            resolve(false);
+                        };
+                        
+                        document.body.appendChild(script);
+                    });
+                }
+            }
+        } catch (erro) {
+            console.error('❌ Erro fatal ao salvar na planilha:', erro);
+            showToast(`⚠️ Erro ao sincronizar com a planilha. Dado salvo localmente.`, 4000);
+            return false;
+        }
+    }
+
+    // ==================== ESTADO DO FORMULÁRIO ====================
+    let currentFormType = null;
+    let editingRecordId = null;
+    let currentFormImageBase64 = null;
+    let currentListMode = null;
+    let currentSearchTerm = '';
+
+    // ==================== DOM ELEMENTOS ====================
+    const cadEnvolvidoBtn = document.getElementById('cadastrarEnvolvidoBtn');
+    const cadMandadoBtn = document.getElementById('cadastrarMandadoBtn');
+    const verEnvolvidosBtn = document.getElementById('verEnvolvidosBtn');
+    const verMandadosBtn = document.getElementById('verMandadosBtn');
+    const listPanel = document.getElementById('listPanel');
+    const listTitle = document.getElementById('listTitle');
+    const listContent = document.getElementById('listContent');
+    const closeListBtn = document.getElementById('closeListBtn');
+    const searchInput = document.getElementById('searchInput');
+    const formPanel = document.getElementById('formPanel');
+    const formPanelTitle = document.getElementById('formPanelTitle');
+    const closeFormPanelBtn = document.getElementById('closeFormPanelBtn');
+    const salvarBtn = document.getElementById('salvarRegistroBtn');
+    const formPhotoInput = document.getElementById('formPhoto');
+    const formAvatarPreview = document.getElementById('formAvatarPreview');
+    const formAvatarLabel = document.getElementById('formAvatarLabel');
+    const modal = document.getElementById('photoModal');
+    const modalImage = document.getElementById('modalImage');
+    const logoFileInput = document.getElementById('logoFileInput');
+    const logoPreview = document.getElementById('logoPreview');
+
+    const formNome = document.getElementById('formNome');
+    const formAlcunha = document.getElementById('formAlcunha');
+    const formMae = document.getElementById('formMae');
+    const formPai = document.getElementById('formPai');
+    const formDataNasc = document.getElementById('formDataNasc');
+    const formNaturalidade = document.getElementById('formNaturalidade');
+    const formCpf = document.getElementById('formCpf');
+    const formTelefone = document.getElementById('formTelefone');
+    const formLogradouro = document.getElementById('formLogradouro');
+    const formCidade = document.getElementById('formCidade');
+    const formBairro = document.getElementById('formBairro');
+    const formEstado = document.getElementById('formEstado');
+    const formAnotacoes = document.getElementById('formAnotacoes');
+
+    function openPhotoModal(photoUrl) { if (photoUrl) { modalImage.src = photoUrl; modal.style.display = 'flex'; } }
+    function closeModal() { modal.style.display = 'none'; }
+    
+    function updateAvatarPreview(previewId, imageData) {
+        const preview = document.getElementById(previewId);
+        if (!preview) return;
+        if (imageData) {
+            const img = document.createElement('img');
+            img.src = imageData;
+            img.classList.add('option-avatar-img');
+            preview.innerHTML = '';
+            preview.appendChild(img);
+        } else {
+            preview.innerHTML = '📸';
+            preview.className = 'option-avatar-placeholder';
+        }
+    }
+
+    function setupOptionAvatar(inputId, previewId, storageKey) {
+        const input = document.getElementById(inputId);
+        const label = document.getElementById(previewId).parentElement;
+        if (!input || !label) return;
+        label.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); input.click(); });
+        input.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    const imageData = ev.target.result;
+                    updateAvatarPreview(previewId, imageData);
+                    localStorage.setItem(`avatar_${storageKey}`, imageData);
+                    showToast(`Foto da opção "${storageKey}" atualizada!`);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        const savedAvatar = localStorage.getItem(`avatar_${storageKey}`);
+        if (savedAvatar) updateAvatarPreview(previewId, savedAvatar);
+    }
+
+    setupOptionAvatar('avatarCadEnvolvidoInput', 'avatarCadEnvolvidoPreview', 'cadEnvolvido');
+    setupOptionAvatar('avatarCadMandadoInput', 'avatarCadMandadoPreview', 'cadMandado');
+    setupOptionAvatar('avatarVerEnvolvidosInput', 'avatarVerEnvolvidosPreview', 'verEnvolvidos');
+    setupOptionAvatar('avatarVerMandadosInput', 'avatarVerMandadosPreview', 'verMandados');
+
+    function showToast(msg, time = 2500) {
+        const toast = document.getElementById('toast');
+        toast.textContent = msg;
+        toast.style.opacity = '1';
+        setTimeout(() => toast.style.opacity = '0', time);
+    }
+
+    // ==================== FUNÇÃO PDF ====================
+    async function gerarPDF(record, tipo) {
+        showToast('📄 Gerando PDF, aguarde...', 2000);
+        const pdfContainer = document.createElement('div');
+        pdfContainer.style.position = 'absolute';
+        pdfContainer.style.left = '-9999px';
+        pdfContainer.style.top = '-9999px';
+        pdfContainer.style.width = '800px';
+        pdfContainer.style.backgroundColor = 'white';
+        pdfContainer.style.padding = '30px';
+        pdfContainer.style.fontFamily = 'Arial, sans-serif';
+        
+        const titulo = tipo === 'envolvido' ? 'RELATÓRIO DE ENVOLVIDO' : 'RELATÓRIO DE MANDADO JUDICIAL';
+        const corTitulo = '#b85c1a';
+        let fotoHtml = record.fotoBase64 ? `<img src="${record.fotoBase64}" style="width:120px; border-radius:50%; border:3px solid ${corTitulo};">` : '<div style="width:120px; height:120px; border-radius:50%; background:#e0e0e0; display:flex; align-items:center; justify-content:center;">👤</div>';
+        
+        pdfContainer.innerHTML = `
+            <div style="text-align:center; border-bottom:3px solid ${corTitulo}; padding-bottom:15px;">
+                <h1 style="color:${corTitulo};">${titulo}</h1>
+                <p>Gerado em ${new Date().toLocaleString('pt-BR')}</p>
+            </div>
+            <div style="display:flex; gap:25px; margin:20px 0;">
+                <div>${fotoHtml}</div>
+                <div><h2>${escapeHtml(record.nome)}</h2>${record.alcunha ? `<p>Alcunha: ${escapeHtml(record.alcunha)}</p>` : ''}</div>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; background:#f5f5f5; padding:15px;">
+                <div><strong>Mãe:</strong> ${escapeHtml(record.mae || '—')}</div>
+                <div><strong>Pai:</strong> ${escapeHtml(record.pai || '—')}</div>
+                <div><strong>Nascimento:</strong> ${record.dataNasc || '—'}</div>
+                <div><strong>CPF:</strong> ${escapeHtml(record.cpf || '—')}</div>
+                <div><strong>Telefone:</strong> ${escapeHtml(record.telefone || '—')}</div>
+                <div><strong>Endereço:</strong> ${escapeHtml(record.logradouro || '—')}</div>
+            </div>
+            ${record.anotacoes ? `<div style="margin-top:15px; background:#fff3e0; padding:12px;"><strong>Anotações:</strong><br>${escapeHtml(record.anotacoes)}</div>` : ''}
+        `;
+        document.body.appendChild(pdfContainer);
+        try { await html2pdf().set({ margin: 0.5, filename: `${tipo}_${record.nome}.pdf` }).from(pdfContainer).save(); showToast('✅ PDF gerado!'); } catch(e) { showToast('❌ Erro no PDF'); }
+        document.body.removeChild(pdfContainer);
+    }
+
+    // ==================== FUNÇÃO WHATSAPP ====================
+    async function compartilharWhatsApp(record, tipo) {
+        const tipoTexto = tipo === 'envolvido' ? 'ENVOLVIDO' : 'MANDADO';
+        let msg = `*${tipoTexto} - SISTEMA CRIMINAL*\n*Nome:* ${record.nome}\n`;
+        if (record.alcunha) msg += `*Alcunha:* ${record.alcunha}\n`;
+        msg += `*Mãe:* ${record.mae || '—'}\n*Pai:* ${record.pai || '—'}\n*CPF:* ${record.cpf || '—'}\n`;
+        if (record.anotacoes) msg += `\n*Anotações:* ${record.anotacoes}\n`;
+        window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+        showToast('📱 WhatsApp aberto!');
+    }
+
+    // ==================== FUNÇÕES CRUD ====================
+    function resetFormFields() {
+        formNome.value = ''; formAlcunha.value = ''; formMae.value = ''; formPai.value = ''; formDataNasc.value = '';
+        formNaturalidade.value = ''; formCpf.value = ''; formTelefone.value = ''; formLogradouro.value = '';
+        formCidade.value = ''; formBairro.value = ''; formEstado.value = ''; formAnotacoes.value = '';
+        currentFormImageBase64 = null; formAvatarPreview.innerHTML = '📷'; formPhotoInput.value = '';
+    }
+
+    function closeFormAndClean() { formPanel.classList.add('hidden'); resetFormFields(); currentFormType = null; editingRecordId = null; }
+    function openCreateForm(type) { currentFormType = type; editingRecordId = null; resetFormFields(); formPanelTitle.innerText = type === 'envolvido' ? '👤 NOVO ENVOLVIDO' : '⚖️ NOVO MANDADO'; formPanel.classList.remove('hidden'); listPanel.classList.add('hidden'); }
+    
+    function openEditForm(type, id) {
+        const list = type === 'envolvido' ? envolvidos : mandados;
+        const record = list.find(r => r.id === id);
+        if (!record) return;
+        currentFormType = type; editingRecordId = id;
+        formNome.value = record.nome || ''; formAlcunha.value = record.alcunha || ''; formMae.value = record.mae || ''; formPai.value = record.pai || '';
+        formDataNasc.value = record.dataNasc || ''; formNaturalidade.value = record.naturalidade || ''; formCpf.value = record.cpf || ''; formTelefone.value = record.telefone || '';
+        formLogradouro.value = record.logradouro || ''; formCidade.value = record.cidade || ''; formBairro.value = record.bairro || ''; formEstado.value = record.estado || ''; formAnotacoes.value = record.anotacoes || '';
+        currentFormImageBase64 = record.fotoBase64 || null;
+        if (currentFormImageBase64) { const img = document.createElement('img'); img.src = currentFormImageBase64; img.classList.add('circle-img'); formAvatarPreview.innerHTML = ''; formAvatarPreview.appendChild(img); }
+        formPanelTitle.innerText = type === 'envolvido' ? '✏️ EDITAR ENVOLVIDO' : '✏️ EDITAR MANDADO';
+        formPanel.classList.remove('hidden'); listPanel.classList.add('hidden');
+    }
+
+    function sendToMandados(envolvidoRecord) {
+        if (mandados.some(m => m.originalEnvolvidoId === envolvidoRecord.id)) { showToast('⚠️ Já possui mandado!'); return; }
+        const newMandado = { ...JSON.parse(JSON.stringify(envolvidoRecord)), id: Date.now(), originalEnvolvidoId: envolvidoRecord.id };
+        mandados.push(newMandado); saveMandados();
+        salvarNaPlanilha(newMandado, 'mandado');
+        showToast('✅ Enviado para MANDADOS!', 2500);
+        if (currentListMode === 'mandados') renderList(currentListMode);
+    }
+
+    async function saveRecord() {
+        if (!currentFormType) { showToast('❌ Selecione uma opção primeiro.'); return; }
+        if (!formNome.value.trim()) { showToast('⚠️ NOME é obrigatório!'); return; }
+        
+        const novoId = editingRecordId || Date.now();
+        const newRecord = {
+            id: novoId, nome: formNome.value.trim(), alcunha: formAlcunha.value.trim(),
+            mae: formMae.value.trim(), pai: formPai.value.trim(), dataNasc: formDataNasc.value,
+            naturalidade: formNaturalidade.value.trim(), cpf: formCpf.value.trim(), telefone: formTelefone.value.trim(),
+            logradouro: formLogradouro.value.trim(), cidade: formCidade.value.trim(), bairro: formBairro.value.trim(),
+            estado: formEstado.value.trim(), anotacoes: formAnotacoes.value.trim(),
+            fotoBase64: currentFormImageBase64, criadoEm: new Date().toISOString()
+        };
+        
+        if (currentFormType === 'envolvido') {
+            if (editingRecordId) { const idx = envolvidos.findIndex(e => e.id === editingRecordId); if (idx !== -1) envolvidos[idx] = newRecord; else envolvidos.push(newRecord); }
+            else { envolvidos.push(newRecord); }
+            saveEnvolvidos(); showToast('✅ ENVOLVIDO salvo localmente!');
+        } else {
+            if (editingRecordId) { const idx = mandados.findIndex(m => m.id === editingRecordId); if (idx !== -1) mandados[idx] = newRecord; else mandados.push(newRecord); }
+            else { mandados.push(newRecord); }
+            saveMandados(); showToast('✅ MANDADO salvo localmente!');
+        }
+        
+        await salvarNaPlanilha(newRecord, currentFormType);
+        closeFormAndClean();
+        if (currentListMode) renderList(currentListMode);
+    }
+
+    function renderFotoThumb(fotoBase64) {
+        if (fotoBase64) return `<img class="record-foto-img" src="${fotoBase64}" onclick="event.stopPropagation(); openPhotoModal('${fotoBase64}')">`;
+        return `<div class="record-foto-placeholder" onclick="event.stopPropagation(); showToast('Sem foto', 1500);">👤</div>`;
+    }
+
+    async function excluirRegistro(id, tipo) {
+        if (confirm('⚠️ Excluir permanentemente?')) {
+            if (tipo === 'envolvido') { envolvidos = envolvidos.filter(r => r.id !== id); saveEnvolvidos(); }
+            else { mandados = mandados.filter(r => r.id !== id); saveMandados(); }
+            showToast('🗑️ Registro excluído!');
+            if (currentListMode) renderList(currentListMode);
+        }
+    }
+
+    function renderList(mode) {
+        currentListMode = mode;
+        let filteredList = mode === 'envolvidos' ? envolvidos.filter(i => i.nome.toLowerCase().includes(currentSearchTerm.toLowerCase())) : mandados.filter(i => i.nome.toLowerCase().includes(currentSearchTerm.toLowerCase()));
+        listTitle.innerText = mode === 'envolvidos' ? `🧬 ENVOLVIDOS (${filteredList.length} de ${envolvidos.length})` : `📜 MANDADOS (${filteredList.length} de ${mandados.length})`;
+        if (filteredList.length === 0) { listContent.innerHTML = '<div style="padding:2rem;text-align:center;">Nenhum registro.</div>'; return; }
+        
+        let html = '';
+        filteredList.forEach(r => {
+            html += `<div class="record-card">
+                <div class="record-foto">${renderFotoThumb(r.fotoBase64)}</div>
+                <div class="record-info">
+                    <div class="record-name">${mode === 'envolvidos' ? '🔹' : '⚡'} ${escapeHtml(r.nome)} ${r.alcunha ? `(${escapeHtml(r.alcunha)})` : ''}</div>
+                    <div class="record-meta">${r.cidade || ''} / ${r.estado || ''} • ${r.telefone || '—'}</div>
+                    ${r.anotacoes ? `<div class="record-meta">⚖️ ${escapeHtml(r.anotacoes.substring(0,50))}${r.anotacoes.length>50?'...':''}</div>` : ''}
+                </div>
+                <div class="record-actions">
+                    <button class="edit-btn" data-id="${r.id}" data-type="${mode === 'envolvidos' ? 'envolvido' : 'mandado'}">✏️</button>
+                    <button class="delete-btn" data-id="${r.id}" data-type="${mode === 'envolvidos' ? 'envolvido' : 'mandado'}">🗑️</button>
+                    ${mode === 'envolvidos' ? `<button class="send-to-mandado-btn" data-id="${r.id}">📋 Mandado</button>` : ''}
+                    <button class="pdf-btn" data-id="${r.id}" data-type="${mode === 'envolvidos' ? 'envolvido' : 'mandado'}">📄</button>
+                    <button class="whatsapp-btn" data-id="${r.id}" data-type="${mode === 'envolvidos' ? 'envolvido' : 'mandado'}">📱</button>
+                </div>
+            </div>`;
+        });
+        listContent.innerHTML = html;
+        
+        document.querySelectorAll('.edit-btn').forEach(btn => { btn.onclick = (e) => { e.stopPropagation(); openEditForm(btn.dataset.type, parseInt(btn.dataset.id)); }; });
+        document.querySelectorAll('.delete-btn').forEach(btn => { btn.onclick = (e) => { e.stopPropagation(); excluirRegistro(parseInt(btn.dataset.id), btn.dataset.type); }; });
+        document.querySelectorAll('.send-to-mandado-btn').forEach(btn => { btn.onclick = (e) => { e.stopPropagation(); const env = envolvidos.find(e => e.id === parseInt(btn.dataset.id)); if(env) sendToMandados(env); }; });
+        document.querySelectorAll('.pdf-btn').forEach(btn => { btn.onclick = async (e) => { e.stopPropagation(); const list = btn.dataset.type === 'envolvido' ? envolvidos : mandados; const rec = list.find(r => r.id === parseInt(btn.dataset.id)); if(rec) await gerarPDF(rec, btn.dataset.type); }; });
+        document.querySelectorAll('.whatsapp-btn').forEach(btn => { btn.onclick = async (e) => { e.stopPropagation(); const list = btn.dataset.type === 'envolvido' ? envolvidos : mandados; const rec = list.find(r => r.id === parseInt(btn.dataset.id)); if(rec) await compartilharWhatsApp(rec, btn.dataset.type); }; });
+    }
+
+    function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m])); }
+    function showList(mode) { currentSearchTerm = ''; if(searchInput) searchInput.value = ''; renderList(mode); listPanel.classList.remove('hidden'); formPanel.classList.add('hidden'); closeFormAndClean(); }
+
+    if (searchInput) searchInput.addEventListener('input', (e) => { currentSearchTerm = e.target.value; if (currentListMode) renderList(currentListMode); });
+    cadEnvolvidoBtn.onclick = () => openCreateForm('envolvido');
+    cadMandadoBtn.onclick = () => openCreateForm('mandado');
+    verEnvolvidosBtn.onclick = () => showList('envolvidos');
+    verMandadosBtn.onclick = () => showList('mandados');
+    closeListBtn.onclick = () => { listPanel.classList.add('hidden'); currentListMode = null; currentSearchTerm = ''; };
+    closeFormPanelBtn.onclick = closeFormAndClean;
+    salvarBtn.onclick = saveRecord;
+    formAvatarLabel.onclick = () => formPhotoInput.click();
+    formPhotoInput.onchange = (e) => { const file = e.target.files[0]; if(file && file.type.startsWith('image/')){ const reader = new FileReader(); reader.onload = ev => { currentFormImageBase64 = ev.target.result; const img = document.createElement('img'); img.src = currentFormImageBase64; img.classList.add('circle-img'); formAvatarPreview.innerHTML = ''; formAvatarPreview.appendChild(img); }; reader.readAsDataURL(file); } };
+    logoFileInput.onchange = (e) => { const file = e.target.files[0]; if(file && file.type.startsWith('image/')){ const reader = new FileReader(); reader.onload = ev => { const img = document.createElement('img'); img.src = ev.target.result; img.classList.add('logo-img'); logoPreview.innerHTML = ''; logoPreview.appendChild(img); }; reader.readAsDataURL(file); } };
+
+    function initCodeRain() {
+        const rainDiv = document.getElementById('codeRain');
+        const chars = "01アイウABCDEFGHIJKLMNOPQRSTUVWXYZ@#$%&*+";
+        for(let i=0;i<70;i++) {
+            const span = document.createElement('span');
+            span.textContent = chars[Math.floor(Math.random() * chars.length)];
+            span.style.position = 'absolute';
+            span.style.left = Math.random() * 100 + '%';
+            span.style.top = Math.random() * 100 + '%';
+            span.style.opacity = 0.1 + Math.random() * 0.4;
+            span.style.animation = `fall ${5 + Math.random() * 8}s linear infinite`;
+            span.style.fontSize = (12 + Math.random() * 16) + 'px';
+            span.style.color = '#d2691e';
+            span.style.pointerEvents = 'none';
+            rainDiv.appendChild(span);
+        }
+        const style = document.createElement('style');
+        style.textContent = `@keyframes fall { 0% { transform: translateY(-20vh); opacity:0; } 10%{opacity:1;} 90%{opacity:1;} 100% { transform: translateY(120vh); opacity:0; } }`;
+        document.head.appendChild(style);
+    }
+    
+    loadFromStorage();
+    initCodeRain();
+    console.log('🚀 Sistema Criminal iniciado - Salvamento corrigido!');
+</script>
+</body>
+</html>
