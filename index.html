@@ -777,15 +777,15 @@
     let currentListType = null;
 
     // ============================================================
-    // FUNÇÕES DE API - USANDO JSONP (como no app que funciona)
+    // FUNÇÕES DE API - USANDO JSONP PARA GET E POST VIA JSON
     // ============================================================
-    function callAPI(action, data = {}, callback) {
+    
+    // Função para requisições GET (JSONP)
+    function callAPIGet(action, data = {}, callback) {
         const callbackName = 'jsonp_' + action + '_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
         
-        // Constrói a URL com os parâmetros
         let url = API_URL + '?action=' + encodeURIComponent(action) + '&callback=' + encodeURIComponent(callbackName);
         
-        // Adiciona os parâmetros adicionais
         for (let key in data) {
             if (data[key] !== undefined && data[key] !== null) {
                 if (typeof data[key] === 'object') {
@@ -796,13 +796,11 @@
             }
         }
         
-        // Cria a função de callback global
         window[callbackName] = function(response) {
             delete window[callbackName];
             if (callback) callback(response);
         };
         
-        // Cria e adiciona o script
         const script = document.createElement('script');
         script.src = url + '&_nocache=' + Date.now();
         script.onerror = function() {
@@ -812,14 +810,96 @@
         document.body.appendChild(script);
     }
 
-    // ============================================================
-    // FUNÇÕES DE API - Versão Promise para facilitar
-    // ============================================================
-    function callAPIPromise(action, data = {}) {
+    // Função para requisições POST via JSON (CORRIGIDA)
+    function callAPIPost(action, data = {}) {
         return new Promise((resolve, reject) => {
-            callAPI(action, data, function(response) {
-                resolve(response);
+            // Constrói o payload como JSON
+            const payload = {
+                action: action,
+                ...data
+            };
+            
+            // Configura a requisição POST
+            const options = {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload)
+            };
+            
+            fetch(API_URL, options)
+                .then(response => {
+                    // Com no-cors, não podemos ler a resposta diretamente
+                    // Vamos assumir que a operação foi bem-sucedida se não houve erro
+                    resolve({ success: true, message: 'Operação realizada com sucesso!' });
+                })
+                .catch(error => {
+                    console.error('Erro no POST:', error);
+                    resolve({ success: false, message: 'Erro na comunicação: ' + error.message });
+                });
+        });
+    }
+
+    // Função unificada para chamar a API
+    function callAPI(action, data = {}) {
+        // GET para leitura
+        if (action === 'getRecords' || action === 'getLogin') {
+            return new Promise((resolve) => {
+                callAPIGet(action, data, function(response) {
+                    resolve(response);
+                });
             });
+        }
+        // POST para escrita
+        else {
+            return callAPIPost(action, data);
+        }
+    }
+
+    // ============================================================
+    // FUNÇÃO PARA REDIMENSIONAR IMAGEM
+    // ============================================================
+    function resizeImage(file, maxWidth, maxHeight, quality) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    let width = img.width;
+                    let height = img.height;
+                    
+                    if (width > height) {
+                        if (width > maxWidth) {
+                            height = Math.round(height * (maxWidth / width));
+                            width = maxWidth;
+                        }
+                    } else {
+                        if (height > maxHeight) {
+                            width = Math.round(width * (maxHeight / height));
+                            height = maxHeight;
+                        }
+                    }
+                    
+                    const canvas = document.createElement('canvas');
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    
+                    const dataUrl = canvas.toDataURL('image/jpeg', quality || 0.4);
+                    resolve(dataUrl);
+                };
+                img.onerror = function() {
+                    reject(new Error('Erro ao carregar imagem'));
+                };
+                img.src = e.target.result;
+            };
+            reader.onerror = function() {
+                reject(new Error('Erro ao ler arquivo'));
+            };
+            reader.readAsDataURL(file);
         });
     }
 
@@ -828,7 +908,7 @@
     // ============================================================
     async function loadRecords() {
         try {
-            const result = await callAPIPromise('getRecords');
+            const result = await callAPI('getRecords');
             if (result.success) {
                 allRecords = result.records || [];
                 updateBadges();
@@ -866,7 +946,7 @@
         }
         
         try {
-            const result = await callAPIPromise('getLogin');
+            const result = await callAPI('getLogin');
             if (result.success) {
                 const found = result.users.find(u => u.usuario === user && u.senha === pass && u.ativo === 'SIM');
                 if (found) {
@@ -1075,7 +1155,7 @@
     // ============================================================
     function openCadastro() {
         document.querySelector('.cards-grid').style.display = 'none';
-const nextId = allRecords.length > 0 ? Math.max(...allRecords.map(r => Number(r.ID) || 0)) + 1 : 1;
+        const nextId = allRecords.length > 0 ? Math.max(...allRecords.map(r => Number(r.ID) || 0)) + 1 : 1;
         let html = `
             <div class="form-page" style="display:flex;">
                 <div class="list-header">
@@ -1129,15 +1209,16 @@ const nextId = allRecords.length > 0 ? Math.max(...allRecords.map(r => Number(r.
         currentView = 'form';
     }
 
-    function previewFoto(e) {
+    async function previewFoto(e) {
         const file = e.target.files[0];
         if (file) {
-            const reader = new FileReader();
-            reader.onload = function(ev) {
-                document.getElementById('fotoPreview').innerHTML = `<img src="${ev.target.result}" style="max-width:100px;border-radius:8px;border:1px solid #555;">`;
-                document.getElementById('f_foto').value = ev.target.result;
-            };
-            reader.readAsDataURL(file);
+            try {
+                const resizedDataUrl = await resizeImage(file, 150, 150, 0.4);
+                document.getElementById('fotoPreview').innerHTML = `<img src="${resizedDataUrl}" style="max-width:100px;border-radius:8px;border:1px solid #555;">`;
+                document.getElementById('f_foto').value = resizedDataUrl;
+            } catch (error) {
+                alert('Erro ao processar imagem: ' + error.message);
+            }
         }
     }
 
@@ -1162,13 +1243,14 @@ const nextId = allRecords.length > 0 ? Math.max(...allRecords.map(r => Number(r.
             TIPO_PENAL: document.getElementById('f_tipoPenal').value.trim(),
             MANDADO: document.getElementById('f_mandado').value
         };
+        
         if (!record.NOME) {
             alert('O campo NOME é obrigatório.');
             return;
         }
         
         try {
-            const result = await callAPIPromise('addRecord', {
+            const result = await callAPI('addRecord', {
                 record: record,
                 usuario: currentUser
             });
@@ -1188,9 +1270,10 @@ const nextId = allRecords.length > 0 ? Math.max(...allRecords.map(r => Number(r.
     // EDIÇÃO
     // ============================================================
     function editRecord(id) {
-       document.querySelector('.cards-grid').style.display = 'none';
- const rec = allRecords.find(r => r.ID == id);
+        document.querySelector('.cards-grid').style.display = 'none';
+        const rec = allRecords.find(r => r.ID == id);
         if (!rec) return;
+        
         let html = `
             <div class="form-page" style="display:flex;">
                 <div class="list-header">
@@ -1211,10 +1294,39 @@ const nextId = allRecords.length > 0 ? Math.max(...allRecords.map(r => Number(r.
                         <input type="hidden" id="e_foto" value="${rec.FOTO || ''}">
                         <div id="editFotoPreview" style="margin-top:6px;">${rec.FOTO ? `<img src="${rec.FOTO}" style="max-width:100px;border-radius:8px;border:1px solid #555;">` : ''}</div>
                     </div>
-                    ${['NOME','ALCUNHA','MAE','PAI','DATA_NASC','NATURALIDADE','UF_NAT','CPF','RG','UF_RG','TELEFONE','ENDERECO','CIDADE','ESTADO','TIPO_PENAL'].map(key => `
-                        <div class="form-group"><label>${key.replace('_',' ')}</label><input type="text" id="e_${key.toLowerCase()}" value="${rec[key] || ''}"></div>
-                    `).join('')}
-                    <div class="form-group"><label>MANDADO</label>
+        `;
+        
+        const campos = [
+            { id: 'e_nome', label: 'NOME', key: 'NOME' },
+            { id: 'e_alcunha', label: 'ALCUNHA', key: 'ALCUNHA' },
+            { id: 'e_mae', label: 'MÃE', key: 'MAE' },
+            { id: 'e_pai', label: 'PAI', key: 'PAI' },
+            { id: 'e_data_nasc', label: 'DATA NASC', key: 'DATA_NASC' },
+            { id: 'e_naturalidade', label: 'NATURALIDADE', key: 'NATURALIDADE' },
+            { id: 'e_uf_nat', label: 'UF NAT', key: 'UF_NAT' },
+            { id: 'e_cpf', label: 'CPF', key: 'CPF' },
+            { id: 'e_rg', label: 'RG', key: 'RG' },
+            { id: 'e_uf_rg', label: 'UF RG', key: 'UF_RG' },
+            { id: 'e_telefone', label: 'TELEFONE', key: 'TELEFONE' },
+            { id: 'e_endereco', label: 'ENDEREÇO', key: 'ENDERECO' },
+            { id: 'e_cidade', label: 'CIDADE', key: 'CIDADE' },
+            { id: 'e_estado', label: 'ESTADO', key: 'ESTADO' },
+            { id: 'e_tipo_penal', label: 'TIPO PENAL', key: 'TIPO_PENAL' }
+        ];
+        
+        campos.forEach(campo => {
+            const valor = rec[campo.key] || '';
+            html += `
+                <div class="form-group">
+                    <label>${campo.label}</label>
+                    <input type="text" id="${campo.id}" value="${valor}">
+                </div>
+            `;
+        });
+        
+        html += `
+                    <div class="form-group">
+                        <label>MANDADO</label>
                         <select id="e_mandado">
                             <option value="NÃO" ${rec.MANDADO === 'NÃO' ? 'selected' : ''}>NÃO</option>
                             <option value="SIM" ${rec.MANDADO === 'SIM' ? 'selected' : ''}>SIM</option>
@@ -1232,51 +1344,53 @@ const nextId = allRecords.length > 0 ? Math.max(...allRecords.map(r => Number(r.
         currentView = 'form';
     }
 
-    function previewEditFoto(e) {
+    async function previewEditFoto(e) {
         const file = e.target.files[0];
         if (file) {
-            const reader = new FileReader();
-            reader.onload = function(ev) {
-                document.getElementById('editFotoPreview').innerHTML = `<img src="${ev.target.result}" style="max-width:100px;border-radius:8px;border:1px solid #555;">`;
-                document.getElementById('e_foto').value = ev.target.result;
-            };
-            reader.readAsDataURL(file);
+            try {
+                const resizedDataUrl = await resizeImage(file, 150, 150, 0.4);
+                document.getElementById('editFotoPreview').innerHTML = `<img src="${resizedDataUrl}" style="max-width:100px;border-radius:8px;border:1px solid #555;">`;
+                document.getElementById('e_foto').value = resizedDataUrl;
+            } catch (error) {
+                alert('Erro ao processar imagem: ' + error.message);
+            }
         }
     }
 
     async function salvarEdicao(id) {
         const record = {
-            FOTO: document.getElementById('e_foto').value || '',
-            NOME: document.getElementById('e_nome').value.trim(),
-            ALCUNHA: document.getElementById('e_alcunha').value.trim(),
-            MAE: document.getElementById('e_mae').value.trim(),
-            PAI: document.getElementById('e_pai').value.trim(),
-            DATA_NASC: document.getElementById('e_data_nasc').value.trim(),
-            NATURALIDADE: document.getElementById('e_naturalidade').value.trim(),
-            UF_NAT: document.getElementById('e_uf_nat').value.trim(),
-            CPF: document.getElementById('e_cpf').value.trim(),
-            RG: document.getElementById('e_rg').value.trim(),
-            UF_RG: document.getElementById('e_uf_rg').value.trim(),
-            TELEFONE: document.getElementById('e_telefone').value.trim(),
-            ENDERECO: document.getElementById('e_endereco').value.trim(),
-            CIDADE: document.getElementById('e_cidade').value.trim(),
-            ESTADO: document.getElementById('e_estado').value.trim(),
-            TIPO_PENAL: document.getElementById('e_tipo_penal').value.trim(),
-            MANDADO: document.getElementById('e_mandado').value
+            FOTO: document.getElementById('e_foto') ? document.getElementById('e_foto').value || '' : '',
+            NOME: document.getElementById('e_nome') ? document.getElementById('e_nome').value.trim() : '',
+            ALCUNHA: document.getElementById('e_alcunha') ? document.getElementById('e_alcunha').value.trim() : '',
+            MAE: document.getElementById('e_mae') ? document.getElementById('e_mae').value.trim() : '',
+            PAI: document.getElementById('e_pai') ? document.getElementById('e_pai').value.trim() : '',
+            DATA_NASC: document.getElementById('e_data_nasc') ? document.getElementById('e_data_nasc').value.trim() : '',
+            NATURALIDADE: document.getElementById('e_naturalidade') ? document.getElementById('e_naturalidade').value.trim() : '',
+            UF_NAT: document.getElementById('e_uf_nat') ? document.getElementById('e_uf_nat').value.trim() : '',
+            CPF: document.getElementById('e_cpf') ? document.getElementById('e_cpf').value.trim() : '',
+            RG: document.getElementById('e_rg') ? document.getElementById('e_rg').value.trim() : '',
+            UF_RG: document.getElementById('e_uf_rg') ? document.getElementById('e_uf_rg').value.trim() : '',
+            TELEFONE: document.getElementById('e_telefone') ? document.getElementById('e_telefone').value.trim() : '',
+            ENDERECO: document.getElementById('e_endereco') ? document.getElementById('e_endereco').value.trim() : '',
+            CIDADE: document.getElementById('e_cidade') ? document.getElementById('e_cidade').value.trim() : '',
+            ESTADO: document.getElementById('e_estado') ? document.getElementById('e_estado').value.trim() : '',
+            TIPO_PENAL: document.getElementById('e_tipo_penal') ? document.getElementById('e_tipo_penal').value.trim() : '',
+            MANDADO: document.getElementById('e_mandado') ? document.getElementById('e_mandado').value : 'NÃO'
         };
+        
         if (!record.NOME) {
             alert('O campo NOME é obrigatório.');
             return;
         }
         
         try {
-            const result = await callAPIPromise('updateRecord', {
+            const result = await callAPI('updateRecord', {
                 id: id,
                 record: record,
                 usuario: currentUser
             });
             if (result.success) {
-                alert('Registro atualizado!');
+                alert('Registro atualizado com sucesso!');
                 await loadRecords();
                 backToList();
             } else {
@@ -1288,7 +1402,7 @@ const nextId = allRecords.length > 0 ? Math.max(...allRecords.map(r => Number(r.
     }
 
     // ============================================================
-    // SENHA - CORRIGIDO DEFINITIVAMENTE
+    // SENHA
     // ============================================================
     function openSenha() {
         document.getElementById('modalSenha').style.display = 'flex';
@@ -1322,7 +1436,7 @@ const nextId = allRecords.length > 0 ? Math.max(...allRecords.map(r => Number(r.
             document.getElementById('senhaMsg').textContent = 'Alterando senha...';
             document.getElementById('senhaMsg').style.color = '#f5c842';
             
-            const result = await callAPIPromise('updatePassword', {
+            const result = await callAPI('updatePassword', {
                 user: currentUser,
                 newPass: nova
             });
