@@ -194,21 +194,38 @@
     justify-content: center;
 }
 
-        . .card {
+        .card {
     background: #3b2b1a;
     border-radius: 24px;
     padding: 34px 28px;
-    border: 1.5px solid #5f7a3a;
-    box-shadow: 0 0 0 1px #d4b84c, 0 4px 12px rgba(0,0,0,0.5);
-    transition: 0.2s;
+
+    /* CONTORNO DOURADO */
+    border: 2px solid #d4af37;
+
+    /* BRILHO NEON VERDE E AMARELO */
+    box-shadow:
+        0 0 3px #d4af37,
+        0 0 8px #d4af37,
+        0 0 12px #ffff00,
+        0 0 18px #ccff00,
+        0 0 25px rgba(204,255,0,0.7),
+        0 4px 12px rgba(0,0,0,0.5);
+
+    transition: all 0.3s ease;
     cursor: pointer;
     position: relative;
     min-height: 220px;
 }
 
         .card:active {
-            transform: scale(0.97);
-        }
+    transform: scale(0.97);
+
+    box-shadow:
+        0 0 5px #d4af37,
+        0 0 15px #ffff00,
+        0 0 25px #ccff00,
+        0 0 35px #99ff00;
+}
 
         .card h3 {
             font-size: 1.8rem;
@@ -219,7 +236,7 @@
             align-items: center;
         }
 
-        . .card .badge {
+        .card .badge {
     background: #f5c842;
     color: #1a1a1a;
     font-weight: 700;
@@ -241,7 +258,32 @@
         }
 
         /* ===== PÁGINAS DE LISTA ===== */
-        .list-page{
+      @keyframes neonPulse {
+    0% {
+        box-shadow:
+            0 0 3px #d4af37,
+            0 0 8px #d4af37,
+            0 0 12px #ffff00,
+            0 0 18px #ccff00;
+    }
+
+    50% {
+        box-shadow:
+            0 0 5px #d4af37,
+            0 0 12px #ffff00,
+            0 0 22px #ccff00,
+            0 0 32px #99ff00;
+    }
+
+    100% {
+        box-shadow:
+            0 0 3px #d4af37,
+            0 0 8px #d4af37,
+            0 0 12px #ffff00,
+            0 0 18px #ccff00;
+    }
+}
+  .list-page{
     display:none;
     flex-direction:column;
     gap:16px;
@@ -571,7 +613,7 @@
         }
 
         /* ===== SCROLL ===== */
-        . .scroll-area {
+        .scroll-area {
     flex: 1;
     min-height: 0;
     overflow-y: auto;
@@ -620,7 +662,8 @@
             .card {
                 padding: 20px;
                 min-height: 80px;
-            }
+          animation: neonPulse 2s infinite;
+  }
 
             .card h3 {
                 font-size: 1.2rem;
@@ -1031,7 +1074,8 @@
     // CADASTRO (FORMULÁRIO)
     // ============================================================
     function openCadastro() {
-        const nextId = allRecords.length > 0 ? Math.max(...allRecords.map(r => Number(r.ID) || 0)) + 1 : 1;
+        document.querySelector('.cards-grid').style.display = 'none';
+const nextId = allRecords.length > 0 ? Math.max(...allRecords.map(r => Number(r.ID) || 0)) + 1 : 1;
         let html = `
             <div class="form-page" style="display:flex;">
                 <div class="list-header">
@@ -1144,7 +1188,8 @@
     // EDIÇÃO
     // ============================================================
     function editRecord(id) {
-        const rec = allRecords.find(r => r.ID == id);
+       document.querySelector('.cards-grid').style.display = 'none';
+ const rec = allRecords.find(r => r.ID == id);
         if (!rec) return;
         let html = `
             <div class="form-page" style="display:flex;">
