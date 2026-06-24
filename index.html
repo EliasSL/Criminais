@@ -1571,11 +1571,89 @@ if (!record) {
     // ============================================================
     // PDF (simulação)
     // ============================================================
-    function gerarPDF(id) {
-        const rec = allRecords.find(r => r.ID == id);
-        if (!rec) return;
-        alert('Função PDF: gerando arquivo para o registro #' + id + ' (em desenvolvimento)');
+    async function gerarPDF(id) {
+
+    const rec = allRecords.find(r => r.ID == id);
+
+    if (!rec) {
+        alert('Registro não encontrado.');
+        return;
     }
+
+    const { jsPDF } = window.jspdf;
+
+    const pdf = new jsPDF('p', 'mm', 'a4');
+
+    pdf.setFont('helvetica', 'bold');
+    pdf.setFontSize(18);
+    pdf.text('SIGEC - FICHA CADASTRAL', 105, 15, { align: 'center' });
+
+    pdf.setFont('helvetica', 'normal');
+    pdf.setFontSize(10);
+
+    let y = 40;
+
+    try {
+
+        if (rec.FOTO) {
+
+            pdf.addImage(
+                rec.FOTO,
+                'JPEG',
+                150,
+                25,
+                40,
+                50
+            );
+
+        }
+
+    } catch(e) {
+        console.log('Foto não carregada no PDF');
+    }
+
+    const campos = [
+
+        ['ID', rec.ID],
+        ['NOME', rec.NOME],
+        ['ALCUNHA', rec.ALCUNHA],
+        ['MAE', rec.MAE],
+        ['PAI', rec.PAI],
+        ['DATA NASC', rec.DATA_NASC],
+        ['NATURALIDADE', rec.NATURALIDADE],
+        ['UF NAT', rec.UF_NAT],
+        ['CPF', rec.CPF],
+        ['RG', rec.RG],
+        ['UF RG', rec.UF_RG],
+        ['TELEFONE', rec.TELEFONE],
+        ['ENDERECO', rec.ENDERECO],
+        ['CIDADE', rec.CIDADE],
+        ['ESTADO', rec.ESTADO],
+        ['TIPO PENAL', rec.TIPO_PENAL],
+        ['MANDADO', rec.MANDADO]
+
+    ];
+
+    campos.forEach(item => {
+
+        pdf.setFont('helvetica', 'bold');
+        pdf.text(item[0] + ':', 15, y);
+
+        pdf.setFont('helvetica', 'normal');
+        pdf.text(String(item[1] || '-'), 55, y);
+
+        y += 8;
+
+    });
+
+    pdf.save(
+        'SIGEC_' +
+        String(rec.NOME || 'REGISTRO')
+            .replace(/[^a-zA-Z0-9]/g, '_') +
+        '.pdf'
+    );
+
+}
 function openImageModal(src){
     let modal = document.getElementById('imageModal');
 
@@ -1607,6 +1685,6 @@ function openImageModal(src){
         document.querySelector('.cards-grid').style.display = 'flex';
     });
 </script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </body>
 </html>
