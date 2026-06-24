@@ -719,6 +719,42 @@ animation: neonMandado 2s infinite;
     border-radius:12px;
     border:2px solid #f5c842;
 }
+
+/* ===== LOADING ===== */
+.loading-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.8);
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #444;
+    border-top-color: #f5c842;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.loading-text {
+    color: #f5c842;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
         /* ===== RESPONSIVO ===== */
         @media (max-width: 480px) {
             #app {
@@ -857,6 +893,12 @@ animation: neonMandado 2s infinite;
                 <button class="cancelar-modal" onclick="fecharModalSenha()">CANCELAR</button>
             </div>
         </div>
+    </div>
+
+    <!-- ========== LOADING ========== -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-text" id="loadingText">Gerando PDF...</div>
     </div>
 </div>
 
@@ -1558,7 +1600,7 @@ if (!record) {
     }
 
     // ============================================================
-    // COMPARTILHAR - Abre WhatsApp com os dados do cadastro
+    // COMPARTILHAR - CORRIGIDO PARA MOBILE
     // ============================================================
     function shareRecord(id) {
         const rec = allRecords.find(r => r.ID == id);
@@ -1570,7 +1612,19 @@ if (!record) {
         msg += '📌 *Alcunha:* ' + (rec.ALCUNHA || 'N/I') + '\n';
         msg += '📌 *Mãe:* ' + (rec.MAE || 'N/I') + '\n';
         msg += '📌 *Pai:* ' + (rec.PAI || 'N/I') + '\n';
-        msg += '📌 *Data Nasc.:* ' + (rec.DATA_NASC || 'N/I') + '\n';
+        
+        // Formata a data de nascimento se for um objeto Date
+        let dataNasc = rec.DATA_NASC || 'N/I';
+        if (dataNasc && dataNasc.includes('GMT')) {
+            try {
+                const date = new Date(dataNasc);
+                dataNasc = date.toLocaleDateString('pt-BR');
+            } catch(e) {
+                dataNasc = rec.DATA_NASC || 'N/I';
+            }
+        }
+        msg += '📌 *Data Nasc.:* ' + dataNasc + '\n';
+        
         msg += '📌 *Naturalidade:* ' + (rec.NATURALIDADE || 'N/I') + '/' + (rec.UF_NAT || 'N/I') + '\n';
         msg += '📌 *CPF:* ' + (rec.CPF || 'N/I') + '\n';
         msg += '📌 *RG:* ' + (rec.RG || 'N/I') + ' - ' + (rec.UF_RG || 'N/I') + '\n';
@@ -1580,13 +1634,20 @@ if (!record) {
         msg += '📌 *Tipo Penal:* ' + (rec.TIPO_PENAL || 'N/I') + '\n';
         msg += '⚖️ *Mandado:* ' + (rec.MANDADO || 'N/I');
         
-        // Abre o WhatsApp com a mensagem
-        const url = 'https://api.whatsapp.com/send?text=' + encodeURIComponent(msg);
-        window.open(url, '_blank');
+        // Usa a URL https://wa.me/ que funciona em todos os navegadores
+        const url = 'https://wa.me/?text=' + encodeURIComponent(msg);
+        
+        // Tenta abrir de forma compatível com mobile
+        try {
+            window.open(url, '_blank');
+        } catch(e) {
+            // Fallback: tenta usar location.href
+            window.location.href = url;
+        }
     }
 
     // ============================================================
-    // PDF - Gera e abre um arquivo PDF com os dados e foto
+    // PDF - CORRIGIDO PARA MOBILE
     // ============================================================
     function gerarPDF(id) {
         const rec = allRecords.find(r => r.ID == id);
@@ -1595,17 +1656,31 @@ if (!record) {
             return;
         }
         
+        // Mostra loading
+        showLoading('Gerando PDF...');
+        
         // Cria um container temporário para gerar o PDF
         const container = document.createElement('div');
         container.style.cssText = 'position:fixed;left:-9999px;top:0;width:800px;background:#fff;padding:40px;font-family:Arial,sans-serif;color:#333;';
         document.body.appendChild(container);
+        
+        // Formata a data de nascimento
+        let dataNasc = rec.DATA_NASC || 'N/I';
+        if (dataNasc && dataNasc.includes('GMT')) {
+            try {
+                const date = new Date(dataNasc);
+                dataNasc = date.toLocaleDateString('pt-BR');
+            } catch(e) {
+                dataNasc = rec.DATA_NASC || 'N/I';
+            }
+        }
         
         // Monta o conteúdo do PDF
         let html = `
             <div style="text-align:center;border-bottom:3px solid #f5c842;padding-bottom:20px;margin-bottom:20px;">
                 <h1 style="color:#1a1a1a;font-size:28px;">⚔️ SIGEC</h1>
                 <p style="color:#666;font-size:14px;">Sistema Integrado de Gestão e Controle</p>
-                <p style="color:#999;font-size:12px;">Documento gerado em ${new Date().toLocaleString()}</p>
+                <p style="color:#999;font-size:12px;">Documento gerado em ${new Date().toLocaleString('pt-BR')}</p>
             </div>
             
             <div style="display:flex;gap:30px;margin-bottom:30px;">
@@ -1620,7 +1695,7 @@ if (!record) {
             ['ALCUNHA', rec.ALCUNHA || 'N/I'],
             ['MÃE', rec.MAE || 'N/I'],
             ['PAI', rec.PAI || 'N/I'],
-            ['DATA NASC.', rec.DATA_NASC || 'N/I'],
+            ['DATA NASC.', dataNasc],
             ['NATURALIDADE', (rec.NATURALIDADE || 'N/I') + ' - ' + (rec.UF_NAT || 'N/I')],
             ['CPF', rec.CPF || 'N/I'],
             ['RG', (rec.RG || 'N/I') + ' - ' + (rec.UF_RG || 'N/I')],
@@ -1677,18 +1752,40 @@ if (!record) {
         
         container.innerHTML = html;
         
-        // Usa html2canvas para gerar a imagem e depois criar o PDF
-        // Verifica se a biblioteca está carregada
+        // Carrega as bibliotecas necessárias
+        carregarBibliotecasPDF(container, rec);
+    }
+
+    function carregarBibliotecasPDF(container, rec) {
+        // Verifica se html2canvas já está carregado
         if (typeof html2canvas === 'undefined') {
-            // Carrega a biblioteca dinamicamente
             const script = document.createElement('script');
             script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+            script.onload = function() {
+                carregarJsPDF(container, rec);
+            };
+            script.onerror = function() {
+                document.body.removeChild(container);
+                hideLoading();
+                alert('Erro ao carregar bibliotecas. Verifique sua conexão com a internet.');
+            };
+            document.head.appendChild(script);
+        } else {
+            carregarJsPDF(container, rec);
+        }
+    }
+
+    function carregarJsPDF(container, rec) {
+        if (typeof window.jspdf === 'undefined') {
+            const script = document.createElement('script');
+            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
             script.onload = function() {
                 gerarPDFComImagem(container, rec);
             };
             script.onerror = function() {
                 document.body.removeChild(container);
-                alert('Erro ao carregar a biblioteca de geração de PDF. Verifique sua conexão com a internet.');
+                hideLoading();
+                alert('Erro ao carregar bibliotecas. Verifique sua conexão com a internet.');
             };
             document.head.appendChild(script);
         } else {
@@ -1701,28 +1798,14 @@ if (!record) {
             scale: 2,
             useCORS: true,
             backgroundColor: '#ffffff',
-            allowTaint: true
+            allowTaint: true,
+            logging: false
         }).then(function(canvas) {
-            // Remove o container temporário
             document.body.removeChild(container);
-            
-            // Converte para PDF usando jsPDF
-            if (typeof window.jspdf === 'undefined') {
-                // Carrega a biblioteca dinamicamente
-                const script = document.createElement('script');
-                script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
-                script.onload = function() {
-                    criarPDFComJsPDF(canvas, rec);
-                };
-                script.onerror = function() {
-                    alert('Erro ao carregar a biblioteca PDF. Verifique sua conexão com a internet.');
-                };
-                document.head.appendChild(script);
-            } else {
-                criarPDFComJsPDF(canvas, rec);
-            }
+            criarPDFComJsPDF(canvas, rec);
         }).catch(function(error) {
             document.body.removeChild(container);
+            hideLoading();
             console.error('Erro ao gerar PDF:', error);
             alert('Erro ao gerar PDF: ' + error.message);
         });
@@ -1730,8 +1813,8 @@ if (!record) {
 
     function criarPDFComJsPDF(canvas, rec) {
         try {
-            // Verifica se jsPDF está disponível
             if (typeof window.jspdf === 'undefined') {
+                hideLoading();
                 alert('Biblioteca PDF não carregada. Tente novamente.');
                 return;
             }
@@ -1744,12 +1827,32 @@ if (!record) {
             
             pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
             pdf.save('SIGEC_Registro_' + (rec.ID || '') + '.pdf');
+            
+            hideLoading();
         } catch (error) {
+            hideLoading();
             console.error('Erro ao criar PDF:', error);
             alert('Erro ao criar PDF: ' + error.message);
         }
     }
 
+    // ============================================================
+    // FUNÇÕES DE LOADING
+    // ============================================================
+    function showLoading(text) {
+        const overlay = document.getElementById('loadingOverlay');
+        const textEl = document.getElementById('loadingText');
+        if (text) textEl.textContent = text;
+        overlay.style.display = 'flex';
+    }
+
+    function hideLoading() {
+        document.getElementById('loadingOverlay').style.display = 'none';
+    }
+
+    // ============================================================
+    // IMAGE MODAL
+    // ============================================================
     function openImageModal(src){
         let modal = document.getElementById('imageModal');
 
@@ -1772,6 +1875,7 @@ if (!record) {
         document.getElementById('modalImage').src = src;
         modal.style.display = 'flex';
     }
+
     // ============================================================
     // INICIALIZAÇÃO
     // ============================================================
