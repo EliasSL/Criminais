@@ -1558,46 +1558,220 @@ if (!record) {
     }
 
     // ============================================================
-    // COMPARTILHAR
+    // COMPARTILHAR - Abre WhatsApp com os dados do cadastro
     // ============================================================
     function shareRecord(id) {
         const rec = allRecords.find(r => r.ID == id);
         if (!rec) return;
-        const msg = `*SIGEC - Registro #${rec.ID}*\nNome: ${rec.NOME || 'N/I'}\nMãe: ${rec.MAE || 'N/I'}\nAlcunha: ${rec.ALCUNHA || 'N/I'}\nMandado: ${rec.MANDADO || 'N/I'}`;
-        const url = `https://wa.me/?text=${encodeURIComponent(msg)}`;
+        
+        // Monta a mensagem formatada
+        let msg = '*SIGEC - Registro #' + rec.ID + '*\n\n';
+        msg += '📌 *Nome:* ' + (rec.NOME || 'N/I') + '\n';
+        msg += '📌 *Alcunha:* ' + (rec.ALCUNHA || 'N/I') + '\n';
+        msg += '📌 *Mãe:* ' + (rec.MAE || 'N/I') + '\n';
+        msg += '📌 *Pai:* ' + (rec.PAI || 'N/I') + '\n';
+        msg += '📌 *Data Nasc.:* ' + (rec.DATA_NASC || 'N/I') + '\n';
+        msg += '📌 *Naturalidade:* ' + (rec.NATURALIDADE || 'N/I') + '/' + (rec.UF_NAT || 'N/I') + '\n';
+        msg += '📌 *CPF:* ' + (rec.CPF || 'N/I') + '\n';
+        msg += '📌 *RG:* ' + (rec.RG || 'N/I') + ' - ' + (rec.UF_RG || 'N/I') + '\n';
+        msg += '📌 *Telefone:* ' + (rec.TELEFONE || 'N/I') + '\n';
+        msg += '📌 *Endereço:* ' + (rec.ENDERECO || 'N/I') + '\n';
+        msg += '📌 *Cidade/UF:* ' + (rec.CIDADE || 'N/I') + '/' + (rec.ESTADO || 'N/I') + '\n';
+        msg += '📌 *Tipo Penal:* ' + (rec.TIPO_PENAL || 'N/I') + '\n';
+        msg += '⚖️ *Mandado:* ' + (rec.MANDADO || 'N/I');
+        
+        // Abre o WhatsApp com a mensagem
+        const url = 'https://api.whatsapp.com/send?text=' + encodeURIComponent(msg);
         window.open(url, '_blank');
     }
 
     // ============================================================
-    // PDF (simulação)
+    // PDF - Gera e abre um arquivo PDF com os dados e foto
     // ============================================================
     function gerarPDF(id) {
         const rec = allRecords.find(r => r.ID == id);
-        if (!rec) return;
-        alert('Função PDF: gerando arquivo para o registro #' + id + ' (em desenvolvimento)');
-    }
-function openImageModal(src){
-    let modal = document.getElementById('imageModal');
-
-    if(!modal){
-        modal = document.createElement('div');
-        modal.id = 'imageModal';
-        modal.className = 'image-modal';
-
-        modal.innerHTML = `
-            <img id="modalImage">
+        if (!rec) {
+            alert('Registro não encontrado!');
+            return;
+        }
+        
+        // Cria um container temporário para gerar o PDF
+        const container = document.createElement('div');
+        container.style.cssText = 'position:fixed;left:-9999px;top:0;width:800px;background:#fff;padding:40px;font-family:Arial,sans-serif;color:#333;';
+        document.body.appendChild(container);
+        
+        // Monta o conteúdo do PDF
+        let html = `
+            <div style="text-align:center;border-bottom:3px solid #f5c842;padding-bottom:20px;margin-bottom:20px;">
+                <h1 style="color:#1a1a1a;font-size:28px;">⚔️ SIGEC</h1>
+                <p style="color:#666;font-size:14px;">Sistema Integrado de Gestão e Controle</p>
+                <p style="color:#999;font-size:12px;">Documento gerado em ${new Date().toLocaleString()}</p>
+            </div>
+            
+            <div style="display:flex;gap:30px;margin-bottom:30px;">
+                <div style="flex:1;">
+                    <h2 style="color:#f5c842;font-size:20px;border-bottom:2px solid #eee;padding-bottom:10px;">Dados Pessoais</h2>
+                    <table style="width:100%;border-collapse:collapse;margin-top:15px;">
         `;
-
-        modal.onclick = function(){
-            modal.style.display = 'none';
-        };
-
-        document.body.appendChild(modal);
+        
+        const campos = [
+            ['ID', rec.ID || 'N/I'],
+            ['NOME', rec.NOME || 'N/I'],
+            ['ALCUNHA', rec.ALCUNHA || 'N/I'],
+            ['MÃE', rec.MAE || 'N/I'],
+            ['PAI', rec.PAI || 'N/I'],
+            ['DATA NASC.', rec.DATA_NASC || 'N/I'],
+            ['NATURALIDADE', (rec.NATURALIDADE || 'N/I') + ' - ' + (rec.UF_NAT || 'N/I')],
+            ['CPF', rec.CPF || 'N/I'],
+            ['RG', (rec.RG || 'N/I') + ' - ' + (rec.UF_RG || 'N/I')],
+            ['TELEFONE', rec.TELEFONE || 'N/I']
+        ];
+        
+        campos.forEach(([label, valor]) => {
+            html += `
+                <tr>
+                    <td style="padding:8px 12px;font-weight:bold;color:#555;border-bottom:1px solid #eee;width:40%;">${label}</td>
+                    <td style="padding:8px 12px;border-bottom:1px solid #eee;">${valor}</td>
+                </tr>
+            `;
+        });
+        
+        html += `
+                    </table>
+                </div>
+                <div style="width:200px;text-align:center;">
+                    ${rec.FOTO ? `<img src="${rec.FOTO}" style="width:180px;height:220px;object-fit:cover;border-radius:12px;border:3px solid #f5c842;">` : '<div style="width:180px;height:220px;border:2px dashed #ccc;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#999;">Sem foto</div>'}
+                </div>
+            </div>
+            
+            <div style="margin-top:20px;">
+                <h2 style="color:#f5c842;font-size:20px;border-bottom:2px solid #eee;padding-bottom:10px;">Informações Adicionais</h2>
+                <table style="width:100%;border-collapse:collapse;margin-top:15px;">
+        `;
+        
+        const adicionais = [
+            ['ENDEREÇO', rec.ENDERECO || 'N/I'],
+            ['CIDADE / ESTADO', (rec.CIDADE || 'N/I') + ' - ' + (rec.ESTADO || 'N/I')],
+            ['TIPO PENAL', rec.TIPO_PENAL || 'N/I'],
+            ['MANDADO', rec.MANDADO || 'N/I']
+        ];
+        
+        adicionais.forEach(([label, valor]) => {
+            html += `
+                <tr>
+                    <td style="padding:8px 12px;font-weight:bold;color:#555;border-bottom:1px solid #eee;width:40%;">${label}</td>
+                    <td style="padding:8px 12px;border-bottom:1px solid #eee;">${valor}</td>
+                </tr>
+            `;
+        });
+        
+        html += `
+                    </table>
+                </div>
+                
+                <div style="margin-top:40px;padding-top:20px;border-top:2px solid #eee;text-align:center;color:#999;font-size:12px;">
+                    Documento gerado pelo SIGEC - Sistema Integrado de Gestão e Controle
+                </div>
+            </div>
+        `;
+        
+        container.innerHTML = html;
+        
+        // Usa html2canvas para gerar a imagem e depois criar o PDF
+        // Verifica se a biblioteca está carregada
+        if (typeof html2canvas === 'undefined') {
+            // Carrega a biblioteca dinamicamente
+            const script = document.createElement('script');
+            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+            script.onload = function() {
+                gerarPDFComImagem(container, rec);
+            };
+            script.onerror = function() {
+                document.body.removeChild(container);
+                alert('Erro ao carregar a biblioteca de geração de PDF. Verifique sua conexão com a internet.');
+            };
+            document.head.appendChild(script);
+        } else {
+            gerarPDFComImagem(container, rec);
+        }
     }
 
-    document.getElementById('modalImage').src = src;
-    modal.style.display = 'flex';
-}
+    function gerarPDFComImagem(container, rec) {
+        html2canvas(container, {
+            scale: 2,
+            useCORS: true,
+            backgroundColor: '#ffffff',
+            allowTaint: true
+        }).then(function(canvas) {
+            // Remove o container temporário
+            document.body.removeChild(container);
+            
+            // Converte para PDF usando jsPDF
+            if (typeof window.jspdf === 'undefined') {
+                // Carrega a biblioteca dinamicamente
+                const script = document.createElement('script');
+                script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+                script.onload = function() {
+                    criarPDFComJsPDF(canvas, rec);
+                };
+                script.onerror = function() {
+                    alert('Erro ao carregar a biblioteca PDF. Verifique sua conexão com a internet.');
+                };
+                document.head.appendChild(script);
+            } else {
+                criarPDFComJsPDF(canvas, rec);
+            }
+        }).catch(function(error) {
+            document.body.removeChild(container);
+            console.error('Erro ao gerar PDF:', error);
+            alert('Erro ao gerar PDF: ' + error.message);
+        });
+    }
+
+    function criarPDFComJsPDF(canvas, rec) {
+        try {
+            // Verifica se jsPDF está disponível
+            if (typeof window.jspdf === 'undefined') {
+                alert('Biblioteca PDF não carregada. Tente novamente.');
+                return;
+            }
+            
+            const { jsPDF } = window.jspdf;
+            const imgData = canvas.toDataURL('image/jpeg', 0.95);
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+            
+            pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+            pdf.save('SIGEC_Registro_' + (rec.ID || '') + '.pdf');
+        } catch (error) {
+            console.error('Erro ao criar PDF:', error);
+            alert('Erro ao criar PDF: ' + error.message);
+        }
+    }
+
+    function openImageModal(src){
+        let modal = document.getElementById('imageModal');
+
+        if(!modal){
+            modal = document.createElement('div');
+            modal.id = 'imageModal';
+            modal.className = 'image-modal';
+
+            modal.innerHTML = `
+                <img id="modalImage">
+            `;
+
+            modal.onclick = function(){
+                modal.style.display = 'none';
+            };
+
+            document.body.appendChild(modal);
+        }
+
+        document.getElementById('modalImage').src = src;
+        modal.style.display = 'flex';
+    }
     // ============================================================
     // INICIALIZAÇÃO
     // ============================================================
@@ -1610,4 +1784,3 @@ function openImageModal(src){
 
 </body>
 </html>
-
