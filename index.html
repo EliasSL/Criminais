@@ -913,6 +913,46 @@ animation: neonMandado 2s infinite;
     let currentListType = null;
 
     // ============================================================
+    // FUNÇÃO PARA FORMATAR DATA
+    // ============================================================
+    function formatarData(data) {
+        if (!data || data === 'N/I' || data === '—') return 'N/I';
+        
+        // Se for uma string no formato ISO ou GMT
+        if (typeof data === 'string' && (data.includes('GMT') || data.includes('T') || data.includes('-'))) {
+            try {
+                const date = new Date(data);
+                if (!isNaN(date.getTime())) {
+                    const dia = String(date.getDate()).padStart(2, '0');
+                    const mes = String(date.getMonth() + 1).padStart(2, '0');
+                    const ano = date.getFullYear();
+                    return `${dia}/${mes}/${ano}`;
+                }
+            } catch(e) {
+                return data;
+            }
+        }
+        
+        // Se já estiver no formato DD/MM/AAAA, retorna como está
+        if (typeof data === 'string' && /^\d{2}\/\d{2}\/\d{4}$/.test(data)) {
+            return data;
+        }
+        
+        // Tenta converter de outros formatos
+        try {
+            const date = new Date(data);
+            if (!isNaN(date.getTime())) {
+                const dia = String(date.getDate()).padStart(2, '0');
+                const mes = String(date.getMonth() + 1).padStart(2, '0');
+                const ano = date.getFullYear();
+                return `${dia}/${mes}/${ano}`;
+            }
+        } catch(e) {}
+        
+        return data;
+    }
+
+    // ============================================================
     // FUNÇÕES DE API - USANDO JSONP PARA GET E POST VIA JSON
     // ============================================================
     
@@ -946,16 +986,14 @@ animation: neonMandado 2s infinite;
         document.body.appendChild(script);
     }
 
-    // Função para requisições POST via JSON (CORRIGIDA)
+    // Função para requisições POST via JSON
     function callAPIPost(action, data = {}) {
         return new Promise((resolve, reject) => {
-            // Constrói o payload como JSON
             const payload = {
                 action: action,
                 ...data
             };
             
-            // Configura a requisição POST
             const options = {
                 method: 'POST',
                 mode: 'no-cors',
@@ -967,8 +1005,6 @@ animation: neonMandado 2s infinite;
             
             fetch(API_URL, options)
                 .then(response => {
-                    // Com no-cors, não podemos ler a resposta diretamente
-                    // Vamos assumir que a operação foi bem-sucedida se não houve erro
                     resolve({ success: true, message: 'Operação realizada com sucesso!' });
                 })
                 .catch(error => {
@@ -980,7 +1016,6 @@ animation: neonMandado 2s infinite;
 
     // Função unificada para chamar a API
     function callAPI(action, data = {}) {
-        // GET para leitura
         if (action === 'getRecords' || action === 'getLogin') {
             return new Promise((resolve) => {
                 callAPIGet(action, data, function(response) {
@@ -988,7 +1023,6 @@ animation: neonMandado 2s infinite;
                 });
             });
         }
-        // POST para escrita
         else {
             return callAPIPost(action, data);
         }
@@ -1248,6 +1282,10 @@ if (!record) {
     alert('Registro não encontrado.');
     return;
 }
+
+        // Formata a data de nascimento
+        const dataNasc = formatarData(record.DATA_NASC);
+        
         let html = `
     <div class="detail-page" style="display:flex;">
         <div class="list-header">
@@ -1269,14 +1307,25 @@ if (!record) {
 `;
 
         const fields = [
-            ['ID', 'ID'], ['NOME', 'NOME'], ['ALCUNHA', 'ALCUNHA'], ['MAE', 'MAE'], ['PAI', 'PAI'],
-            ['DATA NASC', 'DATA_NASC'], ['NATURALIDADE', 'NATURALIDADE'], ['UF NAT', 'UF_NAT'],
-            ['CPF', 'CPF'], ['RG', 'RG'], ['UF RG', 'UF_RG'], ['TELEFONE', 'TELEFONE'],
-            ['ENDEREÇO', 'ENDERECO'], ['CIDADE', 'CIDADE'], ['ESTADO', 'ESTADO'],
-            ['TIPO PENAL', 'TIPO_PENAL'], ['MANDADO', 'MANDADO']
+            ['ID', record.ID || '—'],
+            ['NOME', record.NOME || '—'],
+            ['ALCUNHA', record.ALCUNHA || '—'],
+            ['MAE', record.MAE || '—'],
+            ['PAI', record.PAI || '—'],
+            ['DATA NASC', dataNasc],
+            ['NATURALIDADE', record.NATURALIDADE || '—'],
+            ['UF NAT', record.UF_NAT || '—'],
+            ['CPF', record.CPF || '—'],
+            ['RG', record.RG || '—'],
+            ['UF RG', record.UF_RG || '—'],
+            ['TELEFONE', record.TELEFONE || '—'],
+            ['ENDEREÇO', record.ENDERECO || '—'],
+            ['CIDADE', record.CIDADE || '—'],
+            ['ESTADO', record.ESTADO || '—'],
+            ['TIPO PENAL', record.TIPO_PENAL || '—'],
+            ['MANDADO', record.MANDADO || '—']
         ];
-        fields.forEach(([label, key]) => {
-            const val = record[key] || '—';
+        fields.forEach(([label, val]) => {
             html += `<div class="detail-field"><span class="label">${label}</span><span class="value">${val}</span></div>`;
         });
         
@@ -1419,6 +1468,12 @@ if (!record) {
         const rec = allRecords.find(r => r.ID == id);
         if (!rec) return;
         
+        // Formata a data para exibição no campo
+        let dataNasc = rec.DATA_NASC || '';
+        if (dataNasc && (dataNasc.includes('GMT') || dataNasc.includes('T'))) {
+            dataNasc = formatarData(dataNasc);
+        }
+        
         let html = `
             <div class="form-page" style="display:flex;">
                 <div class="list-header">
@@ -1446,7 +1501,7 @@ if (!record) {
             { id: 'e_alcunha', label: 'ALCUNHA', key: 'ALCUNHA' },
             { id: 'e_mae', label: 'MÃE', key: 'MAE' },
             { id: 'e_pai', label: 'PAI', key: 'PAI' },
-            { id: 'e_data_nasc', label: 'DATA NASC', key: 'DATA_NASC' },
+            { id: 'e_data_nasc', label: 'DATA NASC', key: 'DATA_NASC', value: dataNasc },
             { id: 'e_naturalidade', label: 'NATURALIDADE', key: 'NATURALIDADE' },
             { id: 'e_uf_nat', label: 'UF NAT', key: 'UF_NAT' },
             { id: 'e_cpf', label: 'CPF', key: 'CPF' },
@@ -1460,7 +1515,7 @@ if (!record) {
         ];
         
         campos.forEach(campo => {
-            const valor = rec[campo.key] || '';
+            let valor = campo.value !== undefined ? campo.value : (rec[campo.key] || '');
             html += `
                 <div class="form-group">
                     <label>${campo.label}</label>
@@ -1606,25 +1661,16 @@ if (!record) {
         const rec = allRecords.find(r => r.ID == id);
         if (!rec) return;
         
+        // Formata a data de nascimento
+        const dataNasc = formatarData(rec.DATA_NASC);
+        
         // Monta a mensagem formatada
         let msg = '*SIGEC - Registro #' + rec.ID + '*\n\n';
         msg += '📌 *Nome:* ' + (rec.NOME || 'N/I') + '\n';
         msg += '📌 *Alcunha:* ' + (rec.ALCUNHA || 'N/I') + '\n';
         msg += '📌 *Mãe:* ' + (rec.MAE || 'N/I') + '\n';
         msg += '📌 *Pai:* ' + (rec.PAI || 'N/I') + '\n';
-        
-        // Formata a data de nascimento se for um objeto Date
-        let dataNasc = rec.DATA_NASC || 'N/I';
-        if (dataNasc && dataNasc.includes('GMT')) {
-            try {
-                const date = new Date(dataNasc);
-                dataNasc = date.toLocaleDateString('pt-BR');
-            } catch(e) {
-                dataNasc = rec.DATA_NASC || 'N/I';
-            }
-        }
         msg += '📌 *Data Nasc.:* ' + dataNasc + '\n';
-        
         msg += '📌 *Naturalidade:* ' + (rec.NATURALIDADE || 'N/I') + '/' + (rec.UF_NAT || 'N/I') + '\n';
         msg += '📌 *CPF:* ' + (rec.CPF || 'N/I') + '\n';
         msg += '📌 *RG:* ' + (rec.RG || 'N/I') + ' - ' + (rec.UF_RG || 'N/I') + '\n';
@@ -1641,13 +1687,12 @@ if (!record) {
         try {
             window.open(url, '_blank');
         } catch(e) {
-            // Fallback: tenta usar location.href
             window.location.href = url;
         }
     }
 
     // ============================================================
-    // PDF - CORRIGIDO PARA MOBILE
+    // PDF - CORRIGIDO PARA MOBILE USANDO CDN CONFIÁVEL
     // ============================================================
     function gerarPDF(id) {
         const rec = allRecords.find(r => r.ID == id);
@@ -1657,7 +1702,7 @@ if (!record) {
         }
         
         // Mostra loading
-        showLoading('Gerando PDF...');
+        showLoading('Preparando PDF...');
         
         // Cria um container temporário para gerar o PDF
         const container = document.createElement('div');
@@ -1665,15 +1710,7 @@ if (!record) {
         document.body.appendChild(container);
         
         // Formata a data de nascimento
-        let dataNasc = rec.DATA_NASC || 'N/I';
-        if (dataNasc && dataNasc.includes('GMT')) {
-            try {
-                const date = new Date(dataNasc);
-                dataNasc = date.toLocaleDateString('pt-BR');
-            } catch(e) {
-                dataNasc = rec.DATA_NASC || 'N/I';
-            }
-        }
+        const dataNasc = formatarData(rec.DATA_NASC);
         
         // Monta o conteúdo do PDF
         let html = `
@@ -1752,7 +1789,7 @@ if (!record) {
         
         container.innerHTML = html;
         
-        // Carrega as bibliotecas necessárias
+        // Carrega as bibliotecas e gera o PDF
         carregarBibliotecasPDF(container, rec);
     }
 
