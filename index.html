@@ -1572,8 +1572,12 @@ if (!record) {
     // PDF (simulação)
     // ============================================================
     async function gerarPDF(id) {
+    if (!window.jspdf) {
+        alert('Biblioteca PDF não carregada.');
+        return;
+    }
 
-    const rec = allRecords.find(r => r.ID == id);
+       const rec = allRecords.find(r => r.ID == id);
 
     if (!rec) {
         alert('Registro não encontrado.');
@@ -1593,19 +1597,29 @@ if (!record) {
     // FOTO
     if (rec.FOTO) {
         try {
-            pdf.addImage(
-                rec.FOTO,
-                'JPEG',
-                140,
-                15,
-                50,
-                60
-            );
-        } catch(e) {
-            console.log('Foto não carregada');
-        }
+
+    if (
+        rec.FOTO &&
+        rec.FOTO.startsWith('data:image')
+    ) {
+
+        pdf.addImage(
+            rec.FOTO,
+            'JPEG',
+            140,
+            15,
+            50,
+            60
+        );
+
     }
 
+    } catch(e) {
+
+        console.log('Erro foto PDF', e);
+
+    }
+}
     const campos = [
         ['ID', rec.ID],
         ['NOME', rec.NOME],
@@ -1630,39 +1644,31 @@ if (!record) {
 
     campos.forEach(item => {
 
-        pdf.setFont('helvetica', 'bold');
-        pdf.text(item[0] + ':', 15, y);
+    pdf.setFont('helvetica', 'bold');
+    pdf.text(item[0] + ':', 15, y);
 
-        pdf.setFont('helvetica', 'normal');
-        pdf.text(String(item[1] || '-'), 55, y);
+    pdf.setFont('helvetica', 'normal');
 
-        y += 8;
+    const texto = String(item[1] || '-')
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g,'');
 
-    });
+    pdf.text(texto, 55, y);
 
-    const blob = pdf.output('blob');
+    y += 8;
 
-    const url = URL.createObjectURL(blob);
+});
 
-    const link = document.createElement('a');
+const pdfBlob = pdf.output('blob');
 
-    link.href = url;
+const pdfUrl = URL.createObjectURL(pdfBlob);
 
-    link.download =
-        'SIGEC_' +
-        String(rec.NOME || 'REGISTRO')
-            .replace(/[^a-zA-Z0-9]/g, '_') +
-        '.pdf';
+const novaJanela = window.open(pdfUrl, '_blank');
 
-    document.body.appendChild(link);
+if (!novaJanela) {
+    location.href = pdfUrl;
+}
 
-    link.click();
-
-    document.body.removeChild(link);
-
-    setTimeout(() => {
-        URL.revokeObjectURL(url);
-    }, 3000);
 }
     // ============================================================
     // INICIALIZAÇÃO
