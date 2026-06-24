@@ -828,6 +828,7 @@ animation: neonMandado 2s infinite;
             }
         }
     </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
 
@@ -902,10 +903,6 @@ animation: neonMandado 2s infinite;
     </div>
 </div>
 
-<!-- ========== BIBLIOTECAS CARREGADAS VIA CDN ========== -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
 <script>
     // ============================================================
     // CONFIGURAÇÕES GLOBAIS
@@ -920,7 +917,7 @@ animation: neonMandado 2s infinite;
     // FUNÇÃO PARA FORMATAR DATA
     // ============================================================
     function formatarData(data) {
-        if (!data || data === 'N/I' || data === '—' || data === '') return 'N/I';
+        if (!data || data === 'N/I' || data === '—') return 'N/I';
         
         // Se for uma string no formato ISO ou GMT
         if (typeof data === 'string' && (data.includes('GMT') || data.includes('T') || data.includes('-'))) {
@@ -930,9 +927,7 @@ animation: neonMandado 2s infinite;
                     const dia = String(date.getDate()).padStart(2, '0');
                     const mes = String(date.getMonth() + 1).padStart(2, '0');
                     const ano = date.getFullYear();
-                    if (ano > 1900 && ano < 2100) {
-                        return `${dia}/${mes}/${ano}`;
-                    }
+                    return `${dia}/${mes}/${ano}`;
                 }
             } catch(e) {
                 return data;
@@ -951,15 +946,127 @@ animation: neonMandado 2s infinite;
                 const dia = String(date.getDate()).padStart(2, '0');
                 const mes = String(date.getMonth() + 1).padStart(2, '0');
                 const ano = date.getFullYear();
-                if (ano > 1900 && ano < 2100) {
-                    return `${dia}/${mes}/${ano}`;
-                }
+                return `${dia}/${mes}/${ano}`;
             }
         } catch(e) {}
         
         return data;
     }
+function abrirFichaImagem(id){
 
+    const rec = allRecords.find(r => r.ID == id);
+
+    if(!rec){
+        alert("Registro não encontrado");
+        return;
+    }
+
+    const dataNasc = formatarData(rec.DATA_NASC);
+
+    const html = `
+    <div id="fichaImagemGerada"
+         style="
+         position:fixed;
+         left:-99999px;
+         top:0;
+         width:900px;
+         background:white;
+         padding:25px;
+         color:black;
+         font-family:Arial;
+         ">
+
+        <h2 style="text-align:center">
+            SIGEC
+        </h2>
+
+        <div style="text-align:center;margin-bottom:20px">
+
+            ${rec.FOTO ?
+            `<img src="${rec.FOTO}"
+             style="
+             width:180px;
+             height:220px;
+             object-fit:cover;
+             border:2px solid black;
+             ">`
+            : ''}
+
+        </div>
+
+        <table style="width:100%;border-collapse:collapse">
+
+<tr><td>ID</td><td>${rec.ID||''}</td></tr>
+<tr><td>NOME</td><td>${rec.NOME||''}</td></tr>
+<tr><td>ALCUNHA</td><td>${rec.ALCUNHA||''}</td></tr>
+<tr><td>MÃE</td><td>${rec.MAE||''}</td></tr>
+<tr><td>PAI</td><td>${rec.PAI||''}</td></tr>
+<tr><td>DATA NASC.</td><td>${dataNasc}</td></tr>
+<tr><td>CPF</td><td>${rec.CPF||''}</td></tr>
+<tr><td>RG</td><td>${rec.RG||''}</td></tr>
+<tr><td>ENDEREÇO</td><td>${rec.ENDERECO||''}</td></tr>
+<tr><td>CIDADE</td><td>${rec.CIDADE||''}</td></tr>
+<tr><td>TIPO PENAL</td><td>${rec.TIPO_PENAL||''}</td></tr>
+<tr><td>MANDADO</td><td>${rec.MANDADO||''}</td></tr>
+
+        </table>
+
+    </div>
+    `;
+
+    const divExistente=document.getElementById("fichaImagemGerada");
+
+    if(divExistente){
+        divExistente.remove();
+    }
+
+    document.body.insertAdjacentHTML("beforeend",html);
+
+    showLoading("Gerando imagem...");
+
+    setTimeout(()=>{
+
+        html2canvas(
+            document.getElementById("fichaImagemGerada"),
+            {
+                scale:2,
+                useCORS:true,
+                backgroundColor:"#ffffff"
+            }
+
+        ).then(canvas=>{
+
+            hideLoading();
+
+            const imagem = canvas.toDataURL("image/jpeg",1);
+
+            const novaJanela = window.open("", "_blank");
+
+            novaJanela.document.write(`
+                <html>
+                <body style="margin:0;background:black">
+
+                <img src="${imagem}"
+                     style="
+                     width:100%;
+                     display:block;
+                     ">
+
+                </body>
+                </html>
+            `);
+
+            document.getElementById("fichaImagemGerada").remove();
+
+        });
+
+    },500);
+
+}
+
+function gerarPDF(id){
+    abrirFichaImagem(id);
+}
     // ============================================================
     // FUNÇÕES DE API - USANDO JSONP PARA GET E POST VIA JSON
     // ============================================================
@@ -1342,7 +1449,10 @@ if (!record) {
                 <div class="detail-actions">
                     <button class="btn-detail editar" onclick="editRecord(${record.ID})">✎ EDITAR</button>
                     <button class="btn-detail compartilhar" onclick="shareRecord(${record.ID})">📱 COMPARTILHAR</button>
-                    <button class="btn-detail pdf" onclick="gerarPDF(${record.ID})">📄 PDF</button>
+                    <button class="btn-detail pdf"
+onclick="abrirFichaImagem(${record.ID})">
+📷 FICHA
+</button>
                 </div>
                 <button class="btn-back" style="margin-top:8px;" onclick="backToList()">← Voltar</button>
             </div>
@@ -1699,146 +1809,7 @@ if (!record) {
         }
     }
 
-    // ============================================================
-    // PDF - CORRIGIDO USANDO BIBLIOTECAS CARREGADAS VIA CDN
-    // ============================================================
-    function gerarPDF(id) {
-        const rec = allRecords.find(r => r.ID == id);
-        if (!rec) {
-            alert('Registro não encontrado!');
-            return;
-        }
-        
-        // Mostra loading
-        showLoading('Preparando PDF...');
-        
-        // Verifica se as bibliotecas foram carregadas
-        if (typeof html2canvas === 'undefined' || typeof window.jspdf === 'undefined') {
-            hideLoading();
-            alert('Bibliotecas não carregadas. Tente novamente ou recarregue a página.');
-            return;
-        }
-        
-        // Cria um container temporário para gerar o PDF
-        const container = document.createElement('div');
-        container.style.cssText = 'position:fixed;left:-9999px;top:0;width:800px;background:#fff;padding:40px;font-family:Arial,sans-serif;color:#333;';
-        document.body.appendChild(container);
-        
-        // Formata a data de nascimento
-        const dataNasc = formatarData(rec.DATA_NASC);
-        
-        // Monta o conteúdo do PDF
-        let html = `
-            <div style="text-align:center;border-bottom:3px solid #f5c842;padding-bottom:20px;margin-bottom:20px;">
-                <h1 style="color:#1a1a1a;font-size:28px;">⚔️ SIGEC</h1>
-                <p style="color:#666;font-size:14px;">Sistema Integrado de Gestão e Controle</p>
-                <p style="color:#999;font-size:12px;">Documento gerado em ${new Date().toLocaleString('pt-BR')}</p>
-            </div>
-            
-            <div style="display:flex;gap:30px;margin-bottom:30px;">
-                <div style="flex:1;">
-                    <h2 style="color:#f5c842;font-size:20px;border-bottom:2px solid #eee;padding-bottom:10px;">Dados Pessoais</h2>
-                    <table style="width:100%;border-collapse:collapse;margin-top:15px;">
-        `;
-        
-        const campos = [
-            ['ID', rec.ID || 'N/I'],
-            ['NOME', rec.NOME || 'N/I'],
-            ['ALCUNHA', rec.ALCUNHA || 'N/I'],
-            ['MÃE', rec.MAE || 'N/I'],
-            ['PAI', rec.PAI || 'N/I'],
-            ['DATA NASC.', dataNasc],
-            ['NATURALIDADE', (rec.NATURALIDADE || 'N/I') + ' - ' + (rec.UF_NAT || 'N/I')],
-            ['CPF', rec.CPF || 'N/I'],
-            ['RG', (rec.RG || 'N/I') + ' - ' + (rec.UF_RG || 'N/I')],
-            ['TELEFONE', rec.TELEFONE || 'N/I']
-        ];
-        
-        campos.forEach(([label, valor]) => {
-            html += `
-                <tr>
-                    <td style="padding:8px 12px;font-weight:bold;color:#555;border-bottom:1px solid #eee;width:40%;">${label}</td>
-                    <td style="padding:8px 12px;border-bottom:1px solid #eee;">${valor}</td>
-                </tr>
-            `;
-        });
-        
-        html += `
-                    </table>
-                </div>
-                <div style="width:200px;text-align:center;">
-                    ${rec.FOTO ? `<img src="${rec.FOTO}" style="width:180px;height:220px;object-fit:cover;border-radius:12px;border:3px solid #f5c842;">` : '<div style="width:180px;height:220px;border:2px dashed #ccc;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#999;">Sem foto</div>'}
-                </div>
-            </div>
-            
-            <div style="margin-top:20px;">
-                <h2 style="color:#f5c842;font-size:20px;border-bottom:2px solid #eee;padding-bottom:10px;">Informações Adicionais</h2>
-                <table style="width:100%;border-collapse:collapse;margin-top:15px;">
-        `;
-        
-        const adicionais = [
-            ['ENDEREÇO', rec.ENDERECO || 'N/I'],
-            ['CIDADE / ESTADO', (rec.CIDADE || 'N/I') + ' - ' + (rec.ESTADO || 'N/I')],
-            ['TIPO PENAL', rec.TIPO_PENAL || 'N/I'],
-            ['MANDADO', rec.MANDADO || 'N/I']
-        ];
-        
-        adicionais.forEach(([label, valor]) => {
-            html += `
-                <tr>
-                    <td style="padding:8px 12px;font-weight:bold;color:#555;border-bottom:1px solid #eee;width:40%;">${label}</td>
-                    <td style="padding:8px 12px;border-bottom:1px solid #eee;">${valor}</td>
-                </tr>
-            `;
-        });
-        
-        html += `
-                    </table>
-                </div>
-                
-                <div style="margin-top:40px;padding-top:20px;border-top:2px solid #eee;text-align:center;color:#999;font-size:12px;">
-                    Documento gerado pelo SIGEC - Sistema Integrado de Gestão e Controle
-                </div>
-            </div>
-        `;
-        
-        container.innerHTML = html;
-        
-        // Gera o PDF
-        html2canvas(container, {
-            scale: 2,
-            useCORS: true,
-            backgroundColor: '#ffffff',
-            allowTaint: true,
-            logging: false
-        }).then(function(canvas) {
-            document.body.removeChild(container);
-            
-            try {
-                const { jsPDF } = window.jspdf;
-                const imgData = canvas.toDataURL('image/jpeg', 0.95);
-                const pdf = new jsPDF('p', 'mm', 'a4');
-                const pdfWidth = pdf.internal.pageSize.getWidth();
-                const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-                
-                pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
-                pdf.save('SIGEC_Registro_' + (rec.ID || '') + '.pdf');
-                
-                hideLoading();
-            } catch (error) {
-                hideLoading();
-                console.error('Erro ao criar PDF:', error);
-                alert('Erro ao criar PDF: ' + error.message);
-            }
-        }).catch(function(error) {
-            document.body.removeChild(container);
-            hideLoading();
-            console.error('Erro ao gerar PDF:', error);
-            alert('Erro ao gerar PDF: ' + error.message);
-        });
-    }
-
-    // ============================================================
+     // ============================================================
     // FUNÇÕES DE LOADING
     // ============================================================
     function showLoading(text) {
@@ -1886,7 +1857,13 @@ if (!record) {
         document.getElementById('dashboard').style.display = 'none';
         document.querySelector('.cards-grid').style.display = 'flex';
     });
-</script>
+window.addEventListener("load",()=>{
 
+    if(typeof html2canvas==="undefined"){
+        alert("html2canvas não carregou.");
+    }
+
+});
+</script>
 </body>
 </html>
