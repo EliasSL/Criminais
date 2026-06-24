@@ -702,6 +702,28 @@
                 font-size: 1.3rem;
             }
         }
+        
+        /* Estilo para o link de download do PDF */
+        .pdf-download-link {
+            display: block;
+            margin: 10px auto;
+            padding: 12px 20px;
+            background: #c0392b;
+            color: white;
+            text-align: center;
+            border-radius: 40px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            max-width: 300px;
+        }
+        
+        .pdf-download-link:active {
+            transform: scale(0.95);
+        }
     </style>
 </head>
 <body>
@@ -1469,7 +1491,7 @@
         mensagem += '⚖️ Tipo Penal: ' + (rec.TIPO_PENAL || 'N/I') + '\n';
         mensagem += '📋 Mandado: ' + (rec.MANDADO || 'N/I') + '\n';
         
-        // URL do WhatsApp com a mensagem
+        // URL do WhatsApp com a mensagem - usando api.whatsapp.com que funciona melhor em mobile
         const url = 'https://api.whatsapp.com/send?text=' + encodeURIComponent(mensagem);
         
         // Abrir WhatsApp (funciona no celular e desktop)
@@ -1483,7 +1505,7 @@
         const rec = allRecords.find(r => r.ID == id);
         if (!rec) return;
         
-        // Construir o conteúdo do PDF (simples)
+        // Construir o conteúdo do PDF em formato de texto
         let conteudo = '====================================\n';
         conteudo += '        SIGEC - SISTEMA DE GESTÃO\n';
         conteudo += '====================================\n\n';
@@ -1512,16 +1534,23 @@
         // Criar URL do Blob
         const url = URL.createObjectURL(blob);
         
-        // Abrir em nova janela/aba (funciona no celular)
-        window.open(url, '_blank');
+        // Criar um link de download
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'SIGEC_Registro_' + rec.ID + '.txt';
         
-        // Após alguns segundos, liberar a URL
+        // Adicionar o link ao documento e clicar
+        document.body.appendChild(link);
+        link.click();
+        
+        // Remover o link e liberar a URL
         setTimeout(() => {
+            document.body.removeChild(link);
             URL.revokeObjectURL(url);
-        }, 10000);
+        }, 100);
         
-        // Feedback
-        alert('📄 PDF gerado com sucesso! O arquivo será aberto automaticamente.');
+        // Feedback para o usuário
+        alert('📄 PDF gerado com sucesso! O download foi iniciado.');
     }
 
     // ============================================================
