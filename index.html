@@ -185,11 +185,14 @@
         }
 
         /* ===== CARDS ===== */
-        .cards-grid {
+.cards-grid {
     display: flex;
     flex-direction: column;
-    gap: 24px;
-    margin: 8px 0 16px;
+
+    gap: 16px;
+
+    margin: 4px 0;
+
     flex: 1;
     justify-content: center;
 }
@@ -197,12 +200,11 @@
         .card {
     background: #3b2b1a;
     border-radius: 24px;
-    padding: 34px 28px;
 
-    /* CONTORNO DOURADO */
+    padding: 42px 30px;
+
     border: 2px solid #d4af37;
 
-    /* BRILHO NEON VERDE E AMARELO */
     box-shadow:
         0 0 3px #d4af37,
         0 0 8px #d4af37,
@@ -214,7 +216,8 @@
     transition: all 0.3s ease;
     cursor: pointer;
     position: relative;
-    min-height: 220px;
+
+    min-height: 280px;
 }
 
         .card:active {
@@ -228,7 +231,7 @@
 }
 
         .card h3 {
-            font-size: 1.8rem;
+            font-size: 2rem;
             color: #f5e6c8;
             letter-spacing: 0.5px;
             display: flex;
@@ -241,7 +244,7 @@
     color: #1a1a1a;
     font-weight: 700;
     border-radius: 40px;
-    font-size: 1.6rem;
+    font-size: 2rem;
     padding: 8px 24px;
 }
 
@@ -254,8 +257,22 @@
         }
 
         .card.mandados {
-            border-color: #c4b33a;
-        }
+
+    border: 2px solid #00ff66;
+
+    box-shadow:
+        0 0 4px #00ff66,
+        0 0 10px #00ff66,
+
+        0 0 16px #ffff00,
+        0 0 24px #ffff00,
+
+        0 0 32px #ff3300,
+        0 0 42px #ff0000,
+
+        0 4px 12px rgba(0,0,0,0.5);
+animation: neonMandado 2s infinite;
+}
 
         /* ===== PÁGINAS DE LISTA ===== */
       @keyframes neonPulse {
@@ -266,7 +283,35 @@
             0 0 12px #ffff00,
             0 0 18px #ccff00;
     }
+@keyframes neonMandado {
 
+    0% {
+        box-shadow:
+            0 0 4px #00ff66,
+            0 0 10px #00ff66,
+            0 0 16px #ffff00,
+            0 0 24px #ffff00,
+            0 0 32px #ff3300;
+    }
+
+    50% {
+        box-shadow:
+            0 0 8px #00ff66,
+            0 0 18px #00ff66,
+            0 0 28px #ffff00,
+            0 0 38px #ff3300,
+            0 0 50px #ff0000;
+    }
+
+    100% {
+        box-shadow:
+            0 0 4px #00ff66,
+            0 0 10px #00ff66,
+            0 0 16px #ffff00,
+            0 0 24px #ffff00,
+            0 0 32px #ff3300;
+    }
+}
     50% {
         box-shadow:
             0 0 5px #d4af37,
@@ -629,7 +674,51 @@
             background: #f5c842;
             border-radius: 10px;
         }
+/* ===== FOTO DETALHAMENTO ===== */
 
+.detail-photo-header{
+    display:flex;
+    justify-content:center;
+    margin-bottom:20px;
+}
+
+.detail-photo{
+    width:180px;
+    height:220px;
+    object-fit:cover;
+    border-radius:14px;
+    border:2px solid #f5c842;
+    cursor:pointer;
+    box-shadow:0 0 12px rgba(245,200,66,0.4);
+    transition:0.2s;
+}
+
+.detail-photo:active{
+    transform:scale(0.98);
+}
+
+/* Modal da imagem */
+
+.image-modal{
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.92);
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+    padding:20px;
+}
+
+.image-modal img{
+    max-width:95%;
+    max-height:95%;
+    border-radius:12px;
+    border:2px solid #f5c842;
+}
         /* ===== RESPONSIVO ===== */
         @media (max-width: 480px) {
             #app {
@@ -659,12 +748,17 @@
                 min-width: 60px;
             }
 
-            .card {
-                padding: 20px;
-                min-height: 80px;
-          animation: neonPulse 2s infinite;
-  }
+@media (max-width: 480px) {
 
+    .card {
+        padding: 48px 32px;
+
+        min-height: 320px;
+
+        animation: inherit;
+    }
+
+}
             .card h3 {
                 font-size: 1.2rem;
             }
@@ -1105,22 +1199,33 @@
 
     function openDetail(id) {
         const record = allRecords.find(r =>
-            String(r.ID).trim() === String(id).trim()
-        );
+    String(r.ID).trim() === String(id).trim()
+);
 
-        if (!record) {
-            alert('Registro não encontrado.');
-            return;
-        }
-        document.querySelector('.cards-grid').style.display = 'none';
+if (!record) {
+    alert('Registro não encontrado.');
+    return;
+}
         let html = `
-            <div class="detail-page" style="display:flex;">
-                <div class="list-header">
-                    <button class="btn-back" onclick="backToList()">←</button>
-                    <span class="list-title">Detalhes</span>
-                </div>
-                <div class="detail-card">
-        `;
+    <div class="detail-page" style="display:flex;">
+        <div class="list-header">
+            <button class="btn-back" onclick="backToList()">←</button>
+            <span class="list-title">Detalhes</span>
+        </div>
+
+        ${record.FOTO ? `
+        <div class="detail-photo-header">
+            <img
+                src="${record.FOTO}"
+                class="detail-photo"
+                onclick="openImageModal('${record.FOTO}')"
+            >
+        </div>
+        ` : ''}
+
+        <div class="detail-card">
+`;
+
         const fields = [
             ['ID', 'ID'], ['NOME', 'NOME'], ['ALCUNHA', 'ALCUNHA'], ['MAE', 'MAE'], ['PAI', 'PAI'],
             ['DATA NASC', 'DATA_NASC'], ['NATURALIDADE', 'NATURALIDADE'], ['UF NAT', 'UF_NAT'],
@@ -1132,9 +1237,7 @@
             const val = record[key] || '—';
             html += `<div class="detail-field"><span class="label">${label}</span><span class="value">${val}</span></div>`;
         });
-        if (record.FOTO) {
-            html += `<div class="detail-field"><span class="label">FOTO</span><span class="value"><img src="${record.FOTO}" style="max-width:80px;border-radius:8px;"></span></div>`;
-        }
+        
         html += `
                 </div>
                 <div class="detail-actions">
@@ -1473,7 +1576,28 @@
         if (!rec) return;
         alert('Função PDF: gerando arquivo para o registro #' + id + ' (em desenvolvimento)');
     }
+function openImageModal(src){
+    let modal = document.getElementById('imageModal');
 
+    if(!modal){
+        modal = document.createElement('div');
+        modal.id = 'imageModal';
+        modal.className = 'image-modal';
+
+        modal.innerHTML = `
+            <img id="modalImage">
+        `;
+
+        modal.onclick = function(){
+            modal.style.display = 'none';
+        };
+
+        document.body.appendChild(modal);
+    }
+
+    document.getElementById('modalImage').src = src;
+    modal.style.display = 'flex';
+}
     // ============================================================
     // INICIALIZAÇÃO
     // ============================================================
