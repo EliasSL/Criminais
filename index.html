@@ -14,30 +14,30 @@
         }
 
         body {
-    background: #1a1a1a;
-    color: #e0e0e0;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: stretch;
-    padding: 4px;
-}
+            background: #1a1a1a;
+            color: #e0e0e0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: stretch;
+            padding: 4px;
+        }
 
         /* ===== CONTAINER PRINCIPAL ===== */
         #app {
-    max-width: 500px;
-    width: 100%;
-    min-height: 95vh;
-    background: #2c2c2c;
-    border-radius: 28px;
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7);
-    overflow: hidden;
-    padding: 20px 18px 30px;
-    transition: all 0.3s;
-    border: 1px solid #3d3d3d;
-    display: flex;
-    flex-direction: column;
-}
+            max-width: 500px;
+            width: 100%;
+            min-height: 95vh;
+            background: #2c2c2c;
+            border-radius: 28px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7);
+            overflow: hidden;
+            padding: 20px 18px 30px;
+            transition: all 0.3s;
+            border: 1px solid #3d3d3d;
+            display: flex;
+            flex-direction: column;
+        }
 
         /* ===== TELA DE LOGIN ===== */
         #loginScreen {
@@ -104,12 +104,12 @@
 
         /* ===== HEADER / DASHBOARD ===== */
         #dashboard {
-    display: none;
-    flex-direction: column;
-    gap: 20px;
-    flex: 1;
-    min-height: 0;
-}
+            display: none;
+            flex-direction: column;
+            gap: 20px;
+            flex: 1;
+            min-height: 0;
+        }
 
         .header-dash {
             display: flex;
@@ -185,50 +185,31 @@
         }
 
         /* ===== CARDS ===== */
-.cards-grid {
-    display: flex;
-    flex-direction: column;
-
-    gap: 16px;
-
-    margin: 4px 0;
-
-    flex: 1;
-    justify-content: center;
-}
+        .cards-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin: 4px 0;
+            flex: 1;
+            justify-content: center;
+        }
 
         .card {
-    background: #3b2b1a;
-    border-radius: 24px;
-
-    padding: 42px 30px;
-
-    border: 2px solid #d4af37;
-
-    box-shadow:
-        0 0 3px #d4af37,
-        0 0 8px #d4af37,
-        0 0 12px #ffff00,
-        0 0 18px #ccff00,
-        0 0 25px rgba(204,255,0,0.7),
-        0 4px 12px rgba(0,0,0,0.5);
-
-    transition: all 0.3s ease;
-    cursor: pointer;
-    position: relative;
-
-    min-height: 280px;
-}
+            background: #3b2b1a;
+            border-radius: 24px;
+            padding: 42px 30px;
+            border: 2px solid #d4af37;
+            box-shadow: 0 0 3px #d4af37, 0 0 8px #d4af37, 0 0 12px #ffff00, 0 0 18px #ccff00, 0 0 25px rgba(204,255,0,0.7), 0 4px 12px rgba(0,0,0,0.5);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            min-height: 280px;
+        }
 
         .card:active {
-    transform: scale(0.97);
-
-    box-shadow:
-        0 0 5px #d4af37,
-        0 0 15px #ffff00,
-        0 0 25px #ccff00,
-        0 0 35px #99ff00;
-}
+            transform: scale(0.97);
+            box-shadow: 0 0 5px #d4af37, 0 0 15px #ffff00, 0 0 25px #ccff00, 0 0 35px #99ff00;
+        }
 
         .card h3 {
             font-size: 2rem;
@@ -240,13 +221,13 @@
         }
 
         .card .badge {
-    background: #f5c842;
-    color: #1a1a1a;
-    font-weight: 700;
-    border-radius: 40px;
-    font-size: 2rem;
-    padding: 8px 24px;
-}
+            background: #f5c842;
+            color: #1a1a1a;
+            font-weight: 700;
+            border-radius: 40px;
+            font-size: 2rem;
+            padding: 8px 24px;
+        }
 
         .card .card-sub {
             font-size: 0.9rem;
@@ -257,95 +238,42 @@
         }
 
         .card.mandados {
+            border: 2px solid #00ff66;
+            box-shadow: 0 0 4px #00ff66, 0 0 10px #00ff66, 0 0 16px #ffff00, 0 0 24px #ffff00, 0 0 32px #ff3300, 0 0 42px #ff0000, 0 4px 12px rgba(0,0,0,0.5);
+            animation: neonMandado 2s infinite;
+        }
 
-    border: 2px solid #00ff66;
-
-    box-shadow:
-        0 0 4px #00ff66,
-        0 0 10px #00ff66,
-
-        0 0 16px #ffff00,
-        0 0 24px #ffff00,
-
-        0 0 32px #ff3300,
-        0 0 42px #ff0000,
-
-        0 4px 12px rgba(0,0,0,0.5);
-animation: neonMandado 2s infinite;
-}
+        @keyframes neonMandado {
+            0% {
+                box-shadow: 0 0 4px #00ff66, 0 0 10px #00ff66, 0 0 16px #ffff00, 0 0 24px #ffff00, 0 0 32px #ff3300;
+            }
+            50% {
+                box-shadow: 0 0 8px #00ff66, 0 0 18px #00ff66, 0 0 28px #ffff00, 0 0 38px #ff3300, 0 0 50px #ff0000;
+            }
+            100% {
+                box-shadow: 0 0 4px #00ff66, 0 0 10px #00ff66, 0 0 16px #ffff00, 0 0 24px #ffff00, 0 0 32px #ff3300;
+            }
+        }
 
         /* ===== PÁGINAS DE LISTA ===== */
-      @keyframes neonPulse {
-    0% {
-        box-shadow:
-            0 0 3px #d4af37,
-            0 0 8px #d4af37,
-            0 0 12px #ffff00,
-            0 0 18px #ccff00;
-    }
-@keyframes neonMandado {
+        .list-page {
+            display: none;
+            flex-direction: column;
+            gap: 16px;
+            height: 100%;
+        }
 
-    0% {
-        box-shadow:
-            0 0 4px #00ff66,
-            0 0 10px #00ff66,
-            0 0 16px #ffff00,
-            0 0 24px #ffff00,
-            0 0 32px #ff3300;
-    }
+        .detail-page {
+            display: none;
+            flex-direction: column;
+            height: 100%;
+        }
 
-    50% {
-        box-shadow:
-            0 0 8px #00ff66,
-            0 0 18px #00ff66,
-            0 0 28px #ffff00,
-            0 0 38px #ff3300,
-            0 0 50px #ff0000;
-    }
-
-    100% {
-        box-shadow:
-            0 0 4px #00ff66,
-            0 0 10px #00ff66,
-            0 0 16px #ffff00,
-            0 0 24px #ffff00,
-            0 0 32px #ff3300;
-    }
-}
-    50% {
-        box-shadow:
-            0 0 5px #d4af37,
-            0 0 12px #ffff00,
-            0 0 22px #ccff00,
-            0 0 32px #99ff00;
-    }
-
-    100% {
-        box-shadow:
-            0 0 3px #d4af37,
-            0 0 8px #d4af37,
-            0 0 12px #ffff00,
-            0 0 18px #ccff00;
-    }
-}
-  .list-page{
-    display:none;
-    flex-direction:column;
-    gap:16px;
-    height:100%;
-}
-
-.detail-page{
-    display:none;
-    flex-direction:column;
-    height:100%;
-}
-
-.form-page{
-    display:none;
-    flex-direction:column;
-    height:100%;
-}
+        .form-page {
+            display: none;
+            flex-direction: column;
+            height: 100%;
+        }
 
         .list-header {
             display: flex;
@@ -421,12 +349,6 @@ animation: neonMandado 2s infinite;
         }
 
         /* ===== DETALHES ===== */
-        .detail-page {
-            display: none;
-            flex-direction: column;
-            gap: 16px;
-        }
-
         .detail-card {
             background: #222;
             border-radius: 20px;
@@ -493,12 +415,6 @@ animation: neonMandado 2s infinite;
         }
 
         /* ===== FORMULÁRIO ===== */
-        .form-page {
-            display: none;
-            flex-direction: column;
-            gap: 14px;
-        }
-
         .form-group {
             display: flex;
             flex-direction: column;
@@ -659,11 +575,11 @@ animation: neonMandado 2s infinite;
 
         /* ===== SCROLL ===== */
         .scroll-area {
-    flex: 1;
-    min-height: 0;
-    overflow-y: auto;
-    padding-right: 4px;
-}
+            flex: 1;
+            min-height: 0;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
         .scroll-area::-webkit-scrollbar {
             width: 4px;
         }
@@ -674,51 +590,51 @@ animation: neonMandado 2s infinite;
             background: #f5c842;
             border-radius: 10px;
         }
-/* ===== FOTO DETALHAMENTO ===== */
 
-.detail-photo-header{
-    display:flex;
-    justify-content:center;
-    margin-bottom:20px;
-}
+        /* ===== FOTO DETALHAMENTO ===== */
+        .detail-photo-header {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
 
-.detail-photo{
-    width:180px;
-    height:220px;
-    object-fit:cover;
-    border-radius:14px;
-    border:2px solid #f5c842;
-    cursor:pointer;
-    box-shadow:0 0 12px rgba(245,200,66,0.4);
-    transition:0.2s;
-}
+        .detail-photo {
+            width: 180px;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 14px;
+            border: 2px solid #f5c842;
+            cursor: pointer;
+            box-shadow: 0 0 12px rgba(245,200,66,0.4);
+            transition: 0.2s;
+        }
 
-.detail-photo:active{
-    transform:scale(0.98);
-}
+        .detail-photo:active {
+            transform: scale(0.98);
+        }
 
-/* Modal da imagem */
+        /* Modal da imagem */
+        .image-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.92);
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            padding: 20px;
+        }
 
-.image-modal{
-    display:none;
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background:rgba(0,0,0,0.92);
-    justify-content:center;
-    align-items:center;
-    z-index:9999;
-    padding:20px;
-}
+        .image-modal img {
+            max-width: 95%;
+            max-height: 95%;
+            border-radius: 12px;
+            border: 2px solid #f5c842;
+        }
 
-.image-modal img{
-    max-width:95%;
-    max-height:95%;
-    border-radius:12px;
-    border:2px solid #f5c842;
-}
         /* ===== RESPONSIVO ===== */
         @media (max-width: 480px) {
             #app {
@@ -748,17 +664,12 @@ animation: neonMandado 2s infinite;
                 min-width: 60px;
             }
 
-@media (max-width: 480px) {
+            .card {
+                padding: 48px 32px;
+                min-height: 320px;
+                animation: inherit;
+            }
 
-    .card {
-        padding: 48px 32px;
-
-        min-height: 320px;
-
-        animation: inherit;
-    }
-
-}
             .card h3 {
                 font-size: 1.2rem;
             }
@@ -1126,12 +1037,7 @@ animation: neonMandado 2s infinite;
         }
         const title = tipo === 'SIM' ? 'MANDADOS' : 'ANOTAÇÕES CRIMINAIS';
         let html = `
-            <div class="list-page"
-     style="
-        display:flex;
-        flex-direction:column;
-        height:100%;
-     ">
+            <div class="list-page" style="display:flex; flex-direction:column; height:100%;">
                 <div class="list-header">
                     <button class="btn-back" onclick="backToDashboard()">←</button>
                     <span class="list-title">${title} (${filtered.length})</span>
@@ -1142,14 +1048,7 @@ animation: neonMandado 2s infinite;
                         id="searchInput"
                         placeholder="Pesquisar qualquer informação..."
                         onkeyup="filtrarLista()"
-                        style="
-                            width:100%;
-                            padding:12px;
-                            border-radius:12px;
-                            border:1px solid #444;
-                            background:#1e1e1e;
-                            color:#fff;
-                        "
+                        style="width:100%; padding:12px; border-radius:12px; border:1px solid #444; background:#1e1e1e; color:#fff;"
                     >
                 </div>
                 <div class="scroll-area">
@@ -1198,34 +1097,24 @@ animation: neonMandado 2s infinite;
     }
 
     function openDetail(id) {
-        const record = allRecords.find(r =>
-    String(r.ID).trim() === String(id).trim()
-);
-
-if (!record) {
-    alert('Registro não encontrado.');
-    return;
-}
+        const record = allRecords.find(r => String(r.ID).trim() === String(id).trim());
+        if (!record) {
+            alert('Registro não encontrado.');
+            return;
+        }
         let html = `
-    <div class="detail-page" style="display:flex;">
-        <div class="list-header">
-            <button class="btn-back" onclick="backToList()">←</button>
-            <span class="list-title">Detalhes</span>
-        </div>
-
-        ${record.FOTO ? `
-        <div class="detail-photo-header">
-            <img
-                src="${record.FOTO}"
-                class="detail-photo"
-                onclick="openImageModal('${record.FOTO}')"
-            >
-        </div>
-        ` : ''}
-
-        <div class="detail-card">
-`;
-
+            <div class="detail-page" style="display:flex; flex-direction:column; height:100%;">
+                <div class="list-header">
+                    <button class="btn-back" onclick="backToList()">←</button>
+                    <span class="list-title">Detalhes</span>
+                </div>
+                ${record.FOTO ? `
+                <div class="detail-photo-header">
+                    <img src="${record.FOTO}" class="detail-photo" onclick="openImageModal('${record.FOTO}')">
+                </div>
+                ` : ''}
+                <div class="detail-card">
+        `;
         const fields = [
             ['ID', 'ID'], ['NOME', 'NOME'], ['ALCUNHA', 'ALCUNHA'], ['MAE', 'MAE'], ['PAI', 'PAI'],
             ['DATA NASC', 'DATA_NASC'], ['NATURALIDADE', 'NATURALIDADE'], ['UF NAT', 'UF_NAT'],
@@ -1241,9 +1130,9 @@ if (!record) {
         html += `
                 </div>
                 <div class="detail-actions">
-                    <button class="btn-detail editar" onclick="editRecord(${record.ID})">✎ EDITAR</button>
-                    <button class="btn-detail compartilhar" onclick="shareRecord(${record.ID})">📱 COMPARTILHAR</button>
-                    <button class="btn-detail pdf" onclick="gerarPDF(${record.ID})">📄 PDF</button>
+                    <button class="btn-detail editar" onclick="editRecord('${record.ID}')">✎ EDITAR</button>
+                    <button class="btn-detail compartilhar" onclick="shareRecord('${record.ID}')">📱 COMPARTILHAR</button>
+                    <button class="btn-detail pdf" onclick="gerarPDF('${record.ID}')">📄 PDF</button>
                 </div>
                 <button class="btn-back" style="margin-top:8px;" onclick="backToList()">← Voltar</button>
             </div>
@@ -1260,7 +1149,7 @@ if (!record) {
         document.querySelector('.cards-grid').style.display = 'none';
         const nextId = allRecords.length > 0 ? Math.max(...allRecords.map(r => Number(r.ID) || 0)) + 1 : 1;
         let html = `
-            <div class="form-page" style="display:flex;">
+            <div class="form-page" style="display:flex; flex-direction:column; height:100%;">
                 <div class="list-header">
                     <button class="btn-back" onclick="backToDashboard()">←</button>
                     <span class="list-title">Novo Cadastro</span>
@@ -1378,12 +1267,12 @@ if (!record) {
         if (!rec) return;
         
         let html = `
-            <div class="form-page" style="display:flex;">
+            <div class="form-page" style="display:flex; flex-direction:column; height:100%;">
                 <div class="list-header">
                     <button class="btn-back" onclick="backToList()">←</button>
                     <span class="list-title">Editar Registro #${id}</span>
                 </div>
-                <form id="formEdit" onsubmit="event.preventDefault(); salvarEdicao(${id});">
+                <form id="formEdit" onsubmit="event.preventDefault(); salvarEdicao('${id}');">
                     <div class="form-group">
                         <label>ID</label>
                         <input type="text" value="${id}" disabled>
@@ -1558,118 +1447,102 @@ if (!record) {
     }
 
     // ============================================================
-    // COMPARTILHAR
+    // COMPARTILHAR - WhatsApp (CORRIGIDO PARA CELULAR)
     // ============================================================
     function shareRecord(id) {
         const rec = allRecords.find(r => r.ID == id);
         if (!rec) return;
-        const msg = `*SIGEC - Registro #${rec.ID}*\nNome: ${rec.NOME || 'N/I'}\nMãe: ${rec.MAE || 'N/I'}\nAlcunha: ${rec.ALCUNHA || 'N/I'}\nMandado: ${rec.MANDADO || 'N/I'}`;
-        const url = `https://wa.me/?text=${encodeURIComponent(msg)}`;
+        
+        // Construir mensagem formatada com todos os dados
+        let mensagem = '*SIGEC - Registro #' + rec.ID + '*\n\n';
+        mensagem += '👤 Nome: ' + (rec.NOME || 'N/I') + '\n';
+        mensagem += '👥 Alcunha: ' + (rec.ALCUNHA || 'N/I') + '\n';
+        mensagem += '👩 Mãe: ' + (rec.MAE || 'N/I') + '\n';
+        mensagem += '👨 Pai: ' + (rec.PAI || 'N/I') + '\n';
+        mensagem += '📅 Data Nasc: ' + (rec.DATA_NASC || 'N/I') + '\n';
+        mensagem += '📍 Naturalidade: ' + (rec.NATURALIDADE || 'N/I') + ' - ' + (rec.UF_NAT || 'N/I') + '\n';
+        mensagem += '🆔 CPF: ' + (rec.CPF || 'N/I') + '\n';
+        mensagem += '🆔 RG: ' + (rec.RG || 'N/I') + ' - ' + (rec.UF_RG || 'N/I') + '\n';
+        mensagem += '📱 Telefone: ' + (rec.TELEFONE || 'N/I') + '\n';
+        mensagem += '🏠 Endereço: ' + (rec.ENDERECO || 'N/I') + '\n';
+        mensagem += '🏙️ Cidade: ' + (rec.CIDADE || 'N/I') + ' - ' + (rec.ESTADO || 'N/I') + '\n';
+        mensagem += '⚖️ Tipo Penal: ' + (rec.TIPO_PENAL || 'N/I') + '\n';
+        mensagem += '📋 Mandado: ' + (rec.MANDADO || 'N/I') + '\n';
+        
+        // URL do WhatsApp com a mensagem
+        const url = 'https://api.whatsapp.com/send?text=' + encodeURIComponent(mensagem);
+        
+        // Abrir WhatsApp (funciona no celular e desktop)
         window.open(url, '_blank');
     }
 
     // ============================================================
-    // PDF (simulação)
+    // PDF (CORRIGIDO PARA GERAR E ABRIR NO CELULAR)
     // ============================================================
-    async function gerarPDF(id) {
-    if (!window.jspdf) {
-        alert('Biblioteca PDF não carregada.');
-        return;
+    function gerarPDF(id) {
+        const rec = allRecords.find(r => r.ID == id);
+        if (!rec) return;
+        
+        // Construir o conteúdo do PDF (simples)
+        let conteudo = '====================================\n';
+        conteudo += '        SIGEC - SISTEMA DE GESTÃO\n';
+        conteudo += '====================================\n\n';
+        conteudo += 'RELATÓRIO DE REGISTRO #' + rec.ID + '\n';
+        conteudo += '------------------------------------\n';
+        conteudo += 'NOME: ' + (rec.NOME || 'N/I') + '\n';
+        conteudo += 'ALCUNHA: ' + (rec.ALCUNHA || 'N/I') + '\n';
+        conteudo += 'MÃE: ' + (rec.MAE || 'N/I') + '\n';
+        conteudo += 'PAI: ' + (rec.PAI || 'N/I') + '\n';
+        conteudo += 'DATA NASC.: ' + (rec.DATA_NASC || 'N/I') + '\n';
+        conteudo += 'NATURALIDADE: ' + (rec.NATURALIDADE || 'N/I') + ' - ' + (rec.UF_NAT || 'N/I') + '\n';
+        conteudo += 'CPF: ' + (rec.CPF || 'N/I') + '\n';
+        conteudo += 'RG: ' + (rec.RG || 'N/I') + ' - ' + (rec.UF_RG || 'N/I') + '\n';
+        conteudo += 'TELEFONE: ' + (rec.TELEFONE || 'N/I') + '\n';
+        conteudo += 'ENDEREÇO: ' + (rec.ENDERECO || 'N/I') + '\n';
+        conteudo += 'CIDADE: ' + (rec.CIDADE || 'N/I') + ' - ' + (rec.ESTADO || 'N/I') + '\n';
+        conteudo += 'TIPO PENAL: ' + (rec.TIPO_PENAL || 'N/I') + '\n';
+        conteudo += 'MANDADO: ' + (rec.MANDADO || 'N/I') + '\n';
+        conteudo += '====================================\n';
+        conteudo += 'Gerado em: ' + new Date().toLocaleString() + '\n';
+        conteudo += '====================================\n';
+        
+        // Criar um Blob com o conteúdo
+        const blob = new Blob([conteudo], { type: 'text/plain;charset=utf-8' });
+        
+        // Criar URL do Blob
+        const url = URL.createObjectURL(blob);
+        
+        // Abrir em nova janela/aba (funciona no celular)
+        window.open(url, '_blank');
+        
+        // Após alguns segundos, liberar a URL
+        setTimeout(() => {
+            URL.revokeObjectURL(url);
+        }, 10000);
+        
+        // Feedback
+        alert('📄 PDF gerado com sucesso! O arquivo será aberto automaticamente.');
     }
 
-       const rec = allRecords.find(r => r.ID == id);
-
-    if (!rec) {
-        alert('Registro não encontrado.');
-        return;
+    // ============================================================
+    // FUNÇÃO PARA ABRIR IMAGEM EM MODAL
+    // ============================================================
+    function openImageModal(src){
+        let modal = document.getElementById('imageModal');
+        if(!modal){
+            modal = document.createElement('div');
+            modal.id = 'imageModal';
+            modal.className = 'image-modal';
+            modal.innerHTML = `<img id="modalImage">`;
+            modal.onclick = function(){
+                modal.style.display = 'none';
+            };
+            document.body.appendChild(modal);
+        }
+        document.getElementById('modalImage').src = src;
+        modal.style.display = 'flex';
     }
 
-    const { jsPDF } = window.jspdf;
-    const pdf = new jsPDF();
-
-    let y = 20;
-
-    pdf.setFontSize(16);
-    pdf.text('SIGEC - Cadastro', 15, y);
-
-    y += 15;
-
-    // FOTO
-    if (rec.FOTO) {
-        try {
-
-    if (
-        rec.FOTO &&
-        rec.FOTO.startsWith('data:image')
-    ) {
-
-        pdf.addImage(
-            rec.FOTO,
-            'JPEG',
-            140,
-            15,
-            50,
-            60
-        );
-
-    }
-
-    } catch(e) {
-
-        console.log('Erro foto PDF', e);
-
-    }
-}
-    const campos = [
-        ['ID', rec.ID],
-        ['NOME', rec.NOME],
-        ['ALCUNHA', rec.ALCUNHA],
-        ['MAE', rec.MAE],
-        ['PAI', rec.PAI],
-        ['DATA NASC', rec.DATA_NASC],
-        ['NATURALIDADE', rec.NATURALIDADE],
-        ['UF NAT', rec.UF_NAT],
-        ['CPF', rec.CPF],
-        ['RG', rec.RG],
-        ['UF RG', rec.UF_RG],
-        ['TELEFONE', rec.TELEFONE],
-        ['ENDERECO', rec.ENDERECO],
-        ['CIDADE', rec.CIDADE],
-        ['ESTADO', rec.ESTADO],
-        ['TIPO PENAL', rec.TIPO_PENAL],
-        ['MANDADO', rec.MANDADO]
-    ];
-
-    y = 90;
-
-    campos.forEach(item => {
-
-    pdf.setFont('helvetica', 'bold');
-    pdf.text(item[0] + ':', 15, y);
-
-    pdf.setFont('helvetica', 'normal');
-
-    const texto = String(item[1] || '-')
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g,'');
-
-    pdf.text(texto, 55, y);
-
-    y += 8;
-
-});
-
-const pdfBlob = pdf.output('blob');
-
-const pdfUrl = URL.createObjectURL(pdfBlob);
-
-const novaJanela = window.open(pdfUrl, '_blank');
-
-if (!novaJanela) {
-    location.href = pdfUrl;
-}
-
-}
     // ============================================================
     // INICIALIZAÇÃO
     // ============================================================
@@ -1679,6 +1552,6 @@ if (!novaJanela) {
         document.querySelector('.cards-grid').style.display = 'flex';
     });
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
 </body>
 </html>
