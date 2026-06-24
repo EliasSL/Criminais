@@ -1581,39 +1581,32 @@ if (!record) {
     }
 
     const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF();
 
-    const pdf = new jsPDF('p', 'mm', 'a4');
+    let y = 20;
 
-    pdf.setFont('helvetica', 'bold');
-    pdf.setFontSize(18);
-    pdf.text('SIGEC - FICHA CADASTRAL', 105, 15, { align: 'center' });
+    pdf.setFontSize(16);
+    pdf.text('SIGEC - Cadastro', 15, y);
 
-    pdf.setFont('helvetica', 'normal');
-    pdf.setFontSize(10);
+    y += 15;
 
-    let y = 40;
-
-    try {
-
-        if (rec.FOTO) {
-
+    // FOTO
+    if (rec.FOTO) {
+        try {
             pdf.addImage(
                 rec.FOTO,
                 'JPEG',
-                150,
-                25,
-                40,
-                50
+                140,
+                15,
+                50,
+                60
             );
-
+        } catch(e) {
+            console.log('Foto não carregada');
         }
-
-    } catch(e) {
-        console.log('Foto não carregada no PDF');
     }
 
     const campos = [
-
         ['ID', rec.ID],
         ['NOME', rec.NOME],
         ['ALCUNHA', rec.ALCUNHA],
@@ -1631,8 +1624,9 @@ if (!record) {
         ['ESTADO', rec.ESTADO],
         ['TIPO PENAL', rec.TIPO_PENAL],
         ['MANDADO', rec.MANDADO]
-
     ];
+
+    y = 90;
 
     campos.forEach(item => {
 
@@ -1646,35 +1640,29 @@ if (!record) {
 
     });
 
-    pdf.save(
+    const blob = pdf.output('blob');
+
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement('a');
+
+    link.href = url;
+
+    link.download =
         'SIGEC_' +
         String(rec.NOME || 'REGISTRO')
             .replace(/[^a-zA-Z0-9]/g, '_') +
-        '.pdf'
-    );
+        '.pdf';
 
-}
-function openImageModal(src){
-    let modal = document.getElementById('imageModal');
+    document.body.appendChild(link);
 
-    if(!modal){
-        modal = document.createElement('div');
-        modal.id = 'imageModal';
-        modal.className = 'image-modal';
+    link.click();
 
-        modal.innerHTML = `
-            <img id="modalImage">
-        `;
+    document.body.removeChild(link);
 
-        modal.onclick = function(){
-            modal.style.display = 'none';
-        };
-
-        document.body.appendChild(modal);
-    }
-
-    document.getElementById('modalImage').src = src;
-    modal.style.display = 'flex';
+    setTimeout(() => {
+        URL.revokeObjectURL(url);
+    }, 3000);
 }
     // ============================================================
     // INICIALIZAÇÃO
