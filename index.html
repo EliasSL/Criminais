@@ -902,6 +902,10 @@ animation: neonMandado 2s infinite;
     </div>
 </div>
 
+<!-- ========== BIBLIOTECAS CARREGADAS VIA CDN ========== -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
 <script>
     // ============================================================
     // CONFIGURAÇÕES GLOBAIS
@@ -916,7 +920,7 @@ animation: neonMandado 2s infinite;
     // FUNÇÃO PARA FORMATAR DATA
     // ============================================================
     function formatarData(data) {
-        if (!data || data === 'N/I' || data === '—') return 'N/I';
+        if (!data || data === 'N/I' || data === '—' || data === '') return 'N/I';
         
         // Se for uma string no formato ISO ou GMT
         if (typeof data === 'string' && (data.includes('GMT') || data.includes('T') || data.includes('-'))) {
@@ -926,7 +930,9 @@ animation: neonMandado 2s infinite;
                     const dia = String(date.getDate()).padStart(2, '0');
                     const mes = String(date.getMonth() + 1).padStart(2, '0');
                     const ano = date.getFullYear();
-                    return `${dia}/${mes}/${ano}`;
+                    if (ano > 1900 && ano < 2100) {
+                        return `${dia}/${mes}/${ano}`;
+                    }
                 }
             } catch(e) {
                 return data;
@@ -945,7 +951,9 @@ animation: neonMandado 2s infinite;
                 const dia = String(date.getDate()).padStart(2, '0');
                 const mes = String(date.getMonth() + 1).padStart(2, '0');
                 const ano = date.getFullYear();
-                return `${dia}/${mes}/${ano}`;
+                if (ano > 1900 && ano < 2100) {
+                    return `${dia}/${mes}/${ano}`;
+                }
             }
         } catch(e) {}
         
@@ -1692,7 +1700,7 @@ if (!record) {
     }
 
     // ============================================================
-    // PDF - CORRIGIDO PARA MOBILE USANDO CDN CONFIÁVEL
+    // PDF - CORRIGIDO USANDO BIBLIOTECAS CARREGADAS VIA CDN
     // ============================================================
     function gerarPDF(id) {
         const rec = allRecords.find(r => r.ID == id);
@@ -1703,6 +1711,13 @@ if (!record) {
         
         // Mostra loading
         showLoading('Preparando PDF...');
+        
+        // Verifica se as bibliotecas foram carregadas
+        if (typeof html2canvas === 'undefined' || typeof window.jspdf === 'undefined') {
+            hideLoading();
+            alert('Bibliotecas não carregadas. Tente novamente ou recarregue a página.');
+            return;
+        }
         
         // Cria um container temporário para gerar o PDF
         const container = document.createElement('div');
@@ -1789,48 +1804,7 @@ if (!record) {
         
         container.innerHTML = html;
         
-        // Carrega as bibliotecas e gera o PDF
-        carregarBibliotecasPDF(container, rec);
-    }
-
-    function carregarBibliotecasPDF(container, rec) {
-        // Verifica se html2canvas já está carregado
-        if (typeof html2canvas === 'undefined') {
-            const script = document.createElement('script');
-            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
-            script.onload = function() {
-                carregarJsPDF(container, rec);
-            };
-            script.onerror = function() {
-                document.body.removeChild(container);
-                hideLoading();
-                alert('Erro ao carregar bibliotecas. Verifique sua conexão com a internet.');
-            };
-            document.head.appendChild(script);
-        } else {
-            carregarJsPDF(container, rec);
-        }
-    }
-
-    function carregarJsPDF(container, rec) {
-        if (typeof window.jspdf === 'undefined') {
-            const script = document.createElement('script');
-            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
-            script.onload = function() {
-                gerarPDFComImagem(container, rec);
-            };
-            script.onerror = function() {
-                document.body.removeChild(container);
-                hideLoading();
-                alert('Erro ao carregar bibliotecas. Verifique sua conexão com a internet.');
-            };
-            document.head.appendChild(script);
-        } else {
-            gerarPDFComImagem(container, rec);
-        }
-    }
-
-    function gerarPDFComImagem(container, rec) {
+        // Gera o PDF
         html2canvas(container, {
             scale: 2,
             useCORS: true,
@@ -1839,38 +1813,29 @@ if (!record) {
             logging: false
         }).then(function(canvas) {
             document.body.removeChild(container);
-            criarPDFComJsPDF(canvas, rec);
+            
+            try {
+                const { jsPDF } = window.jspdf;
+                const imgData = canvas.toDataURL('image/jpeg', 0.95);
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+                
+                pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+                pdf.save('SIGEC_Registro_' + (rec.ID || '') + '.pdf');
+                
+                hideLoading();
+            } catch (error) {
+                hideLoading();
+                console.error('Erro ao criar PDF:', error);
+                alert('Erro ao criar PDF: ' + error.message);
+            }
         }).catch(function(error) {
             document.body.removeChild(container);
             hideLoading();
             console.error('Erro ao gerar PDF:', error);
             alert('Erro ao gerar PDF: ' + error.message);
         });
-    }
-
-    function criarPDFComJsPDF(canvas, rec) {
-        try {
-            if (typeof window.jspdf === 'undefined') {
-                hideLoading();
-                alert('Biblioteca PDF não carregada. Tente novamente.');
-                return;
-            }
-            
-            const { jsPDF } = window.jspdf;
-            const imgData = canvas.toDataURL('image/jpeg', 0.95);
-            const pdf = new jsPDF('p', 'mm', 'a4');
-            const pdfWidth = pdf.internal.pageSize.getWidth();
-            const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-            
-            pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
-            pdf.save('SIGEC_Registro_' + (rec.ID || '') + '.pdf');
-            
-            hideLoading();
-        } catch (error) {
-            hideLoading();
-            console.error('Erro ao criar PDF:', error);
-            alert('Erro ao criar PDF: ' + error.message);
-        }
     }
 
     // ============================================================
