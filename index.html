@@ -14,30 +14,30 @@
         }
 
         body {
-    background: #1a1a1a;
-    color: #e0e0e0;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: stretch;
-    padding: 4px;
-}
+            background: #1a1a1a;
+            color: #e0e0e0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: stretch;
+            padding: 4px;
+        }
 
         /* ===== CONTAINER PRINCIPAL ===== */
         #app {
-    max-width: 500px;
-    width: 100%;
-    min-height: 95vh;
-    background: #2c2c2c;
-    border-radius: 28px;
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7);
-    overflow: hidden;
-    padding: 20px 18px 30px;
-    transition: all 0.3s;
-    border: 1px solid #3d3d3d;
-    display: flex;
-    flex-direction: column;
-}
+            max-width: 500px;
+            width: 100%;
+            min-height: 95vh;
+            background: #2c2c2c;
+            border-radius: 28px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7);
+            overflow: hidden;
+            padding: 20px 18px 30px;
+            transition: all 0.3s;
+            border: 1px solid #3d3d3d;
+            display: flex;
+            flex-direction: column;
+        }
 
         /* ===== TELA DE LOGIN ===== */
         #loginScreen {
@@ -104,12 +104,12 @@
 
         /* ===== HEADER / DASHBOARD ===== */
         #dashboard {
-    display: none;
-    flex-direction: column;
-    gap: 20px;
-    flex: 1;
-    min-height: 0;
-}
+            display: none;
+            flex-direction: column;
+            gap: 20px;
+            flex: 1;
+            min-height: 0;
+        }
 
         .header-dash {
             display: flex;
@@ -185,50 +185,41 @@
         }
 
         /* ===== CARDS ===== */
-.cards-grid {
-    display: flex;
-    flex-direction: column;
-
-    gap: 16px;
-
-    margin: 4px 0;
-
-    flex: 1;
-    justify-content: center;
-}
+        .cards-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin: 4px 0;
+            flex: 1;
+            justify-content: center;
+        }
 
         .card {
-    background: #3b2b1a;
-    border-radius: 24px;
-
-    padding: 42px 30px;
-
-    border: 2px solid #d4af37;
-
-    box-shadow:
-        0 0 3px #d4af37,
-        0 0 8px #d4af37,
-        0 0 12px #ffff00,
-        0 0 18px #ccff00,
-        0 0 25px rgba(204,255,0,0.7),
-        0 4px 12px rgba(0,0,0,0.5);
-
-    transition: all 0.3s ease;
-    cursor: pointer;
-    position: relative;
-
-    min-height: 280px;
-}
+            background: #3b2b1a;
+            border-radius: 24px;
+            padding: 42px 30px;
+            border: 2px solid #d4af37;
+            box-shadow:
+                0 0 3px #d4af37,
+                0 0 8px #d4af37,
+                0 0 12px #ffff00,
+                0 0 18px #ccff00,
+                0 0 25px rgba(204,255,0,0.7),
+                0 4px 12px rgba(0,0,0,0.5);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            min-height: 280px;
+        }
 
         .card:active {
-    transform: scale(0.97);
-
-    box-shadow:
-        0 0 5px #d4af37,
-        0 0 15px #ffff00,
-        0 0 25px #ccff00,
-        0 0 35px #99ff00;
-}
+            transform: scale(0.97);
+            box-shadow:
+                0 0 5px #d4af37,
+                0 0 15px #ffff00,
+                0 0 25px #ccff00,
+                0 0 35px #99ff00;
+        }
 
         .card h3 {
             font-size: 2rem;
@@ -240,13 +231,13 @@
         }
 
         .card .badge {
-    background: #f5c842;
-    color: #1a1a1a;
-    font-weight: 700;
-    border-radius: 40px;
-    font-size: 2rem;
-    padding: 8px 24px;
-}
+            background: #f5c842;
+            color: #1a1a1a;
+            font-weight: 700;
+            border-radius: 40px;
+            font-size: 2rem;
+            padding: 8px 24px;
+        }
 
         .card .card-sub {
             font-size: 0.9rem;
@@ -257,95 +248,64 @@
         }
 
         .card.mandados {
+            border: 2px solid #00ff66;
+            box-shadow:
+                0 0 4px #00ff66,
+                0 0 10px #00ff66,
+                0 0 16px #ffff00,
+                0 0 24px #ffff00,
+                0 0 32px #ff3300,
+                0 0 42px #ff0000,
+                0 4px 12px rgba(0,0,0,0.5);
+            animation: neonMandado 2s infinite;
+        }
 
-    border: 2px solid #00ff66;
-
-    box-shadow:
-        0 0 4px #00ff66,
-        0 0 10px #00ff66,
-
-        0 0 16px #ffff00,
-        0 0 24px #ffff00,
-
-        0 0 32px #ff3300,
-        0 0 42px #ff0000,
-
-        0 4px 12px rgba(0,0,0,0.5);
-animation: neonMandado 2s infinite;
-}
+        @keyframes neonMandado {
+            0% {
+                box-shadow:
+                    0 0 4px #00ff66,
+                    0 0 10px #00ff66,
+                    0 0 16px #ffff00,
+                    0 0 24px #ffff00,
+                    0 0 32px #ff3300;
+            }
+            50% {
+                box-shadow:
+                    0 0 8px #00ff66,
+                    0 0 18px #00ff66,
+                    0 0 28px #ffff00,
+                    0 0 38px #ff3300,
+                    0 0 50px #ff0000;
+            }
+            100% {
+                box-shadow:
+                    0 0 4px #00ff66,
+                    0 0 10px #00ff66,
+                    0 0 16px #ffff00,
+                    0 0 24px #ffff00,
+                    0 0 32px #ff3300;
+            }
+        }
 
         /* ===== PÁGINAS DE LISTA ===== */
-      @keyframes neonPulse {
-    0% {
-        box-shadow:
-            0 0 3px #d4af37,
-            0 0 8px #d4af37,
-            0 0 12px #ffff00,
-            0 0 18px #ccff00;
-    }
-@keyframes neonMandado {
+        .list-page {
+            display: none;
+            flex-direction: column;
+            gap: 16px;
+            height: 100%;
+        }
 
-    0% {
-        box-shadow:
-            0 0 4px #00ff66,
-            0 0 10px #00ff66,
-            0 0 16px #ffff00,
-            0 0 24px #ffff00,
-            0 0 32px #ff3300;
-    }
+        .detail-page {
+            display: none;
+            flex-direction: column;
+            height: 100%;
+        }
 
-    50% {
-        box-shadow:
-            0 0 8px #00ff66,
-            0 0 18px #00ff66,
-            0 0 28px #ffff00,
-            0 0 38px #ff3300,
-            0 0 50px #ff0000;
-    }
-
-    100% {
-        box-shadow:
-            0 0 4px #00ff66,
-            0 0 10px #00ff66,
-            0 0 16px #ffff00,
-            0 0 24px #ffff00,
-            0 0 32px #ff3300;
-    }
-}
-    50% {
-        box-shadow:
-            0 0 5px #d4af37,
-            0 0 12px #ffff00,
-            0 0 22px #ccff00,
-            0 0 32px #99ff00;
-    }
-
-    100% {
-        box-shadow:
-            0 0 3px #d4af37,
-            0 0 8px #d4af37,
-            0 0 12px #ffff00,
-            0 0 18px #ccff00;
-    }
-}
-  .list-page{
-    display:none;
-    flex-direction:column;
-    gap:16px;
-    height:100%;
-}
-
-.detail-page{
-    display:none;
-    flex-direction:column;
-    height:100%;
-}
-
-.form-page{
-    display:none;
-    flex-direction:column;
-    height:100%;
-}
+        .form-page {
+            display: none;
+            flex-direction: column;
+            height: 100%;
+        }
 
         .list-header {
             display: flex;
@@ -659,11 +619,11 @@ animation: neonMandado 2s infinite;
 
         /* ===== SCROLL ===== */
         .scroll-area {
-    flex: 1;
-    min-height: 0;
-    overflow-y: auto;
-    padding-right: 4px;
-}
+            flex: 1;
+            min-height: 0;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
         .scroll-area::-webkit-scrollbar {
             width: 4px;
         }
@@ -674,86 +634,85 @@ animation: neonMandado 2s infinite;
             background: #f5c842;
             border-radius: 10px;
         }
-/* ===== FOTO DETALHAMENTO ===== */
 
-.detail-photo-header{
-    display:flex;
-    justify-content:center;
-    margin-bottom:20px;
-}
+        /* ===== FOTO DETALHAMENTO ===== */
+        .detail-photo-header {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
 
-.detail-photo{
-    width:180px;
-    height:220px;
-    object-fit:cover;
-    border-radius:14px;
-    border:2px solid #f5c842;
-    cursor:pointer;
-    box-shadow:0 0 12px rgba(245,200,66,0.4);
-    transition:0.2s;
-}
+        .detail-photo {
+            width: 180px;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 14px;
+            border: 2px solid #f5c842;
+            cursor: pointer;
+            box-shadow: 0 0 12px rgba(245,200,66,0.4);
+            transition: 0.2s;
+        }
 
-.detail-photo:active{
-    transform:scale(0.98);
-}
+        .detail-photo:active {
+            transform: scale(0.98);
+        }
 
-/* Modal da imagem */
+        /* Modal da imagem */
+        .image-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.92);
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            padding: 20px;
+        }
 
-.image-modal{
-    display:none;
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background:rgba(0,0,0,0.92);
-    justify-content:center;
-    align-items:center;
-    z-index:9999;
-    padding:20px;
-}
+        .image-modal img {
+            max-width: 95%;
+            max-height: 95%;
+            border-radius: 12px;
+            border: 2px solid #f5c842;
+        }
 
-.image-modal img{
-    max-width:95%;
-    max-height:95%;
-    border-radius:12px;
-    border:2px solid #f5c842;
-}
+        /* ===== LOADING ===== */
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            flex-direction: column;
+            gap: 20px;
+        }
 
-/* ===== LOADING ===== */
-.loading-overlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0,0,0,0.8);
-    justify-content: center;
-    align-items: center;
-    z-index: 10000;
-    flex-direction: column;
-    gap: 20px;
-}
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #444;
+            border-top-color: #f5c842;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
 
-.loading-spinner {
-    width: 50px;
-    height: 50px;
-    border: 5px solid #444;
-    border-top-color: #f5c842;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-}
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
 
-@keyframes spin {
-    to { transform: rotate(360deg); }
-}
-
-.loading-text {
-    color: #f5c842;
-    font-size: 1.1rem;
-    font-weight: 600;
-}
+        .loading-text {
+            color: #f5c842;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
 
         /* ===== RESPONSIVO ===== */
         @media (max-width: 480px) {
@@ -784,17 +743,11 @@ animation: neonMandado 2s infinite;
                 min-width: 60px;
             }
 
-@media (max-width: 480px) {
+            .card {
+                padding: 48px 32px;
+                min-height: 320px;
+            }
 
-    .card {
-        padding: 48px 32px;
-
-        min-height: 320px;
-
-        animation: inherit;
-    }
-
-}
             .card h3 {
                 font-size: 1.2rem;
             }
@@ -828,99 +781,115 @@ animation: neonMandado 2s infinite;
             }
         }
     </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
 
-<div id="app">
-    <!-- ========== TELA DE LOGIN ========== -->
-    <div id="loginScreen">
-        <h1>⚔️ SIGEC</h1>
-        <p class="sub">Sistema Integrado de Gestão e Controle</p>
-        <input type="text" id="loginUser" class="login-input" placeholder="Usuário">
-        <input type="password" id="loginPass" class="login-input" placeholder="Senha">
-        <button class="btn-login" onclick="handleLogin()">🔐 ACESSAR</button>
-        <p id="loginError" style="color:#f66; font-size:0.85rem; height:20px;"></p>
-    </div>
+    <div id="app">
+        <!-- ========== TELA DE LOGIN ========== -->
+        <div id="loginScreen">
+            <h1>⚔️ SIGEC</h1>
+            <p class="sub">Sistema Integrado de Gestão e Controle</p>
+            <input type="text" id="loginUser" class="login-input" placeholder="Usuário">
+            <input type="password" id="loginPass" class="login-input" placeholder="Senha">
+            <button class="btn-login" onclick="handleLogin()">🔐 ACESSAR</button>
+            <p id="loginError" style="color:#f66; font-size:0.85rem; height:20px;"></p>
+        </div>
 
-    <!-- ========== DASHBOARD ========== -->
-    <div id="dashboard">
-        <!-- HEADER -->
-        <div class="header-dash">
-            <div class="logo-area">
-                <div class="logo-icon">⚔</div>
-                <div class="logo-text">SIG<span>EC</span></div>
+        <!-- ========== DASHBOARD ========== -->
+        <div id="dashboard">
+            <!-- HEADER -->
+            <div class="header-dash">
+                <div class="logo-area">
+                    <div class="logo-icon">⚔</div>
+                    <div class="logo-text">SIG<span>EC</span></div>
+                </div>
+                <div class="header-actions">
+                    <button class="btn-header" onclick="openCadastro()">CADASTRAR</button>
+                    <button class="btn-header" onclick="openSenha()">SENHA</button>
+                    <button class="btn-header sair" onclick="logout()">SAIR</button>
+                </div>
             </div>
-            <div class="header-actions">
-                <button class="btn-header" onclick="openCadastro()">CADASTRAR</button>
-                <button class="btn-header" onclick="openSenha()">SENHA</button>
-                <button class="btn-header sair" onclick="logout()">SAIR</button>
+
+            <!-- CARDS -->
+            <div class="cards-grid">
+                <div class="card" id="cardAnotacoes" onclick="openList('NAO')">
+                    <h3>
+                        <span>📋 ANOTAÇÕES CRIMINAIS</span>
+                        <span class="badge" id="badgeNao">0</span>
+                    </h3>
+                    <div class="card-sub"><span>Registros com MANDADO = NÃO</span></div>
+                </div>
+                <div class="card mandados" id="cardMandados" onclick="openList('SIM')">
+                    <h3>
+                        <span>⚖️ MANDADOS</span>
+                        <span class="badge" id="badgeSim">0</span>
+                    </h3>
+                    <div class="card-sub"><span>Registros com MANDADO = SIM</span></div>
+                </div>
+            </div>
+
+            <!-- ÁREA DE CONTEÚDO DINÂMICO (listas, detalhes, formulário) -->
+            <div id="dynamicContent" class="scroll-area">
+                <!-- Aqui será injetado o conteúdo via JS -->
             </div>
         </div>
 
-        <!-- CARDS -->
-        <div class="cards-grid">
-            <div class="card" id="cardAnotacoes" onclick="openList('NAO')">
-                <h3>
-                    <span>📋 ANOTAÇÕES CRIMINAIS</span>
-                    <span class="badge" id="badgeNao">0</span>
-                </h3>
-                <div class="card-sub"><span>Registros com MANDADO = NÃO</span></div>
-            </div>
-            <div class="card mandados" id="cardMandados" onclick="openList('SIM')">
-                <h3>
-                    <span>⚖️ MANDADOS</span>
-                    <span class="badge" id="badgeSim">0</span>
-                </h3>
-                <div class="card-sub"><span>Registros com MANDADO = SIM</span></div>
+        <!-- ========== MODAL SENHA ========== -->
+        <div class="modal-overlay" id="modalSenha">
+            <div class="modal-box">
+                <h3>🔑 Alterar Senha</h3>
+                <input type="password" id="novaSenhaInput" placeholder="Nova senha">
+                <input type="password" id="confirmSenhaInput" placeholder="Confirmar senha">
+                <p id="senhaMsg" style="color:#f5c842; font-size:0.85rem; margin:6px 0;"></p>
+                <div class="btn-group">
+                    <button class="alterar" onclick="alterarSenha()">ALTERAR</button>
+                    <button class="cancelar-modal" onclick="fecharModalSenha()">CANCELAR</button>
+                </div>
             </div>
         </div>
 
-        <!-- ÁREA DE CONTEÚDO DINÂMICO (listas, detalhes, formulário) -->
-        <div id="dynamicContent" class="scroll-area">
-            <!-- Aqui será injetado o conteúdo via JS -->
+        <!-- ========== LOADING ========== -->
+        <div class="loading-overlay" id="loadingOverlay">
+            <div class="loading-spinner"></div>
+            <div class="loading-text" id="loadingText">Gerando PDF...</div>
         </div>
     </div>
 
-    <!-- ========== MODAL SENHA ========== -->
-    <div class="modal-overlay" id="modalSenha">
-        <div class="modal-box">
-            <h3>🔑 Alterar Senha</h3>
-            <input type="password" id="novaSenhaInput" placeholder="Nova senha">
-            <input type="password" id="confirmSenhaInput" placeholder="Confirmar senha">
-            <p id="senhaMsg" style="color:#f5c842; font-size:0.85rem; margin:6px 0;"></p>
-            <div class="btn-group">
-                <button class="alterar" onclick="alterarSenha()">ALTERAR</button>
-                <button class="cancelar-modal" onclick="fecharModalSenha()">CANCELAR</button>
-            </div>
-        </div>
-    </div>
+    <script>
+        // ============================================================
+        // CONFIGURAÇÕES GLOBAIS
+        // ============================================================
+        const API_URL = 'https://script.google.com/macros/s/AKfycbw1U5fqEj8tYdCjx_KtuRrm3HBm1qmp5nksdr_PRTxd8ywMLWnX1VZ8vI99-t9oqGwH/exec';
+        let currentUser = null;
+        let allRecords = [];
+        let currentView = 'dashboard';
+        let currentListType = null;
 
-    <!-- ========== LOADING ========== -->
-    <div class="loading-overlay" id="loadingOverlay">
-        <div class="loading-spinner"></div>
-        <div class="loading-text" id="loadingText">Gerando PDF...</div>
-    </div>
-</div>
+        // ============================================================
+        // FUNÇÃO PARA FORMATAR DATA
+        // ============================================================
+        function formatarData(data) {
+            if (!data || data === 'N/I' || data === '—') return 'N/I';
 
-<script>
-    // ============================================================
-    // CONFIGURAÇÕES GLOBAIS
-    // ============================================================
-    const API_URL = 'https://script.google.com/macros/s/AKfycbw1U5fqEj8tYdCjx_KtuRrm3HBm1qmp5nksdr_PRTxd8ywMLWnX1VZ8vI99-t9oqGwH/exec';
-    let currentUser = null;
-    let allRecords = [];
-    let currentView = 'dashboard';
-    let currentListType = null;
+            if (typeof data === 'string' && (data.includes('GMT') || data.includes('T') || data.includes('-'))) {
+                try {
+                    const date = new Date(data);
+                    if (!isNaN(date.getTime())) {
+                        const dia = String(date.getDate()).padStart(2, '0');
+                        const mes = String(date.getMonth() + 1).padStart(2, '0');
+                        const ano = date.getFullYear();
+                        return `${dia}/${mes}/${ano}`;
+                    }
+                } catch (e) {
+                    return data;
+                }
+            }
 
-    // ============================================================
-    // FUNÇÃO PARA FORMATAR DATA
-    // ============================================================
-    function formatarData(data) {
-        if (!data || data === 'N/I' || data === '—') return 'N/I';
-        
-        // Se for uma string no formato ISO ou GMT
-        if (typeof data === 'string' && (data.includes('GMT') || data.includes('T') || data.includes('-'))) {
+            if (typeof data === 'string' && /^\d{2}\/\d{2}\/\d{4}$/.test(data)) {
+                return data;
+            }
+
             try {
                 const date = new Date(data);
                 if (!isNaN(date.getTime())) {
@@ -929,941 +898,1090 @@ animation: neonMandado 2s infinite;
                     const ano = date.getFullYear();
                     return `${dia}/${mes}/${ano}`;
                 }
-            } catch(e) {
-                return data;
-            }
-        }
-        
-        // Se já estiver no formato DD/MM/AAAA, retorna como está
-        if (typeof data === 'string' && /^\d{2}\/\d{2}\/\d{4}$/.test(data)) {
+            } catch (e) {}
+
             return data;
         }
-        
-        // Tenta converter de outros formatos
-        try {
-            const date = new Date(data);
-            if (!isNaN(date.getTime())) {
-                const dia = String(date.getDate()).padStart(2, '0');
-                const mes = String(date.getMonth() + 1).padStart(2, '0');
-                const ano = date.getFullYear();
-                return `${dia}/${mes}/${ano}`;
-            }
-        } catch(e) {}
-        
-        return data;
-    }
-function abrirFichaImagem(id){
 
-    const rec = allRecords.find(r => r.ID == id);
+        // ============================================================
+        // FUNÇÃO PARA ABRIR FICHA NO FORMATO DA IMAGEM
+        // ============================================================
+        function abrirFichaImagem(id) {
+            const rec = allRecords.find(r => r.ID == id);
 
-    if(!rec){
-        alert("Registro não encontrado");
-        return;
-    }
-
-    const dataNasc = formatarData(rec.DATA_NASC);
-
-    const html = `
-    <div id="fichaImagemGerada"
-         style="
-         position:fixed;
-         left:-99999px;
-         top:0;
-         width:900px;
-         background:white;
-         padding:25px;
-         color:black;
-         font-family:Arial;
-         ">
-
-        <h2 style="text-align:center">
-            SIGEC
-        </h2>
-
-        <div style="text-align:center;margin-bottom:20px">
-
-            ${rec.FOTO ?
-            `<img src="${rec.FOTO}"
-             style="
-             width:180px;
-             height:220px;
-             object-fit:cover;
-             border:2px solid black;
-             ">`
-            : ''}
-
-        </div>
-
-        <table style="width:100%;border-collapse:collapse">
-
-<tr><td>ID</td><td>${rec.ID||''}</td></tr>
-<tr><td>NOME</td><td>${rec.NOME||''}</td></tr>
-<tr><td>ALCUNHA</td><td>${rec.ALCUNHA||''}</td></tr>
-<tr><td>MÃE</td><td>${rec.MAE||''}</td></tr>
-<tr><td>PAI</td><td>${rec.PAI||''}</td></tr>
-<tr><td>DATA NASC.</td><td>${dataNasc}</td></tr>
-<tr><td>CPF</td><td>${rec.CPF||''}</td></tr>
-<tr><td>RG</td><td>${rec.RG||''}</td></tr>
-<tr><td>ENDEREÇO</td><td>${rec.ENDERECO||''}</td></tr>
-<tr><td>CIDADE</td><td>${rec.CIDADE||''}</td></tr>
-<tr><td>TIPO PENAL</td><td>${rec.TIPO_PENAL||''}</td></tr>
-<tr><td>MANDADO</td><td>${rec.MANDADO||''}</td></tr>
-
-        </table>
-
-    </div>
-    `;
-
-    const divExistente=document.getElementById("fichaImagemGerada");
-
-    if(divExistente){
-        divExistente.remove();
-    }
-
-    document.body.insertAdjacentHTML("beforeend",html);
-
-    showLoading("Gerando imagem...");
-
-    setTimeout(()=>{
-
-        html2canvas(
-            document.getElementById("fichaImagemGerada"),
-            {
-                scale:2,
-                useCORS:true,
-                backgroundColor:"#ffffff"
+            if (!rec) {
+                alert("Registro não encontrado");
+                return;
             }
 
-        ).then(canvas=>{
+            const dataNasc = formatarData(rec.DATA_NASC);
 
-            hideLoading();
+            const mandadoStatus = (rec.MANDADO || '').toUpperCase() === 'SIM' ? 'CONSTA MANDADO DE PRISÃO' :
+                'NÃO CONSTA MANDADO DE PRISÃO';
 
-            const imagem = canvas.toDataURL("image/jpeg",1);
+            const filiacao = [];
+            if (rec.MAE) filiacao.push(`MÃE: ${rec.MAE}`);
+            if (rec.PAI) filiacao.push(`PAI: ${rec.PAI}`);
+            if (filiacao.length === 0) filiacao.push('MÃE: –', 'PAI: –');
 
-            const novaJanela = window.open("", "_blank");
+            // Busca a UF do RG
+            const ufRg = rec.UF_RG || '';
 
-            novaJanela.document.write(`
-                <html>
-                <body style="margin:0;background:black">
+            const html = `
+            <div id="fichaImagemGerada"
+                 style="
+                    position: fixed;
+                    left: -99999px;
+                    top: 0;
+                    width: 800px;
+                    background: #ffffff;
+                    padding: 30px 35px;
+                    color: #1a1a1a;
+                    font-family: 'Segoe UI', Arial, sans-serif;
+                    border: 2px solid #1a1a1a;
+                    box-sizing: border-box;
+                 ">
 
-                <img src="${imagem}"
-                     style="
-                     width:100%;
-                     display:block;
-                     ">
+                <!-- CABEÇALHO -->
+                <div style="text-align: center; border-bottom: 3px solid #1a1a1a; padding-bottom: 12px; margin-bottom: 18px;">
+                    <div style="font-size: 22px; font-weight: 800; letter-spacing: 2px; color: #1a1a1a;">
+                        SISGEC
+                    </div>
+                    <div style="font-size: 13px; font-weight: 600; letter-spacing: 1px; color: #333;">
+                        SISTEMA INTEGRADO DE GESTÃO E CONTROLE
+                    </div>
+                </div>
 
-                </body>
-                </html>
-            `);
+                <!-- TÍTULO -->
+                <div style="text-align: center; margin-bottom: 16px;">
+                    <div style="font-size: 16px; font-weight: 700; letter-spacing: 0.5px; color: #1a1a1a;">
+                        REGISTRO DE ANOTAÇÕES CRIMINAIS
+                    </div>
+                    <div style="font-size: 15px; font-weight: 700; color: #c0392b; margin-top: 2px; letter-spacing: 0.5px;">
+                        ${mandadoStatus}
+                    </div>
+                </div>
 
-            document.getElementById("fichaImagemGerada").remove();
+                <!-- FOTO -->
+                ${rec.FOTO ? `
+                <div style="text-align: center; margin-bottom: 16px;">
+                    <img src="${rec.FOTO}" 
+                         style="
+                            width: 140px;
+                            height: 170px;
+                            object-fit: cover;
+                            border: 2px solid #1a1a1a;
+                            border-radius: 6px;
+                         ">
+                </div>
+                ` : ''}
 
-        });
+                <!-- DADOS EM TABELA -->
+                <table style="
+                    width: 100%;
+                    border-collapse: collapse;
+                    font-size: 14px;
+                    margin-bottom: 16px;
+                ">
+                    <tr>
+                        <td style="padding: 4px 8px; font-weight: 700; width: 120px; border-bottom: 1px solid #ddd;">NOME</td>
+                        <td style="padding: 4px 8px; border-bottom: 1px solid #ddd; font-weight: 500;">${rec.NOME || '—'}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 4px 8px; font-weight: 700; width: 120px; border-bottom: 1px solid #ddd;">ALCUNHA</td>
+                        <td style="padding: 4px 8px; border-bottom: 1px solid #ddd; font-weight: 500;">${rec.ALCUNHA || '–'}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 4px 8px; font-weight: 700; width: 120px; border-bottom: 1px solid #ddd;">FILIAÇÃO</td>
+                        <td style="padding: 4px 8px; border-bottom: 1px solid #ddd; font-weight: 500;">
+                            ${filiacao.join('<br>')}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 4px 8px; font-weight: 700; width: 120px; border-bottom: 1px solid #ddd;">DATA NASC.</td>
+                        <td style="padding: 4px 8px; border-bottom: 1px solid #ddd; font-weight: 500;">${dataNasc}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 4px 8px; font-weight: 700; width: 120px; border-bottom: 1px solid #ddd;">CPF</td>
+                        <td style="padding: 4px 8px; border-bottom: 1px solid #ddd; font-weight: 500;">${rec.CPF || '—'}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 4px 8px; font-weight: 700; width: 120px; border-bottom: 1px solid #ddd;">RG</td>
+                        <td style="padding: 4px 8px; border-bottom: 1px solid #ddd; font-weight: 500;">${rec.RG || '—'} ${ufRg ? `SSP ${ufRg}` : ''}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 4px 8px; font-weight: 700; width: 120px; border-bottom: 1px solid #ddd;">ENDEREÇO</td>
+                        <td style="padding: 4px 8px; border-bottom: 1px solid #ddd; font-weight: 500;">${rec.ENDERECO || '—'}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 4px 8px; font-weight: 700; width: 120px; border-bottom: 1px solid #ddd;">CIDADE</td>
+                        <td style="padding: 4px 8px; border-bottom: 1px solid #ddd; font-weight: 500;">${rec.CIDADE || '—'}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 4px 8px; font-weight: 700; width: 120px; border-bottom: 1px solid #ddd;">UF</td>
+                        <td style="padding: 4px 8px; border-bottom: 1px solid #ddd; font-weight: 500;">${rec.ESTADO || '—'}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 4px 8px; font-weight: 700; width: 120px; border-bottom: 1px solid #ddd;">TIPO PENAL</td>
+                        <td style="padding: 4px 8px; border-bottom: 1px solid #ddd; font-weight: 500;">${rec.TIPO_PENAL || '–'}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 4px 8px; font-weight: 700; width: 120px; border-bottom: 1px solid #ddd;">MANDADO</td>
+                        <td style="padding: 4px 8px; border-bottom: 1px solid #ddd; font-weight: 500;">${rec.MANDADO || '—'}</td>
+                    </tr>
+                </table>
 
-    },500);
+                <!-- RODAPÉ -->
+                <div style="
+                    border-top: 2px solid #1a1a1a;
+                    padding-top: 10px;
+                    margin-top: 6px;
+                    display: flex;
+                    justify-content: space-between;
+                    font-size: 11px;
+                    color: #555;
+                ">
+                    <div>
+                        <strong>ID</strong> ${rec.ID || '—'}
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-weight: 600; letter-spacing: 0.5px;">SIGEC - SISTEMA INTEGRADO DE GESTÃO E CONTROLE</div>
+                        <div style="font-size: 10px; color: #777;">USO EXCLUSIVO DAS FORÇAS DE SEGURANÇA</div>
+                        <div style="font-size: 10px; color: #777;">DATA/HORA: ${new Date().toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }).replace(',', '')}</div>
+                    </div>
+                </div>
+            </div>
+            `;
 
-}
+            const divExistente = document.getElementById("fichaImagemGerada");
+            if (divExistente) {
+                divExistente.remove();
+            }
 
-function gerarPDF(id){
-    abrirFichaImagem(id);
-}
-    // ============================================================
-    // FUNÇÕES DE API - USANDO JSONP PARA GET E POST VIA JSON
-    // ============================================================
-    
-    // Função para requisições GET (JSONP)
-    function callAPIGet(action, data = {}, callback) {
-        const callbackName = 'jsonp_' + action + '_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
-        
-        let url = API_URL + '?action=' + encodeURIComponent(action) + '&callback=' + encodeURIComponent(callbackName);
-        
-        for (let key in data) {
-            if (data[key] !== undefined && data[key] !== null) {
-                if (typeof data[key] === 'object') {
-                    url += '&' + encodeURIComponent(key) + '=' + encodeURIComponent(JSON.stringify(data[key]));
-                } else {
-                    url += '&' + encodeURIComponent(key) + '=' + encodeURIComponent(data[key]);
+            document.body.insertAdjacentHTML("beforeend", html);
+
+            showLoading("Gerando ficha...");
+
+            setTimeout(() => {
+                const elemento = document.getElementById("fichaImagemGerada");
+                if (!elemento) {
+                    hideLoading();
+                    alert('Erro ao gerar ficha: elemento não encontrado.');
+                    return;
+                }
+
+                html2canvas(elemento, {
+                    scale: 2,
+                    useCORS: true,
+                    backgroundColor: "#ffffff",
+                    logging: false,
+                    width: 800,
+                    height: elemento.scrollHeight
+                }).then(canvas => {
+                    hideLoading();
+
+                    const imagem = canvas.toDataURL("image/jpeg", 0.95);
+
+                    const novaJanela = window.open("", "_blank");
+                    if (novaJanela) {
+                        novaJanela.document.write(`
+                            <!DOCTYPE html>
+                            <html>
+                            <head>
+                                <title>Ficha - ${rec.NOME || 'Registro'}</title>
+                                <style>
+                                    * { margin: 0; padding: 0; box-sizing: border-box; }
+                                    body { 
+                                        background: #1a1a1a; 
+                                        display: flex; 
+                                        justify-content: center; 
+                                        align-items: center; 
+                                        min-height: 100vh;
+                                        padding: 20px;
+                                    }
+                                    img {
+                                        max-width: 100%;
+                                        max-height: 100vh;
+                                        border-radius: 4px;
+                                        box-shadow: 0 8px 32px rgba(0,0,0,0.8);
+                                    }
+                                    .container {
+                                        display: flex;
+                                        flex-direction: column;
+                                        align-items: center;
+                                        gap: 16px;
+                                    }
+                                    .btn-download {
+                                        background: #f5c842;
+                                        border: none;
+                                        padding: 12px 32px;
+                                        border-radius: 30px;
+                                        font-weight: 700;
+                                        font-size: 1rem;
+                                        cursor: pointer;
+                                        transition: 0.2s;
+                                        color: #1a1a1a;
+                                        box-shadow: 0 4px 12px rgba(245,200,66,0.3);
+                                    }
+                                    .btn-download:hover {
+                                        transform: scale(1.02);
+                                        box-shadow: 0 6px 20px rgba(245,200,66,0.5);
+                                    }
+                                    .btn-download:active {
+                                        transform: scale(0.96);
+                                    }
+                                    .btn-fechar {
+                                        background: #444;
+                                        border: none;
+                                        padding: 12px 32px;
+                                        border-radius: 30px;
+                                        font-weight: 700;
+                                        font-size: 1rem;
+                                        cursor: pointer;
+                                        transition: 0.2s;
+                                        color: #fff;
+                                    }
+                                    .btn-fechar:hover {
+                                        background: #555;
+                                    }
+                                    .btn-group {
+                                        display: flex;
+                                        gap: 12px;
+                                        flex-wrap: wrap;
+                                        justify-content: center;
+                                    }
+                                </style>
+                            </head>
+                            <body>
+                                <div class="container">
+                                    <img src="${imagem}" alt="Ficha Criminal">
+                                    <div class="btn-group">
+                                        <button class="btn-download" onclick="downloadImage()">📥 BAIXAR IMAGEM</button>
+                                        <button class="btn-fechar" onclick="window.close()">✕ FECHAR</button>
+                                    </div>
+                                </div>
+                                <script>
+                                    function downloadImage() {
+                                        const link = document.createElement('a');
+                                        link.download = 'ficha_${rec.ID || 'registro'}.jpg';
+                                        link.href = '${imagem}';
+                                        document.body.appendChild(link);
+                                        link.click();
+                                        document.body.removeChild(link);
+                                    }
+                                <\/script>
+                            </body>
+                            </html>
+                        `);
+                        novaJanela.document.close();
+                    } else {
+                        alert('Por favor, permita pop-ups para visualizar a ficha.');
+                    }
+
+                    elemento.remove();
+
+                }).catch(err => {
+                    hideLoading();
+                    console.error('Erro ao gerar ficha:', err);
+                    alert('Erro ao gerar a ficha: ' + err.message);
+                    const el = document.getElementById("fichaImagemGerada");
+                    if (el) el.remove();
+                });
+
+            }, 300);
+        }
+
+        // ============================================================
+        // FUNÇÕES DE API - USANDO JSONP PARA GET E POST VIA JSON
+        // ============================================================
+
+        function callAPIGet(action, data = {}, callback) {
+            const callbackName = 'jsonp_' + action + '_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
+
+            let url = API_URL + '?action=' + encodeURIComponent(action) + '&callback=' + encodeURIComponent(callbackName);
+
+            for (let key in data) {
+                if (data[key] !== undefined && data[key] !== null) {
+                    if (typeof data[key] === 'object') {
+                        url += '&' + encodeURIComponent(key) + '=' + encodeURIComponent(JSON.stringify(data[key]));
+                    } else {
+                        url += '&' + encodeURIComponent(key) + '=' + encodeURIComponent(data[key]);
+                    }
                 }
             }
+
+            window[callbackName] = function(response) {
+                delete window[callbackName];
+                if (callback) callback(response);
+            };
+
+            const script = document.createElement('script');
+            script.src = url + '&_nocache=' + Date.now();
+            script.onerror = function() {
+                delete window[callbackName];
+                if (callback) callback({ success: false, message: 'Erro na comunicação com o servidor.' });
+            };
+            document.body.appendChild(script);
         }
-        
-        window[callbackName] = function(response) {
-            delete window[callbackName];
-            if (callback) callback(response);
-        };
-        
-        const script = document.createElement('script');
-        script.src = url + '&_nocache=' + Date.now();
-        script.onerror = function() {
-            delete window[callbackName];
-            if (callback) callback({ success: false, message: 'Erro na comunicação com o servidor.' });
-        };
-        document.body.appendChild(script);
-    }
 
-    // Função para requisições POST via JSON
-    function callAPIPost(action, data = {}) {
-        return new Promise((resolve, reject) => {
-            const payload = {
-                action: action,
-                ...data
-            };
-            
-            const options = {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(payload)
-            };
-            
-            fetch(API_URL, options)
-                .then(response => {
-                    resolve({ success: true, message: 'Operação realizada com sucesso!' });
-                })
-                .catch(error => {
-                    console.error('Erro no POST:', error);
-                    resolve({ success: false, message: 'Erro na comunicação: ' + error.message });
-                });
-        });
-    }
+        function callAPIPost(action, data = {}) {
+            return new Promise((resolve, reject) => {
+                const payload = {
+                    action: action,
+                    ...data
+                };
 
-    // Função unificada para chamar a API
-    function callAPI(action, data = {}) {
-        if (action === 'getRecords' || action === 'getLogin') {
-            return new Promise((resolve) => {
-                callAPIGet(action, data, function(response) {
-                    resolve(response);
-                });
+                const options = {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload)
+                };
+
+                fetch(API_URL, options)
+                    .then(response => {
+                        resolve({ success: true, message: 'Operação realizada com sucesso!' });
+                    })
+                    .catch(error => {
+                        console.error('Erro no POST:', error);
+                        resolve({ success: false, message: 'Erro na comunicação: ' + error.message });
+                    });
             });
         }
-        else {
-            return callAPIPost(action, data);
-        }
-    }
 
-    // ============================================================
-    // FUNÇÃO PARA REDIMENSIONAR IMAGEM
-    // ============================================================
-    function resizeImage(file, maxWidth, maxHeight, quality) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const img = new Image();
-                img.onload = function() {
-                    let width = img.width;
-                    let height = img.height;
-                    
-                    if (width > height) {
-                        if (width > maxWidth) {
-                            height = Math.round(height * (maxWidth / width));
-                            width = maxWidth;
-                        }
-                    } else {
-                        if (height > maxHeight) {
-                            width = Math.round(width * (maxHeight / height));
-                            height = maxHeight;
-                        }
-                    }
-                    
-                    const canvas = document.createElement('canvas');
-                    canvas.width = width;
-                    canvas.height = height;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, width, height);
-                    
-                    const dataUrl = canvas.toDataURL('image/jpeg', quality || 0.4);
-                    resolve(dataUrl);
-                };
-                img.onerror = function() {
-                    reject(new Error('Erro ao carregar imagem'));
-                };
-                img.src = e.target.result;
-            };
-            reader.onerror = function() {
-                reject(new Error('Erro ao ler arquivo'));
-            };
-            reader.readAsDataURL(file);
-        });
-    }
-
-    // ============================================================
-    // CARREGAR REGISTROS
-    // ============================================================
-    async function loadRecords() {
-        try {
-            const result = await callAPI('getRecords');
-            if (result.success) {
-                allRecords = result.records || [];
-                updateBadges();
-                return allRecords;
+        function callAPI(action, data = {}) {
+            if (action === 'getRecords' || action === 'getLogin') {
+                return new Promise((resolve) => {
+                    callAPIGet(action, data, function(response) {
+                        resolve(response);
+                    });
+                });
             } else {
-                alert('Erro ao carregar dados: ' + result.message);
+                return callAPIPost(action, data);
+            }
+        }
+
+        // ============================================================
+        // FUNÇÃO PARA REDIMENSIONAR IMAGEM
+        // ============================================================
+        function resizeImage(file, maxWidth, maxHeight, quality) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.onload = function() {
+                        let width = img.width;
+                        let height = img.height;
+
+                        if (width > height) {
+                            if (width > maxWidth) {
+                                height = Math.round(height * (maxWidth / width));
+                                width = maxWidth;
+                            }
+                        } else {
+                            if (height > maxHeight) {
+                                width = Math.round(width * (maxHeight / height));
+                                height = maxHeight;
+                            }
+                        }
+
+                        const canvas = document.createElement('canvas');
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        const dataUrl = canvas.toDataURL('image/jpeg', quality || 0.4);
+                        resolve(dataUrl);
+                    };
+                    img.onerror = function() {
+                        reject(new Error('Erro ao carregar imagem'));
+                    };
+                    img.src = e.target.result;
+                };
+                reader.onerror = function() {
+                    reject(new Error('Erro ao ler arquivo'));
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // ============================================================
+        // CARREGAR REGISTROS
+        // ============================================================
+        async function loadRecords() {
+            try {
+                const result = await callAPI('getRecords');
+                if (result.success) {
+                    allRecords = result.records || [];
+                    updateBadges();
+                    return allRecords;
+                } else {
+                    alert('Erro ao carregar dados: ' + result.message);
+                    return [];
+                }
+            } catch (e) {
+                console.error('Erro ao carregar registros:', e);
+                alert('Erro de comunicação ao carregar dados.');
                 return [];
             }
-        } catch (e) {
-            console.error('Erro ao carregar registros:', e);
-            alert('Erro de comunicação ao carregar dados.');
-            return [];
         }
-    }
 
-    function updateBadges() {
-        const nao = allRecords.filter(r => (r.MANDADO || '')
-            .normalize('NFD')
-            .replace(/[\u0300-\u036f]/g,'')
-            .toUpperCase() === 'NAO').length;
-        const sim = allRecords.filter(r => (r.MANDADO || '').toUpperCase() === 'SIM').length;
-        document.getElementById('badgeNao').textContent = nao;
-        document.getElementById('badgeSim').textContent = sim;
-    }
-
-    // ============================================================
-    // LOGIN
-    // ============================================================
-    async function handleLogin() {
-        const user = document.getElementById('loginUser').value.trim();
-        const pass = document.getElementById('loginPass').value.trim();
-        if (!user || !pass) {
-            document.getElementById('loginError').textContent = 'Preencha usuário e senha.';
-            return;
+        function updateBadges() {
+            const nao = allRecords.filter(r => (r.MANDADO || '')
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .toUpperCase() === 'NAO').length;
+            const sim = allRecords.filter(r => (r.MANDADO || '').toUpperCase() === 'SIM').length;
+            document.getElementById('badgeNao').textContent = nao;
+            document.getElementById('badgeSim').textContent = sim;
         }
-        
-        try {
-            const result = await callAPI('getLogin');
-            if (result.success) {
-                const found = result.users.find(u => u.usuario === user && u.senha === pass && u.ativo === 'SIM');
-                if (found) {
-                    currentUser = user;
-                    document.getElementById('loginScreen').style.display = 'none';
-                    document.getElementById('dashboard').style.display = 'flex';
-                    await loadRecords();
-                    showDashboardContent();
+
+        // ============================================================
+        // LOGIN
+        // ============================================================
+        async function handleLogin() {
+            const user = document.getElementById('loginUser').value.trim();
+            const pass = document.getElementById('loginPass').value.trim();
+            if (!user || !pass) {
+                document.getElementById('loginError').textContent = 'Preencha usuário e senha.';
+                return;
+            }
+
+            try {
+                const result = await callAPI('getLogin');
+                if (result.success) {
+                    const found = result.users.find(u => u.usuario === user && u.senha === pass && u.ativo === 'SIM');
+                    if (found) {
+                        currentUser = user;
+                        document.getElementById('loginScreen').style.display = 'none';
+                        document.getElementById('dashboard').style.display = 'flex';
+                        await loadRecords();
+                        showDashboardContent();
+                    } else {
+                        document.getElementById('loginError').textContent = 'Usuário ou senha inválidos.';
+                    }
                 } else {
-                    document.getElementById('loginError').textContent = 'Usuário ou senha inválidos.';
+                    document.getElementById('loginError').textContent = 'Erro ao validar login.';
                 }
-            } else {
-                document.getElementById('loginError').textContent = 'Erro ao validar login.';
+            } catch (e) {
+                document.getElementById('loginError').textContent = 'Erro de comunicação.';
             }
-        } catch (e) {
-            document.getElementById('loginError').textContent = 'Erro de comunicação.';
         }
-    }
 
-    // ============================================================
-    // LOGOUT
-    // ============================================================
-    function logout() {
-        currentUser = null;
-        document.getElementById('dashboard').style.display = 'none';
-        document.getElementById('loginScreen').style.display = 'flex';
-        document.getElementById('loginError').textContent = '';
-        document.getElementById('loginPass').value = '';
-        document.getElementById('dynamicContent').innerHTML = '';
-        currentView = 'dashboard';
-        document.querySelector('.cards-grid').style.display = 'flex';
-    }
-
-    // ============================================================
-    // NAVEGAÇÃO
-    // ============================================================
-    function showDashboardContent() {
-        document.getElementById('dynamicContent').innerHTML = `
-            <div style="text-align:center; padding:20px; color:#888;">
-                <p style="font-size:1.1rem;">Bem-vindo, <strong style="color:#f5c842;">${currentUser}</strong></p>
-                <p style="font-size:0.85rem;">Selecione um card para visualizar os registros.</p>
-            </div>
-        `;
-        currentView = 'dashboard';
-        document.querySelector('.cards-grid').style.display = 'flex';
-    }
-
-    function backToDashboard() {
-        document.querySelector('.cards-grid').style.display = 'flex';
-        showDashboardContent();
-        currentView = 'dashboard';
-    }
-
-    function backToList() {
-        if (currentListType) {
-            openList(currentListType);
-        } else {
-            backToDashboard();
+        // ============================================================
+        // LOGOUT
+        // ============================================================
+        function logout() {
+            currentUser = null;
+            document.getElementById('dashboard').style.display = 'none';
+            document.getElementById('loginScreen').style.display = 'flex';
+            document.getElementById('loginError').textContent = '';
+            document.getElementById('loginPass').value = '';
+            document.getElementById('dynamicContent').innerHTML = '';
+            currentView = 'dashboard';
+            document.querySelector('.cards-grid').style.display = 'flex';
         }
-    }
 
-    function openList(tipo) {
-        document.querySelector('.cards-grid').style.display = 'none';
-
-        const filtered = allRecords.filter(r => {
-            const mandado = (r.MANDADO || '')
-                .normalize('NFD')
-                .replace(/[\u0300-\u036f]/g,'')
-                .toUpperCase();
-
-            const busca = tipo
-                .normalize('NFD')
-                .replace(/[\u0300-\u036f]/g,'')
-                .toUpperCase();
-
-            return mandado === busca;
-        });
-        currentListType = tipo;
-        if (filtered.length === 0) {
-            alert('Nenhum registro com MANDADO = ' + tipo);
-            backToDashboard();
-            return;
-        }
-        const title = tipo === 'SIM' ? 'MANDADOS' : 'ANOTAÇÕES CRIMINAIS';
-        let html = `
-            <div class="list-page"
-     style="
-        display:flex;
-        flex-direction:column;
-        height:100%;
-     ">
-                <div class="list-header">
-                    <button class="btn-back" onclick="backToDashboard()">←</button>
-                    <span class="list-title">${title} (${filtered.length})</span>
-                </div>
-                <div style="padding:10px 0;">
-                    <input
-                        type="text"
-                        id="searchInput"
-                        placeholder="Pesquisar qualquer informação..."
-                        onkeyup="filtrarLista()"
-                        style="
-                            width:100%;
-                            padding:12px;
-                            border-radius:12px;
-                            border:1px solid #444;
-                            background:#1e1e1e;
-                            color:#fff;
-                        "
-                    >
-                </div>
-                <div class="scroll-area">
-        `;
-        filtered.forEach(rec => {
-            const searchable = Object.values(rec)
-                .join(' ')
-                .normalize('NFD')
-                .replace(/[\u0300-\u036f]/g,'')
-                .toUpperCase();
-            const foto = rec.FOTO || '';
-            const imgHtml = foto ? `<img src="${foto}" alt="foto" style="width:100%;height:100%;object-fit:cover;">` : '📷';
-            html += `
-                <div class="list-item" data-search="${searchable}">
-                    <div class="avatar">${imgHtml}</div>
-                    <div class="info">
-                        <div class="nome">${rec.NOME || 'Sem nome'}</div>
-                        <div class="mae">Mãe: ${rec.MAE || 'N/I'}</div>
-                    </div>
-                    <div class="seta" onclick="openDetail(\`${String(rec.ID).trim()}\`)">▶</div>
+        // ============================================================
+        // NAVEGAÇÃO
+        // ============================================================
+        function showDashboardContent() {
+            document.getElementById('dynamicContent').innerHTML = `
+                <div style="text-align:center; padding:20px; color:#888;">
+                    <p style="font-size:1.1rem;">Bem-vindo, <strong style="color:#f5c842;">${currentUser}</strong></p>
+                    <p style="font-size:0.85rem;">Selecione um card para visualizar os registros.</p>
                 </div>
             `;
-        });
-        html += `</div></div>`;
-        document.getElementById('dynamicContent').innerHTML = html;
-        document.getElementById('dynamicContent').scrollTop = 0;
-        currentView = 'list';
-    }
+            currentView = 'dashboard';
+            document.querySelector('.cards-grid').style.display = 'flex';
+        }
 
-    function filtrarLista() {
-        const input = document.getElementById('searchInput');
-        if (!input) return;
-        const filter = input.value
-            .normalize('NFD')
-            .replace(/[\u0300-\u036f]/g,'')
-            .toUpperCase();
-        const items = document.querySelectorAll('.list-item');
-        items.forEach(item => {
-            const searchData = item.getAttribute('data-search') || '';
-            if (searchData.includes(filter)) {
-                item.style.display = 'flex';
+        function backToDashboard() {
+            document.querySelector('.cards-grid').style.display = 'flex';
+            showDashboardContent();
+            currentView = 'dashboard';
+        }
+
+        function backToList() {
+            if (currentListType) {
+                openList(currentListType);
             } else {
-                item.style.display = 'none';
-            }
-        });
-    }
-
-    function openDetail(id) {
-        const record = allRecords.find(r =>
-    String(r.ID).trim() === String(id).trim()
-);
-
-if (!record) {
-    alert('Registro não encontrado.');
-    return;
-}
-
-        // Formata a data de nascimento
-        const dataNasc = formatarData(record.DATA_NASC);
-        
-        let html = `
-    <div class="detail-page" style="display:flex;">
-        <div class="list-header">
-            <button class="btn-back" onclick="backToList()">←</button>
-            <span class="list-title">Detalhes</span>
-        </div>
-
-        ${record.FOTO ? `
-        <div class="detail-photo-header">
-            <img
-                src="${record.FOTO}"
-                class="detail-photo"
-                onclick="openImageModal('${record.FOTO}')"
-            >
-        </div>
-        ` : ''}
-
-        <div class="detail-card">
-`;
-
-        const fields = [
-            ['ID', record.ID || '—'],
-            ['NOME', record.NOME || '—'],
-            ['ALCUNHA', record.ALCUNHA || '—'],
-            ['MAE', record.MAE || '—'],
-            ['PAI', record.PAI || '—'],
-            ['DATA NASC', dataNasc],
-            ['NATURALIDADE', record.NATURALIDADE || '—'],
-            ['UF NAT', record.UF_NAT || '—'],
-            ['CPF', record.CPF || '—'],
-            ['RG', record.RG || '—'],
-            ['UF RG', record.UF_RG || '—'],
-            ['TELEFONE', record.TELEFONE || '—'],
-            ['ENDEREÇO', record.ENDERECO || '—'],
-            ['CIDADE', record.CIDADE || '—'],
-            ['ESTADO', record.ESTADO || '—'],
-            ['TIPO PENAL', record.TIPO_PENAL || '—'],
-            ['MANDADO', record.MANDADO || '—']
-        ];
-        fields.forEach(([label, val]) => {
-            html += `<div class="detail-field"><span class="label">${label}</span><span class="value">${val}</span></div>`;
-        });
-        
-        html += `
-                </div>
-                <div class="detail-actions">
-                    <button class="btn-detail editar" onclick="editRecord(${record.ID})">✎ EDITAR</button>
-                    <button class="btn-detail compartilhar" onclick="shareRecord(${record.ID})">📱 COMPARTILHAR</button>
-                    <button class="btn-detail pdf"
-onclick="abrirFichaImagem(${record.ID})">
-📷 FICHA
-</button>
-                </div>
-                <button class="btn-back" style="margin-top:8px;" onclick="backToList()">← Voltar</button>
-            </div>
-        `;
-        document.getElementById('dynamicContent').innerHTML = html;
-        document.getElementById('dynamicContent').scrollTop = 0;
-        currentView = 'detail';
-    }
-
-    // ============================================================
-    // CADASTRO (FORMULÁRIO)
-    // ============================================================
-    function openCadastro() {
-        document.querySelector('.cards-grid').style.display = 'none';
-        const nextId = allRecords.length > 0 ? Math.max(...allRecords.map(r => Number(r.ID) || 0)) + 1 : 1;
-        let html = `
-            <div class="form-page" style="display:flex;">
-                <div class="list-header">
-                    <button class="btn-back" onclick="backToDashboard()">←</button>
-                    <span class="list-title">Novo Cadastro</span>
-                </div>
-                <form id="formCadastro" onsubmit="event.preventDefault(); salvarCadastro();">
-                    <div class="form-group">
-                        <label>ID (automático)</label>
-                        <input type="text" id="f_id" value="${nextId}" disabled>
-                    </div>
-                    <div class="form-group">
-                        <label>FOTO (upload)</label>
-                        <div class="file-upload-wrapper">
-                            <div class="file-upload-label" onclick="document.getElementById('fotoInput').click();">📁 Selecionar imagem</div>
-                            <input type="file" id="fotoInput" accept="image/*" onchange="previewFoto(event)">
-                        </div>
-                        <input type="hidden" id="f_foto" value="">
-                        <div id="fotoPreview" style="margin-top:6px;max-width:100px;"></div>
-                    </div>
-                    <div class="form-group"><label>NOME</label><input type="text" id="f_nome" required></div>
-                    <div class="form-group"><label>ALCUNHA</label><input type="text" id="f_alcunha"></div>
-                    <div class="form-group"><label>MÃE</label><input type="text" id="f_mae"></div>
-                    <div class="form-group"><label>PAI</label><input type="text" id="f_pai"></div>
-                    <div class="form-group"><label>DATA NASC</label><input type="text" id="f_dataNasc" placeholder="DD/MM/AAAA"></div>
-                    <div class="form-group"><label>NATURALIDADE</label><input type="text" id="f_natural"></div>
-                    <div class="form-group"><label>UF NAT</label><input type="text" id="f_ufNat" maxlength="2"></div>
-                    <div class="form-group"><label>CPF</label><input type="text" id="f_cpf"></div>
-                    <div class="form-group"><label>RG</label><input type="text" id="f_rg"></div>
-                    <div class="form-group"><label>UF RG</label><input type="text" id="f_ufRg" maxlength="2"></div>
-                    <div class="form-group"><label>TELEFONE</label><input type="text" id="f_telefone"></div>
-                    <div class="form-group"><label>ENDEREÇO</label><input type="text" id="f_endereco"></div>
-                    <div class="form-group"><label>CIDADE</label><input type="text" id="f_cidade"></div>
-                    <div class="form-group"><label>ESTADO</label><input type="text" id="f_estado" maxlength="2"></div>
-                    <div class="form-group"><label>TIPO PENAL</label><input type="text" id="f_tipoPenal"></div>
-                    <div class="form-group"><label>MANDADO</label>
-                        <select id="f_mandado">
-                            <option value="NÃO">NÃO</option>
-                            <option value="SIM">SIM</option>
-                        </select>
-                    </div>
-                    <div class="form-actions">
-                        <button type="submit" class="btn-form salvar">SALVAR</button>
-                        <button type="button" class="btn-form cancelar" onclick="backToDashboard()">CANCELAR</button>
-                    </div>
-                </form>
-            </div>
-        `;
-        document.getElementById('dynamicContent').innerHTML = html;
-        document.getElementById('dynamicContent').scrollTop = 0;
-        currentView = 'form';
-    }
-
-    async function previewFoto(e) {
-        const file = e.target.files[0];
-        if (file) {
-            try {
-                const resizedDataUrl = await resizeImage(file, 150, 150, 0.4);
-                document.getElementById('fotoPreview').innerHTML = `<img src="${resizedDataUrl}" style="max-width:100px;border-radius:8px;border:1px solid #555;">`;
-                document.getElementById('f_foto').value = resizedDataUrl;
-            } catch (error) {
-                alert('Erro ao processar imagem: ' + error.message);
-            }
-        }
-    }
-
-    async function salvarCadastro() {
-        const record = {
-            ID: document.getElementById('f_id').value,
-            FOTO: document.getElementById('f_foto').value || '',
-            NOME: document.getElementById('f_nome').value.trim(),
-            ALCUNHA: document.getElementById('f_alcunha').value.trim(),
-            MAE: document.getElementById('f_mae').value.trim(),
-            PAI: document.getElementById('f_pai').value.trim(),
-            DATA_NASC: document.getElementById('f_dataNasc').value.trim(),
-            NATURALIDADE: document.getElementById('f_natural').value.trim(),
-            UF_NAT: document.getElementById('f_ufNat').value.trim(),
-            CPF: document.getElementById('f_cpf').value.trim(),
-            RG: document.getElementById('f_rg').value.trim(),
-            UF_RG: document.getElementById('f_ufRg').value.trim(),
-            TELEFONE: document.getElementById('f_telefone').value.trim(),
-            ENDERECO: document.getElementById('f_endereco').value.trim(),
-            CIDADE: document.getElementById('f_cidade').value.trim(),
-            ESTADO: document.getElementById('f_estado').value.trim(),
-            TIPO_PENAL: document.getElementById('f_tipoPenal').value.trim(),
-            MANDADO: document.getElementById('f_mandado').value
-        };
-        
-        if (!record.NOME) {
-            alert('O campo NOME é obrigatório.');
-            return;
-        }
-        
-        try {
-            const result = await callAPI('addRecord', {
-                record: record,
-                usuario: currentUser
-            });
-            if (result.success) {
-                alert('Registro salvo com sucesso!');
-                await loadRecords();
                 backToDashboard();
-            } else {
-                alert('Erro ao salvar: ' + result.message);
             }
-        } catch (e) {
-            alert('Erro de comunicação: ' + e.message);
         }
-    }
 
-    // ============================================================
-    // EDIÇÃO
-    // ============================================================
-    function editRecord(id) {
-        document.querySelector('.cards-grid').style.display = 'none';
-        const rec = allRecords.find(r => r.ID == id);
-        if (!rec) return;
-        
-        // Formata a data para exibição no campo
-        let dataNasc = rec.DATA_NASC || '';
-        if (dataNasc && (dataNasc.includes('GMT') || dataNasc.includes('T'))) {
-            dataNasc = formatarData(dataNasc);
-        }
-        
-        let html = `
-            <div class="form-page" style="display:flex;">
-                <div class="list-header">
-                    <button class="btn-back" onclick="backToList()">←</button>
-                    <span class="list-title">Editar Registro #${id}</span>
-                </div>
-                <form id="formEdit" onsubmit="event.preventDefault(); salvarEdicao(${id});">
-                    <div class="form-group">
-                        <label>ID</label>
-                        <input type="text" value="${id}" disabled>
+        function openList(tipo) {
+            document.querySelector('.cards-grid').style.display = 'none';
+
+            const filtered = allRecords.filter(r => {
+                const mandado = (r.MANDADO || '')
+                    .normalize('NFD')
+                    .replace(/[\u0300-\u036f]/g, '')
+                    .toUpperCase();
+
+                const busca = tipo
+                    .normalize('NFD')
+                    .replace(/[\u0300-\u036f]/g, '')
+                    .toUpperCase();
+
+                return mandado === busca;
+            });
+            currentListType = tipo;
+            if (filtered.length === 0) {
+                alert('Nenhum registro com MANDADO = ' + tipo);
+                backToDashboard();
+                return;
+            }
+            const title = tipo === 'SIM' ? 'MANDADOS' : 'ANOTAÇÕES CRIMINAIS';
+            let html = `
+                <div class="list-page"
+                     style="
+                        display:flex;
+                        flex-direction:column;
+                        height:100%;
+                     ">
+                    <div class="list-header">
+                        <button class="btn-back" onclick="backToDashboard()">←</button>
+                        <span class="list-title">${title} (${filtered.length})</span>
                     </div>
-                    <div class="form-group">
-                        <label>FOTO</label>
-                        <div class="file-upload-wrapper">
-                            <div class="file-upload-label" onclick="document.getElementById('editFotoInput').click();">📁 Alterar imagem</div>
-                            <input type="file" id="editFotoInput" accept="image/*" onchange="previewEditFoto(event)">
+                    <div style="padding:10px 0;">
+                        <input
+                            type="text"
+                            id="searchInput"
+                            placeholder="Pesquisar qualquer informação..."
+                            onkeyup="filtrarLista()"
+                            style="
+                                width:100%;
+                                padding:12px;
+                                border-radius:12px;
+                                border:1px solid #444;
+                                background:#1e1e1e;
+                                color:#fff;
+                            "
+                        >
+                    </div>
+                    <div class="scroll-area">
+            `;
+            filtered.forEach(rec => {
+                const searchable = Object.values(rec)
+                    .join(' ')
+                    .normalize('NFD')
+                    .replace(/[\u0300-\u036f]/g, '')
+                    .toUpperCase();
+                const foto = rec.FOTO || '';
+                const imgHtml = foto ? `<img src="${foto}" alt="foto" style="width:100%;height:100%;object-fit:cover;">` :
+                    '📷';
+                html += `
+                    <div class="list-item" data-search="${searchable}">
+                        <div class="avatar">${imgHtml}</div>
+                        <div class="info">
+                            <div class="nome">${rec.NOME || 'Sem nome'}</div>
+                            <div class="mae">Mãe: ${rec.MAE || 'N/I'}</div>
                         </div>
-                        <input type="hidden" id="e_foto" value="${rec.FOTO || ''}">
-                        <div id="editFotoPreview" style="margin-top:6px;">${rec.FOTO ? `<img src="${rec.FOTO}" style="max-width:100px;border-radius:8px;border:1px solid #555;">` : ''}</div>
+                        <div class="seta" onclick="openDetail(\`${String(rec.ID).trim()}\`)">▶</div>
                     </div>
-        `;
-        
-        const campos = [
-            { id: 'e_nome', label: 'NOME', key: 'NOME' },
-            { id: 'e_alcunha', label: 'ALCUNHA', key: 'ALCUNHA' },
-            { id: 'e_mae', label: 'MÃE', key: 'MAE' },
-            { id: 'e_pai', label: 'PAI', key: 'PAI' },
-            { id: 'e_data_nasc', label: 'DATA NASC', key: 'DATA_NASC', value: dataNasc },
-            { id: 'e_naturalidade', label: 'NATURALIDADE', key: 'NATURALIDADE' },
-            { id: 'e_uf_nat', label: 'UF NAT', key: 'UF_NAT' },
-            { id: 'e_cpf', label: 'CPF', key: 'CPF' },
-            { id: 'e_rg', label: 'RG', key: 'RG' },
-            { id: 'e_uf_rg', label: 'UF RG', key: 'UF_RG' },
-            { id: 'e_telefone', label: 'TELEFONE', key: 'TELEFONE' },
-            { id: 'e_endereco', label: 'ENDEREÇO', key: 'ENDERECO' },
-            { id: 'e_cidade', label: 'CIDADE', key: 'CIDADE' },
-            { id: 'e_estado', label: 'ESTADO', key: 'ESTADO' },
-            { id: 'e_tipo_penal', label: 'TIPO PENAL', key: 'TIPO_PENAL' }
-        ];
-        
-        campos.forEach(campo => {
-            let valor = campo.value !== undefined ? campo.value : (rec[campo.key] || '');
+                `;
+            });
+            html += `</div></div>`;
+            document.getElementById('dynamicContent').innerHTML = html;
+            document.getElementById('dynamicContent').scrollTop = 0;
+            currentView = 'list';
+        }
+
+        function filtrarLista() {
+            const input = document.getElementById('searchInput');
+            if (!input) return;
+            const filter = input.value
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .toUpperCase();
+            const items = document.querySelectorAll('.list-item');
+            items.forEach(item => {
+                const searchData = item.getAttribute('data-search') || '';
+                if (searchData.includes(filter)) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        function openDetail(id) {
+            const record = allRecords.find(r =>
+                String(r.ID).trim() === String(id).trim()
+            );
+
+            if (!record) {
+                alert('Registro não encontrado.');
+                return;
+            }
+
+            const dataNasc = formatarData(record.DATA_NASC);
+
+            let html = `
+                <div class="detail-page" style="display:flex;">
+                    <div class="list-header">
+                        <button class="btn-back" onclick="backToList()">←</button>
+                        <span class="list-title">Detalhes</span>
+                    </div>
+
+                    ${record.FOTO ? `
+                    <div class="detail-photo-header">
+                        <img
+                            src="${record.FOTO}"
+                            class="detail-photo"
+                            onclick="openImageModal('${record.FOTO}')"
+                        >
+                    </div>
+                    ` : ''}
+
+                    <div class="detail-card">
+            `;
+
+            const fields = [
+                ['ID', record.ID || '—'],
+                ['NOME', record.NOME || '—'],
+                ['ALCUNHA', record.ALCUNHA || '—'],
+                ['MAE', record.MAE || '—'],
+                ['PAI', record.PAI || '—'],
+                ['DATA NASC', dataNasc],
+                ['NATURALIDADE', record.NATURALIDADE || '—'],
+                ['UF NAT', record.UF_NAT || '—'],
+                ['CPF', record.CPF || '—'],
+                ['RG', record.RG || '—'],
+                ['UF RG', record.UF_RG || '—'],
+                ['TELEFONE', record.TELEFONE || '—'],
+                ['ENDEREÇO', record.ENDERECO || '—'],
+                ['CIDADE', record.CIDADE || '—'],
+                ['ESTADO', record.ESTADO || '—'],
+                ['TIPO PENAL', record.TIPO_PENAL || '—'],
+                ['MANDADO', record.MANDADO || '—']
+            ];
+            fields.forEach(([label, val]) => {
+                html +=
+                    `<div class="detail-field"><span class="label">${label}</span><span class="value">${val}</span></div>`;
+            });
+
             html += `
-                <div class="form-group">
-                    <label>${campo.label}</label>
-                    <input type="text" id="${campo.id}" value="${valor}">
+                    </div>
+                    <div class="detail-actions">
+                        <button class="btn-detail editar" onclick="editRecord(${record.ID})">✎ EDITAR</button>
+                        <button class="btn-detail compartilhar" onclick="shareRecord(${record.ID})">📱 COMPARTILHAR</button>
+                        <button class="btn-detail pdf" onclick="abrirFichaImagem(${record.ID})">📷 FICHA</button>
+                    </div>
+                    <button class="btn-back" style="margin-top:8px;" onclick="backToList()">← Voltar</button>
                 </div>
             `;
-        });
-        
-        html += `
-                    <div class="form-group">
-                        <label>MANDADO</label>
-                        <select id="e_mandado">
-                            <option value="NÃO" ${rec.MANDADO === 'NÃO' ? 'selected' : ''}>NÃO</option>
-                            <option value="SIM" ${rec.MANDADO === 'SIM' ? 'selected' : ''}>SIM</option>
-                        </select>
+            document.getElementById('dynamicContent').innerHTML = html;
+            document.getElementById('dynamicContent').scrollTop = 0;
+            currentView = 'detail';
+        }
+
+        // ============================================================
+        // CADASTRO (FORMULÁRIO)
+        // ============================================================
+        function openCadastro() {
+            document.querySelector('.cards-grid').style.display = 'none';
+            const nextId = allRecords.length > 0 ? Math.max(...allRecords.map(r => Number(r.ID) || 0)) + 1 : 1;
+            let html = `
+                <div class="form-page" style="display:flex;">
+                    <div class="list-header">
+                        <button class="btn-back" onclick="backToDashboard()">←</button>
+                        <span class="list-title">Novo Cadastro</span>
                     </div>
-                    <div class="form-actions">
-                        <button type="submit" class="btn-form salvar">SALVAR EDIÇÃO</button>
-                        <button type="button" class="btn-form cancelar" onclick="backToList()">CANCELAR</button>
-                    </div>
-                </form>
-            </div>
-        `;
-        document.getElementById('dynamicContent').innerHTML = html;
-        document.getElementById('dynamicContent').scrollTop = 0;
-        currentView = 'form';
-    }
-
-    async function previewEditFoto(e) {
-        const file = e.target.files[0];
-        if (file) {
-            try {
-                const resizedDataUrl = await resizeImage(file, 150, 150, 0.4);
-                document.getElementById('editFotoPreview').innerHTML = `<img src="${resizedDataUrl}" style="max-width:100px;border-radius:8px;border:1px solid #555;">`;
-                document.getElementById('e_foto').value = resizedDataUrl;
-            } catch (error) {
-                alert('Erro ao processar imagem: ' + error.message);
-            }
-        }
-    }
-
-    async function salvarEdicao(id) {
-        const record = {
-            FOTO: document.getElementById('e_foto') ? document.getElementById('e_foto').value || '' : '',
-            NOME: document.getElementById('e_nome') ? document.getElementById('e_nome').value.trim() : '',
-            ALCUNHA: document.getElementById('e_alcunha') ? document.getElementById('e_alcunha').value.trim() : '',
-            MAE: document.getElementById('e_mae') ? document.getElementById('e_mae').value.trim() : '',
-            PAI: document.getElementById('e_pai') ? document.getElementById('e_pai').value.trim() : '',
-            DATA_NASC: document.getElementById('e_data_nasc') ? document.getElementById('e_data_nasc').value.trim() : '',
-            NATURALIDADE: document.getElementById('e_naturalidade') ? document.getElementById('e_naturalidade').value.trim() : '',
-            UF_NAT: document.getElementById('e_uf_nat') ? document.getElementById('e_uf_nat').value.trim() : '',
-            CPF: document.getElementById('e_cpf') ? document.getElementById('e_cpf').value.trim() : '',
-            RG: document.getElementById('e_rg') ? document.getElementById('e_rg').value.trim() : '',
-            UF_RG: document.getElementById('e_uf_rg') ? document.getElementById('e_uf_rg').value.trim() : '',
-            TELEFONE: document.getElementById('e_telefone') ? document.getElementById('e_telefone').value.trim() : '',
-            ENDERECO: document.getElementById('e_endereco') ? document.getElementById('e_endereco').value.trim() : '',
-            CIDADE: document.getElementById('e_cidade') ? document.getElementById('e_cidade').value.trim() : '',
-            ESTADO: document.getElementById('e_estado') ? document.getElementById('e_estado').value.trim() : '',
-            TIPO_PENAL: document.getElementById('e_tipo_penal') ? document.getElementById('e_tipo_penal').value.trim() : '',
-            MANDADO: document.getElementById('e_mandado') ? document.getElementById('e_mandado').value : 'NÃO'
-        };
-        
-        if (!record.NOME) {
-            alert('O campo NOME é obrigatório.');
-            return;
-        }
-        
-        try {
-            const result = await callAPI('updateRecord', {
-                id: id,
-                record: record,
-                usuario: currentUser
-            });
-            if (result.success) {
-                alert('Registro atualizado com sucesso!');
-                await loadRecords();
-                backToList();
-            } else {
-                alert('Erro ao atualizar: ' + result.message);
-            }
-        } catch (e) {
-            alert('Erro de comunicação: ' + e.message);
-        }
-    }
-
-    // ============================================================
-    // SENHA
-    // ============================================================
-    function openSenha() {
-        document.getElementById('modalSenha').style.display = 'flex';
-        document.getElementById('novaSenhaInput').value = '';
-        document.getElementById('confirmSenhaInput').value = '';
-        document.getElementById('senhaMsg').textContent = '';
-        document.getElementById('senhaMsg').style.color = '#f5c842';
-    }
-
-    function fecharModalSenha() {
-        document.getElementById('modalSenha').style.display = 'none';
-    }
-
-    async function alterarSenha() {
-        const nova = document.getElementById('novaSenhaInput').value.trim();
-        const conf = document.getElementById('confirmSenhaInput').value.trim();
-        
-        if (!nova || nova.length < 4) {
-            document.getElementById('senhaMsg').textContent = 'Senha deve ter pelo menos 4 caracteres.';
-            document.getElementById('senhaMsg').style.color = '#f66';
-            return;
-        }
-        
-        if (nova !== conf) {
-            document.getElementById('senhaMsg').textContent = 'As senhas não coincidem.';
-            document.getElementById('senhaMsg').style.color = '#f66';
-            return;
-        }
-        
-        try {
-            document.getElementById('senhaMsg').textContent = 'Alterando senha...';
-            document.getElementById('senhaMsg').style.color = '#f5c842';
-            
-            const result = await callAPI('updatePassword', {
-                user: currentUser,
-                newPass: nova
-            });
-            
-            if (result.success) {
-                alert('Senha alterada com sucesso!');
-                fecharModalSenha();
-            } else {
-                document.getElementById('senhaMsg').textContent = 'Erro: ' + result.message;
-                document.getElementById('senhaMsg').style.color = '#f66';
-            }
-        } catch (error) {
-            document.getElementById('senhaMsg').textContent = 'Erro de comunicação: ' + error.message;
-            document.getElementById('senhaMsg').style.color = '#f66';
-        }
-    }
-
-    // ============================================================
-    // COMPARTILHAR - CORRIGIDO PARA MOBILE
-    // ============================================================
-    function shareRecord(id) {
-        const rec = allRecords.find(r => r.ID == id);
-        if (!rec) return;
-        
-        // Formata a data de nascimento
-        const dataNasc = formatarData(rec.DATA_NASC);
-        
-        // Monta a mensagem formatada
-        let msg = '*SIGEC - Registro #' + rec.ID + '*\n\n';
-        msg += '📌 *Nome:* ' + (rec.NOME || 'N/I') + '\n';
-        msg += '📌 *Alcunha:* ' + (rec.ALCUNHA || 'N/I') + '\n';
-        msg += '📌 *Mãe:* ' + (rec.MAE || 'N/I') + '\n';
-        msg += '📌 *Pai:* ' + (rec.PAI || 'N/I') + '\n';
-        msg += '📌 *Data Nasc.:* ' + dataNasc + '\n';
-        msg += '📌 *Naturalidade:* ' + (rec.NATURALIDADE || 'N/I') + '/' + (rec.UF_NAT || 'N/I') + '\n';
-        msg += '📌 *CPF:* ' + (rec.CPF || 'N/I') + '\n';
-        msg += '📌 *RG:* ' + (rec.RG || 'N/I') + ' - ' + (rec.UF_RG || 'N/I') + '\n';
-        msg += '📌 *Telefone:* ' + (rec.TELEFONE || 'N/I') + '\n';
-        msg += '📌 *Endereço:* ' + (rec.ENDERECO || 'N/I') + '\n';
-        msg += '📌 *Cidade/UF:* ' + (rec.CIDADE || 'N/I') + '/' + (rec.ESTADO || 'N/I') + '\n';
-        msg += '📌 *Tipo Penal:* ' + (rec.TIPO_PENAL || 'N/I') + '\n';
-        msg += '⚖️ *Mandado:* ' + (rec.MANDADO || 'N/I');
-        
-        // Usa a URL https://wa.me/ que funciona em todos os navegadores
-        const url = 'https://wa.me/?text=' + encodeURIComponent(msg);
-        
-        // Tenta abrir de forma compatível com mobile
-        try {
-            window.open(url, '_blank');
-        } catch(e) {
-            window.location.href = url;
-        }
-    }
-
-     // ============================================================
-    // FUNÇÕES DE LOADING
-    // ============================================================
-    function showLoading(text) {
-        const overlay = document.getElementById('loadingOverlay');
-        const textEl = document.getElementById('loadingText');
-        if (text) textEl.textContent = text;
-        overlay.style.display = 'flex';
-    }
-
-    function hideLoading() {
-        document.getElementById('loadingOverlay').style.display = 'none';
-    }
-
-    // ============================================================
-    // IMAGE MODAL
-    // ============================================================
-    function openImageModal(src){
-        let modal = document.getElementById('imageModal');
-
-        if(!modal){
-            modal = document.createElement('div');
-            modal.id = 'imageModal';
-            modal.className = 'image-modal';
-
-            modal.innerHTML = `
-                <img id="modalImage">
+                    <form id="formCadastro" onsubmit="event.preventDefault(); salvarCadastro();">
+                        <div class="form-group">
+                            <label>ID (automático)</label>
+                            <input type="text" id="f_id" value="${nextId}" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label>FOTO (upload)</label>
+                            <div class="file-upload-wrapper">
+                                <div class="file-upload-label" onclick="document.getElementById('fotoInput').click();">📁 Selecionar imagem</div>
+                                <input type="file" id="fotoInput" accept="image/*" onchange="previewFoto(event)">
+                            </div>
+                            <input type="hidden" id="f_foto" value="">
+                            <div id="fotoPreview" style="margin-top:6px;max-width:100px;"></div>
+                        </div>
+                        <div class="form-group"><label>NOME</label><input type="text" id="f_nome" required></div>
+                        <div class="form-group"><label>ALCUNHA</label><input type="text" id="f_alcunha"></div>
+                        <div class="form-group"><label>MÃE</label><input type="text" id="f_mae"></div>
+                        <div class="form-group"><label>PAI</label><input type="text" id="f_pai"></div>
+                        <div class="form-group"><label>DATA NASC</label><input type="text" id="f_dataNasc" placeholder="DD/MM/AAAA"></div>
+                        <div class="form-group"><label>NATURALIDADE</label><input type="text" id="f_natural"></div>
+                        <div class="form-group"><label>UF NAT</label><input type="text" id="f_ufNat" maxlength="2"></div>
+                        <div class="form-group"><label>CPF</label><input type="text" id="f_cpf"></div>
+                        <div class="form-group"><label>RG</label><input type="text" id="f_rg"></div>
+                        <div class="form-group"><label>UF RG</label><input type="text" id="f_ufRg" maxlength="2"></div>
+                        <div class="form-group"><label>TELEFONE</label><input type="text" id="f_telefone"></div>
+                        <div class="form-group"><label>ENDEREÇO</label><input type="text" id="f_endereco"></div>
+                        <div class="form-group"><label>CIDADE</label><input type="text" id="f_cidade"></div>
+                        <div class="form-group"><label>ESTADO</label><input type="text" id="f_estado" maxlength="2"></div>
+                        <div class="form-group"><label>TIPO PENAL</label><input type="text" id="f_tipoPenal"></div>
+                        <div class="form-group"><label>MANDADO</label>
+                            <select id="f_mandado">
+                                <option value="NÃO">NÃO</option>
+                                <option value="SIM">SIM</option>
+                            </select>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn-form salvar">SALVAR</button>
+                            <button type="button" class="btn-form cancelar" onclick="backToDashboard()">CANCELAR</button>
+                        </div>
+                    </form>
+                </div>
             `;
+            document.getElementById('dynamicContent').innerHTML = html;
+            document.getElementById('dynamicContent').scrollTop = 0;
+            currentView = 'form';
+        }
 
-            modal.onclick = function(){
-                modal.style.display = 'none';
+        async function previewFoto(e) {
+            const file = e.target.files[0];
+            if (file) {
+                try {
+                    const resizedDataUrl = await resizeImage(file, 150, 150, 0.4);
+                    document.getElementById('fotoPreview').innerHTML =
+                        `<img src="${resizedDataUrl}" style="max-width:100px;border-radius:8px;border:1px solid #555;">`;
+                    document.getElementById('f_foto').value = resizedDataUrl;
+                } catch (error) {
+                    alert('Erro ao processar imagem: ' + error.message);
+                }
+            }
+        }
+
+        async function salvarCadastro() {
+            const record = {
+                ID: document.getElementById('f_id').value,
+                FOTO: document.getElementById('f_foto').value || '',
+                NOME: document.getElementById('f_nome').value.trim(),
+                ALCUNHA: document.getElementById('f_alcunha').value.trim(),
+                MAE: document.getElementById('f_mae').value.trim(),
+                PAI: document.getElementById('f_pai').value.trim(),
+                DATA_NASC: document.getElementById('f_dataNasc').value.trim(),
+                NATURALIDADE: document.getElementById('f_natural').value.trim(),
+                UF_NAT: document.getElementById('f_ufNat').value.trim(),
+                CPF: document.getElementById('f_cpf').value.trim(),
+                RG: document.getElementById('f_rg').value.trim(),
+                UF_RG: document.getElementById('f_ufRg').value.trim(),
+                TELEFONE: document.getElementById('f_telefone').value.trim(),
+                ENDERECO: document.getElementById('f_endereco').value.trim(),
+                CIDADE: document.getElementById('f_cidade').value.trim(),
+                ESTADO: document.getElementById('f_estado').value.trim(),
+                TIPO_PENAL: document.getElementById('f_tipoPenal').value.trim(),
+                MANDADO: document.getElementById('f_mandado').value
             };
 
-            document.body.appendChild(modal);
+            if (!record.NOME) {
+                alert('O campo NOME é obrigatório.');
+                return;
+            }
+
+            try {
+                const result = await callAPI('addRecord', {
+                    record: record,
+                    usuario: currentUser
+                });
+                if (result.success) {
+                    alert('Registro salvo com sucesso!');
+                    await loadRecords();
+                    backToDashboard();
+                } else {
+                    alert('Erro ao salvar: ' + result.message);
+                }
+            } catch (e) {
+                alert('Erro de comunicação: ' + e.message);
+            }
         }
 
-        document.getElementById('modalImage').src = src;
-        modal.style.display = 'flex';
-    }
+        // ============================================================
+        // EDIÇÃO
+        // ============================================================
+        function editRecord(id) {
+            document.querySelector('.cards-grid').style.display = 'none';
+            const rec = allRecords.find(r => r.ID == id);
+            if (!rec) return;
 
-    // ============================================================
-    // INICIALIZAÇÃO
-    // ============================================================
-    document.addEventListener('DOMContentLoaded', () => {
-        document.getElementById('loginScreen').style.display = 'flex';
-        document.getElementById('dashboard').style.display = 'none';
-        document.querySelector('.cards-grid').style.display = 'flex';
-    });
-window.addEventListener("load",()=>{
+            let dataNasc = rec.DATA_NASC || '';
+            if (dataNasc && (dataNasc.includes('GMT') || dataNasc.includes('T'))) {
+                dataNasc = formatarData(dataNasc);
+            }
 
-    if(typeof html2canvas==="undefined"){
-        alert("html2canvas não carregou.");
-    }
+            let html = `
+                <div class="form-page" style="display:flex;">
+                    <div class="list-header">
+                        <button class="btn-back" onclick="backToList()">←</button>
+                        <span class="list-title">Editar Registro #${id}</span>
+                    </div>
+                    <form id="formEdit" onsubmit="event.preventDefault(); salvarEdicao(${id});">
+                        <div class="form-group">
+                            <label>ID</label>
+                            <input type="text" value="${id}" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label>FOTO</label>
+                            <div class="file-upload-wrapper">
+                                <div class="file-upload-label" onclick="document.getElementById('editFotoInput').click();">📁 Alterar imagem</div>
+                                <input type="file" id="editFotoInput" accept="image/*" onchange="previewEditFoto(event)">
+                            </div>
+                            <input type="hidden" id="e_foto" value="${rec.FOTO || ''}">
+                            <div id="editFotoPreview" style="margin-top:6px;">${rec.FOTO ? `<img src="${rec.FOTO}" style="max-width:100px;border-radius:8px;border:1px solid #555;">` : ''}</div>
+                        </div>
+            `;
 
-});
-</script>
+            const campos = [
+                { id: 'e_nome', label: 'NOME', key: 'NOME' },
+                { id: 'e_alcunha', label: 'ALCUNHA', key: 'ALCUNHA' },
+                { id: 'e_mae', label: 'MÃE', key: 'MAE' },
+                { id: 'e_pai', label: 'PAI', key: 'PAI' },
+                { id: 'e_data_nasc', label: 'DATA NASC', key: 'DATA_NASC', value: dataNasc },
+                { id: 'e_naturalidade', label: 'NATURALIDADE', key: 'NATURALIDADE' },
+                { id: 'e_uf_nat', label: 'UF NAT', key: 'UF_NAT' },
+                { id: 'e_cpf', label: 'CPF', key: 'CPF' },
+                { id: 'e_rg', label: 'RG', key: 'RG' },
+                { id: 'e_uf_rg', label: 'UF RG', key: 'UF_RG' },
+                { id: 'e_telefone', label: 'TELEFONE', key: 'TELEFONE' },
+                { id: 'e_endereco', label: 'ENDEREÇO', key: 'ENDERECO' },
+                { id: 'e_cidade', label: 'CIDADE', key: 'CIDADE' },
+                { id: 'e_estado', label: 'ESTADO', key: 'ESTADO' },
+                { id: 'e_tipo_penal', label: 'TIPO PENAL', key: 'TIPO_PENAL' }
+            ];
+
+            campos.forEach(campo => {
+                let valor = campo.value !== undefined ? campo.value : (rec[campo.key] || '');
+                html += `
+                    <div class="form-group">
+                        <label>${campo.label}</label>
+                        <input type="text" id="${campo.id}" value="${valor}">
+                    </div>
+                `;
+            });
+
+            html += `
+                        <div class="form-group">
+                            <label>MANDADO</label>
+                            <select id="e_mandado">
+                                <option value="NÃO" ${rec.MANDADO === 'NÃO' ? 'selected' : ''}>NÃO</option>
+                                <option value="SIM" ${rec.MANDADO === 'SIM' ? 'selected' : ''}>SIM</option>
+                            </select>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn-form salvar">SALVAR EDIÇÃO</button>
+                            <button type="button" class="btn-form cancelar" onclick="backToList()">CANCELAR</button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            document.getElementById('dynamicContent').innerHTML = html;
+            document.getElementById('dynamicContent').scrollTop = 0;
+            currentView = 'form';
+        }
+
+        async function previewEditFoto(e) {
+            const file = e.target.files[0];
+            if (file) {
+                try {
+                    const resizedDataUrl = await resizeImage(file, 150, 150, 0.4);
+                    document.getElementById('editFotoPreview').innerHTML =
+                        `<img src="${resizedDataUrl}" style="max-width:100px;border-radius:8px;border:1px solid #555;">`;
+                    document.getElementById('e_foto').value = resizedDataUrl;
+                } catch (error) {
+                    alert('Erro ao processar imagem: ' + error.message);
+                }
+            }
+        }
+
+        async function salvarEdicao(id) {
+            const record = {
+                FOTO: document.getElementById('e_foto') ? document.getElementById('e_foto').value || '' : '',
+                NOME: document.getElementById('e_nome') ? document.getElementById('e_nome').value.trim() : '',
+                ALCUNHA: document.getElementById('e_alcunha') ? document.getElementById('e_alcunha').value.trim() : '',
+                MAE: document.getElementById('e_mae') ? document.getElementById('e_mae').value.trim() : '',
+                PAI: document.getElementById('e_pai') ? document.getElementById('e_pai').value.trim() : '',
+                DATA_NASC: document.getElementById('e_data_nasc') ? document.getElementById('e_data_nasc').value.trim() :
+                '',
+                NATURALIDADE: document.getElementById('e_naturalidade') ? document.getElementById('e_naturalidade').value
+                    .trim() : '',
+                UF_NAT: document.getElementById('e_uf_nat') ? document.getElementById('e_uf_nat').value.trim() : '',
+                CPF: document.getElementById('e_cpf') ? document.getElementById('e_cpf').value.trim() : '',
+                RG: document.getElementById('e_rg') ? document.getElementById('e_rg').value.trim() : '',
+                UF_RG: document.getElementById('e_uf_rg') ? document.getElementById('e_uf_rg').value.trim() : '',
+                TELEFONE: document.getElementById('e_telefone') ? document.getElementById('e_telefone').value.trim() : '',
+                ENDERECO: document.getElementById('e_endereco') ? document.getElementById('e_endereco').value.trim() : '',
+                CIDADE: document.getElementById('e_cidade') ? document.getElementById('e_cidade').value.trim() : '',
+                ESTADO: document.getElementById('e_estado') ? document.getElementById('e_estado').value.trim() : '',
+                TIPO_PENAL: document.getElementById('e_tipo_penal') ? document.getElementById('e_tipo_penal').value.trim() :
+                '',
+                MANDADO: document.getElementById('e_mandado') ? document.getElementById('e_mandado').value : 'NÃO'
+            };
+
+            if (!record.NOME) {
+                alert('O campo NOME é obrigatório.');
+                return;
+            }
+
+            try {
+                const result = await callAPI('updateRecord', {
+                    id: id,
+                    record: record,
+                    usuario: currentUser
+                });
+                if (result.success) {
+                    alert('Registro atualizado com sucesso!');
+                    await loadRecords();
+                    backToList();
+                } else {
+                    alert('Erro ao atualizar: ' + result.message);
+                }
+            } catch (e) {
+                alert('Erro de comunicação: ' + e.message);
+            }
+        }
+
+        // ============================================================
+        // SENHA
+        // ============================================================
+        function openSenha() {
+            document.getElementById('modalSenha').style.display = 'flex';
+            document.getElementById('novaSenhaInput').value = '';
+            document.getElementById('confirmSenhaInput').value = '';
+            document.getElementById('senhaMsg').textContent = '';
+            document.getElementById('senhaMsg').style.color = '#f5c842';
+        }
+
+        function fecharModalSenha() {
+            document.getElementById('modalSenha').style.display = 'none';
+        }
+
+        async function alterarSenha() {
+            const nova = document.getElementById('novaSenhaInput').value.trim();
+            const conf = document.getElementById('confirmSenhaInput').value.trim();
+
+            if (!nova || nova.length < 4) {
+                document.getElementById('senhaMsg').textContent = 'Senha deve ter pelo menos 4 caracteres.';
+                document.getElementById('senhaMsg').style.color = '#f66';
+                return;
+            }
+
+            if (nova !== conf) {
+                document.getElementById('senhaMsg').textContent = 'As senhas não coincidem.';
+                document.getElementById('senhaMsg').style.color = '#f66';
+                return;
+            }
+
+            try {
+                document.getElementById('senhaMsg').textContent = 'Alterando senha...';
+                document.getElementById('senhaMsg').style.color = '#f5c842';
+
+                const result = await callAPI('updatePassword', {
+                    user: currentUser,
+                    newPass: nova
+                });
+
+                if (result.success) {
+                    alert('Senha alterada com sucesso!');
+                    fecharModalSenha();
+                } else {
+                    document.getElementById('senhaMsg').textContent = 'Erro: ' + result.message;
+                    document.getElementById('senhaMsg').style.color = '#f66';
+                }
+            } catch (error) {
+                document.getElementById('senhaMsg').textContent = 'Erro de comunicação: ' + error.message;
+                document.getElementById('senhaMsg').style.color = '#f66';
+            }
+        }
+
+        // ============================================================
+        // COMPARTILHAR
+        // ============================================================
+        function shareRecord(id) {
+            const rec = allRecords.find(r => r.ID == id);
+            if (!rec) return;
+
+            const dataNasc = formatarData(rec.DATA_NASC);
+
+            let msg = '*SIGEC - Registro #' + rec.ID + '*\n\n';
+            msg += '📌 *Nome:* ' + (rec.NOME || 'N/I') + '\n';
+            msg += '📌 *Alcunha:* ' + (rec.ALCUNHA || 'N/I') + '\n';
+            msg += '📌 *Mãe:* ' + (rec.MAE || 'N/I') + '\n';
+            msg += '📌 *Pai:* ' + (rec.PAI || 'N/I') + '\n';
+            msg += '📌 *Data Nasc.:* ' + dataNasc + '\n';
+            msg += '📌 *Naturalidade:* ' + (rec.NATURALIDADE || 'N/I') + '/' + (rec.UF_NAT || 'N/I') + '\n';
+            msg += '📌 *CPF:* ' + (rec.CPF || 'N/I') + '\n';
+            msg += '📌 *RG:* ' + (rec.RG || 'N/I') + ' - ' + (rec.UF_RG || 'N/I') + '\n';
+            msg += '📌 *Telefone:* ' + (rec.TELEFONE || 'N/I') + '\n';
+            msg += '📌 *Endereço:* ' + (rec.ENDERECO || 'N/I') + '\n';
+            msg += '📌 *Cidade/UF:* ' + (rec.CIDADE || 'N/I') + '/' + (rec.ESTADO || 'N/I') + '\n';
+            msg += '📌 *Tipo Penal:* ' + (rec.TIPO_PENAL || 'N/I') + '\n';
+            msg += '⚖️ *Mandado:* ' + (rec.MANDADO || 'N/I');
+
+            const url = 'https://wa.me/?text=' + encodeURIComponent(msg);
+
+            try {
+                window.open(url, '_blank');
+            } catch (e) {
+                window.location.href = url;
+            }
+        }
+
+        // ============================================================
+        // FUNÇÕES DE LOADING
+        // ============================================================
+        function showLoading(text) {
+            const overlay = document.getElementById('loadingOverlay');
+            const textEl = document.getElementById('loadingText');
+            if (text) textEl.textContent = text;
+            overlay.style.display = 'flex';
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingOverlay').style.display = 'none';
+        }
+
+        // ============================================================
+        // IMAGE MODAL
+        // ============================================================
+        function openImageModal(src) {
+            let modal = document.getElementById('imageModal');
+
+            if (!modal) {
+                modal = document.createElement('div');
+                modal.id = 'imageModal';
+                modal.className = 'image-modal';
+
+                modal.innerHTML = `
+                    <img id="modalImage">
+                `;
+
+                modal.onclick = function() {
+                    modal.style.display = 'none';
+                };
+
+                document.body.appendChild(modal);
+            }
+
+            document.getElementById('modalImage').src = src;
+            modal.style.display = 'flex';
+        }
+
+        // ============================================================
+        // INICIALIZAÇÃO
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('loginScreen').style.display = 'flex';
+            document.getElementById('dashboard').style.display = 'none';
+            document.querySelector('.cards-grid').style.display = 'flex';
+        });
+
+        window.addEventListener("load", () => {
+            if (typeof html2canvas === "undefined") {
+                console.warn("html2canvas não carregou.");
+            }
+            console.log('Função abrirFichaImagem disponível:', typeof abrirFichaImagem === 'function');
+        });
+    </script>
 </body>
 </html>
