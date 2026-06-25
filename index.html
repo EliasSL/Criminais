@@ -781,7 +781,8 @@
             }
         }
     </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js">
+    </script>
 </head>
 <body>
 
@@ -860,7 +861,8 @@
         // ============================================================
         // CONFIGURAÇÕES GLOBAIS
         // ============================================================
-        const API_URL = 'https://script.google.com/macros/s/AKfycbw1U5fqEj8tYdCjx_KtuRrm3HBm1qmp5nksdr_PRTxd8ywMLWnX1VZ8vI99-t9oqGwH/exec';
+        const API_URL =
+            'https://script.google.com/macros/s/AKfycbw1U5fqEj8tYdCjx_KtuRrm3HBm1qmp5nksdr_PRTxd8ywMLWnX1VZ8vI99-t9oqGwH/exec';
         let currentUser = null;
         let allRecords = [];
         let currentView = 'dashboard';
@@ -904,292 +906,376 @@
         }
 
         // ============================================================
-        // FUNÇÃO PARA ABRIR FICHA NO FORMATO DA IMAGEM
-        // ============================================================
-        function abrirFichaImagem(id) {
-            const rec = allRecords.find(r => r.ID == id);
+// FUNÇÃO PARA ABRIR FICHA NO FORMATO DA IMAGEM (CORRIGIDA)
+// ============================================================
+function abrirFichaImagem(id) {
+    const rec = allRecords.find(r => r.ID == id);
 
-            if (!rec) {
-                alert("Registro não encontrado");
-                return;
-            }
+    if (!rec) {
+        alert("Registro não encontrado");
+        return;
+    }
 
-            const dataNasc = formatarData(rec.DATA_NASC);
+    const dataNasc = formatarData(rec.DATA_NASC);
 
-            const mandadoStatus = (rec.MANDADO || '').toUpperCase() === 'SIM' ? 'CONSTA MANDADO DE PRISÃO' :
-                'NÃO CONSTA MANDADO DE PRISÃO';
+    const mandadoStatus = (rec.MANDADO || '').toUpperCase() === 'SIM' ? 'CONSTA MANDADO DE PRISÃO' :
+        'NÃO CONSTA MANDADO DE PRISÃO';
 
-            const filiacao = [];
-            if (rec.MAE) filiacao.push(`MÃE: ${rec.MAE}`);
-            if (rec.PAI) filiacao.push(`PAI: ${rec.PAI}`);
-            if (filiacao.length === 0) filiacao.push('MÃE: –', 'PAI: –');
+    const filiacao = [];
+    if (rec.MAE) filiacao.push(`MÃE: ${rec.MAE}`);
+    if (rec.PAI) filiacao.push(`PAI: ${rec.PAI}`);
+    if (filiacao.length === 0) filiacao.push('MÃE: –', 'PAI: –');
 
-            // Busca a UF do RG
-            const ufRg = rec.UF_RG || '';
+    const ufRg = rec.UF_RG || '';
 
-            const html = `
-            <div id="fichaImagemGerada"
-                 style="
-                    position: fixed;
-                    left: -99999px;
-                    top: 0;
-                    width: 800px;
-                    background: #ffffff;
-                    padding: 30px 35px;
-                    color: #1a1a1a;
-                    font-family: 'Segoe UI', Arial, sans-serif;
-                    border: 2px solid #1a1a1a;
-                    box-sizing: border-box;
-                 ">
+    // Criar o elemento da ficha
+    const divFicha = document.createElement('div');
+    divFicha.id = 'fichaImagemGerada';
+    divFicha.style.cssText = `
+            position: fixed;
+            left: -99999px;
+            top: 0;
+            width: 1100px;
+            background: #ffffff;
+            padding: 25px 30px;
+            color: #1a1a1a;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            border: 6px double #0b2a57;
+border-radius: 28px;
+            box-sizing: border-box;
+            line-height: 1.5;
+        `;
 
-                <!-- CABEÇALHO -->
-                <div style="text-align: center; border-bottom: 3px solid #1a1a1a; padding-bottom: 12px; margin-bottom: 18px;">
-                    <div style="font-size: 22px; font-weight: 800; letter-spacing: 2px; color: #1a1a1a;">
-                        SISGEC
-                    </div>
-                    <div style="font-size: 13px; font-weight: 600; letter-spacing: 1px; color: #333;">
-                        SISTEMA INTEGRADO DE GESTÃO E CONTROLE
-                    </div>
-                </div>
+    // Construir o HTML da ficha
+    // Construir o HTML da ficha
+let htmlFicha = `
 
-                <!-- TÍTULO -->
-                <div style="text-align: center; margin-bottom: 16px;">
-                    <div style="font-size: 16px; font-weight: 700; letter-spacing: 0.5px; color: #1a1a1a;">
-                        REGISTRO DE ANOTAÇÕES CRIMINAIS
-                    </div>
-                    <div style="font-size: 15px; font-weight: 700; color: #c0392b; margin-top: 2px; letter-spacing: 0.5px;">
-                        ${mandadoStatus}
-                    </div>
-                </div>
+<div style="
+    background:#08264f;
+    color:#fff;
+    text-align:center;
+    padding:25px;
+    border-radius:18px 18px 0 0;
+    margin:-25px -30px 25px -30px;
+">
+    <div style="
+        font-size:70px;
+        font-weight:900;
+        letter-spacing:8px;
+    ">
+        SIGEC
+    </div>
 
-                <!-- FOTO -->
-                ${rec.FOTO ? `
-                <div style="text-align: center; margin-bottom: 16px;">
-                    <img src="${rec.FOTO}" 
-                         style="
-                            width: 140px;
-                            height: 170px;
-                            object-fit: cover;
-                            border: 2px solid #1a1a1a;
-                            border-radius: 6px;
-                         ">
-                </div>
-                ` : ''}
+    <div style="
+        font-size:22px;
+        font-weight:600;
+    ">
+        SISTEMA INTEGRADO DE GESTÃO E CONTROLE
+    </div>
+</div>
 
-                <!-- DADOS EM TABELA -->
-                <table style="
-                    width: 100%;
-                    border-collapse: collapse;
-                    font-size: 14px;
-                    margin-bottom: 16px;
-                ">
-                    <tr>
-                        <td style="padding: 4px 8px; font-weight: 700; width: 120px; border-bottom: 1px solid #ddd;">NOME</td>
-                        <td style="padding: 4px 8px; border-bottom: 1px solid #ddd; font-weight: 500;">${rec.NOME || '—'}</td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 4px 8px; font-weight: 700; width: 120px; border-bottom: 1px solid #ddd;">ALCUNHA</td>
-                        <td style="padding: 4px 8px; border-bottom: 1px solid #ddd; font-weight: 500;">${rec.ALCUNHA || '–'}</td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 4px 8px; font-weight: 700; width: 120px; border-bottom: 1px solid #ddd;">FILIAÇÃO</td>
-                        <td style="padding: 4px 8px; border-bottom: 1px solid #ddd; font-weight: 500;">
-                            ${filiacao.join('<br>')}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 4px 8px; font-weight: 700; width: 120px; border-bottom: 1px solid #ddd;">DATA NASC.</td>
-                        <td style="padding: 4px 8px; border-bottom: 1px solid #ddd; font-weight: 500;">${dataNasc}</td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 4px 8px; font-weight: 700; width: 120px; border-bottom: 1px solid #ddd;">CPF</td>
-                        <td style="padding: 4px 8px; border-bottom: 1px solid #ddd; font-weight: 500;">${rec.CPF || '—'}</td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 4px 8px; font-weight: 700; width: 120px; border-bottom: 1px solid #ddd;">RG</td>
-                        <td style="padding: 4px 8px; border-bottom: 1px solid #ddd; font-weight: 500;">${rec.RG || '—'} ${ufRg ? `SSP ${ufRg}` : ''}</td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 4px 8px; font-weight: 700; width: 120px; border-bottom: 1px solid #ddd;">ENDEREÇO</td>
-                        <td style="padding: 4px 8px; border-bottom: 1px solid #ddd; font-weight: 500;">${rec.ENDERECO || '—'}</td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 4px 8px; font-weight: 700; width: 120px; border-bottom: 1px solid #ddd;">CIDADE</td>
-                        <td style="padding: 4px 8px; border-bottom: 1px solid #ddd; font-weight: 500;">${rec.CIDADE || '—'}</td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 4px 8px; font-weight: 700; width: 120px; border-bottom: 1px solid #ddd;">UF</td>
-                        <td style="padding: 4px 8px; border-bottom: 1px solid #ddd; font-weight: 500;">${rec.ESTADO || '—'}</td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 4px 8px; font-weight: 700; width: 120px; border-bottom: 1px solid #ddd;">TIPO PENAL</td>
-                        <td style="padding: 4px 8px; border-bottom: 1px solid #ddd; font-weight: 500;">${rec.TIPO_PENAL || '–'}</td>
-                    </tr>
-                    <tr>
-                        <td style="padding: 4px 8px; font-weight: 700; width: 120px; border-bottom: 1px solid #ddd;">MANDADO</td>
-                        <td style="padding: 4px 8px; border-bottom: 1px solid #ddd; font-weight: 500;">${rec.MANDADO || '—'}</td>
-                    </tr>
-                </table>
+<div style="text-align:center;margin-bottom:25px;">
+    <div style="
+        font-size:32px;
+        font-weight:900;
+        color:#111;
+    ">
+        REGISTRO DE ANOTAÇÕES CRIMINAIS
+    </div>
 
-                <!-- RODAPÉ -->
-                <div style="
-                    border-top: 2px solid #1a1a1a;
-                    padding-top: 10px;
-                    margin-top: 6px;
-                    display: flex;
-                    justify-content: space-between;
-                    font-size: 11px;
-                    color: #555;
-                ">
-                    <div>
-                        <strong>ID</strong> ${rec.ID || '—'}
-                    </div>
-                    <div style="text-align: right;">
-                        <div style="font-weight: 600; letter-spacing: 0.5px;">SIGEC - SISTEMA INTEGRADO DE GESTÃO E CONTROLE</div>
-                        <div style="font-size: 10px; color: #777;">USO EXCLUSIVO DAS FORÇAS DE SEGURANÇA</div>
-                        <div style="font-size: 10px; color: #777;">DATA/HORA: ${new Date().toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }).replace(',', '')}</div>
-                    </div>
-                </div>
+    <div style="
+        font-size:22px;
+        font-weight:800;
+        color:#c62828;
+        margin-top:8px;
+    ">
+        ${mandadoStatus}
+    </div>
+</div>
+
+<div style="
+    display:flex;
+    gap:40px;
+    align-items:flex-start;
+">
+
+    <div style="
+        width:320px;
+        text-align:center;
+    ">
+`;
+
+if (rec.FOTO) {
+    htmlFicha += `
+        <img src="${rec.FOTO}"
+             style="
+                width:260px;
+                height:330px;
+                object-fit:cover;
+                border:4px solid #0b2a57;
+                border-radius:18px;
+             ">
+    `;
+}
+
+htmlFicha += `
+
+        <div style="
+            margin-top:20px;
+            font-size:22px;
+            font-weight:900;
+        ">
+            ID
+        </div>
+
+        <div style="
+            font-size:70px;
+            font-weight:900;
+        ">
+            ${rec.ID}
+        </div>
+
+    </div>
+
+    <div style="
+        flex:1;
+    ">
+
+        <div style="
+            display:flex;
+            border-bottom:1px solid #cfd8dc;
+            padding:14px 0;
+        ">
+            <div style="
+                width:220px;
+                font-weight:800;
+                color:#0b2a57;
+            ">
+                NOME
             </div>
-            `;
 
-            const divExistente = document.getElementById("fichaImagemGerada");
-            if (divExistente) {
-                divExistente.remove();
+            <div style="
+                flex:1;
+                font-size:22px;
+            ">
+                ${rec.NOME || '—'}
+            </div>
+        </div>
+
+        <div style="display:flex;border-bottom:1px solid #cfd8dc;padding:14px 0;">
+            <div style="width:170px;font-weight:800;color:#0b2a57;">ALCUNHA</div>
+            <div style="flex:1;font-size:18px;">${rec.ALCUNHA || '–'}</div>
+        </div>
+
+        <div style="display:flex;border-bottom:1px solid #cfd8dc;padding:14px 0;">
+            <div style="width:170px;font-weight:800;color:#0b2a57;">FILIAÇÃO</div>
+            <div style="flex:1;font-size:18px;line-height:1.6;">
+                ${filiacao.join('<br>')}
+            </div>
+        </div>
+
+        <div style="display:flex;border-bottom:1px solid #cfd8dc;padding:14px 0;">
+            <div style="width:170px;font-weight:800;color:#0b2a57;">DATA NASC.</div>
+            <div style="flex:1;font-size:18px;">${dataNasc}</div>
+        </div>
+
+        <div style="display:flex;border-bottom:1px solid #cfd8dc;padding:14px 0;">
+            <div style="width:170px;font-weight:800;color:#0b2a57;">CPF</div>
+            <div style="flex:1;font-size:18px;">${rec.CPF || '—'}</div>
+        </div>
+
+        <div style="display:flex;border-bottom:1px solid #cfd8dc;padding:14px 0;">
+            <div style="width:170px;font-weight:800;color:#0b2a57;">RG</div>
+            <div style="flex:1;font-size:18px;">
+                ${rec.RG || '—'} ${ufRg ? `SSP ${ufRg}` : ''}
+            </div>
+        </div>
+
+        <div style="display:flex;border-bottom:1px solid #cfd8dc;padding:14px 0;">
+            <div style="width:170px;font-weight:800;color:#0b2a57;">ENDEREÇO</div>
+            <div style="flex:1;font-size:18px;">${rec.ENDERECO || '—'}</div>
+        </div>
+
+        <div style="display:flex;border-bottom:1px solid #cfd8dc;padding:14px 0;">
+            <div style="width:170px;font-weight:800;color:#0b2a57;">CIDADE</div>
+            <div style="flex:1;font-size:18px;">${rec.CIDADE || '—'}</div>
+        </div>
+
+        <div style="display:flex;border-bottom:1px solid #cfd8dc;padding:14px 0;">
+            <div style="width:170px;font-weight:800;color:#0b2a57;">UF</div>
+            <div style="flex:1;font-size:18px;"> ${rec.UF || rec.ESTADO || '—'}</div>
+        </div>
+
+        <div style="display:flex;border-bottom:1px solid #cfd8dc;padding:14px 0;">
+            <div style="width:170px;font-weight:800;color:#0b2a57;">TIPO PENAL</div>
+            <div style="flex:1;font-size:18px;">${rec.TIPO_PENAL || '–'}</div>
+        </div>
+
+        <div style="display:flex;border-bottom:1px solid #cfd8dc;padding:14px 0;">
+            <div style="width:170px;font-weight:800;color:#0b2a57;">MANDADO</div>
+            <div style="flex:1;font-size:18px;">${rec.MANDADO || '—'}</div>
+        </div>
+
+    </div>
+
+</div>
+
+<div style="
+    background:#08264f;
+    color:#fff;
+    margin:25px -30px -25px -30px;
+    padding:18px 25px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-size:14px;
+    border-radius:0 0 18px 18px;
+">
+    <div>
+        SIGEC - SISTEMA INTEGRADO DE GESTÃO E CONTROLE
+        <br>
+        USO EXCLUSIVO DAS FORÇAS DE SEGURANÇA
+    </div>
+
+    <div>
+        DATA/HORA:
+        ${new Date().toLocaleString('pt-BR')}
+    </div>
+</div>
+`;
+    divFicha.innerHTML = htmlFicha;
+    document.body.appendChild(divFicha);
+
+    showLoading("Gerando ficha...");
+
+    setTimeout(() => {
+        const elemento = document.getElementById("fichaImagemGerada");
+        if (!elemento) {
+            hideLoading();
+            alert('Erro ao gerar ficha: elemento não encontrado.');
+            return;
+        }
+
+        html2canvas(elemento, {
+            scale: 2.5,
+            useCORS: true,
+            backgroundColor: "#ffffff",
+            logging: false,
+            width: 1100,
+            height: elemento.scrollHeight
+        }).then(canvas => {
+            hideLoading();
+
+            const imagem = canvas.toDataURL("image/jpeg", 0.95);
+
+            const novaJanela = window.open("", "_blank");
+            if (novaJanela) {
+                novaJanela.document.write(`
+                        <!DOCTYPE html>
+                        <html>
+                        <head>
+                            <title>Ficha - ${rec.NOME || 'Registro'}</title>
+                            <style>
+                                * { margin: 0; padding: 0; box-sizing: border-box; }
+                                body { 
+                                    background: #1a1a1a; 
+                                    display: flex; 
+                                    justify-content: center; 
+                                    align-items: center; 
+                                    min-height: 100vh;
+                                    padding: 20px;
+                                }
+                                img {
+                                    max-width: 100%;
+                                    max-height: 100vh;
+                                    border-radius: 4px;
+                                    box-shadow: 0 8px 32px rgba(0,0,0,0.8);
+                                }
+                                .container {
+                                    display: flex;
+                                    flex-direction: column;
+                                    align-items: center;
+                                    gap: 16px;
+                                }
+                                .btn-download {
+                                    background: #f5c842;
+                                    border: none;
+                                    padding: 12px 32px;
+                                    border-radius: 30px;
+                                    font-weight: 700;
+                                    font-size: 1rem;
+                                    cursor: pointer;
+                                    transition: 0.2s;
+                                    color: #1a1a1a;
+                                    box-shadow: 0 4px 12px rgba(245,200,66,0.3);
+                                }
+                                .btn-download:hover {
+                                    transform: scale(1.02);
+                                    box-shadow: 0 6px 20px rgba(245,200,66,0.5);
+                                }
+                                .btn-download:active {
+                                    transform: scale(0.96);
+                                }
+                                .btn-fechar {
+                                    background: #444;
+                                    border: none;
+                                    padding: 12px 32px;
+                                    border-radius: 30px;
+                                    font-weight: 700;
+                                    font-size: 1rem;
+                                    cursor: pointer;
+                                    transition: 0.2s;
+                                    color: #fff;
+                                }
+                                .btn-fechar:hover {
+                                    background: #555;
+                                }
+                                .btn-group {
+                                    display: flex;
+                                    gap: 12px;
+                                    flex-wrap: wrap;
+                                    justify-content: center;
+                                }
+                            </style>
+                        </head>
+                        <body>
+                            <div class="container">
+                                <img src="${imagem}" alt="Ficha Criminal">
+                                <div class="btn-group">
+                                    <button class="btn-download" onclick="downloadImage()">📥 BAIXAR IMAGEM</button>
+                                    <button class="btn-fechar" onclick="window.close()">✕ FECHAR</button>
+                                </div>
+                            </div>
+                            <script>
+                                function downloadImage() {
+                                    const link = document.createElement('a');
+                                    link.download = 'ficha_${rec.ID || 'registro'}.jpg';
+                                    link.href = '${imagem}';
+                                    document.body.appendChild(link);
+                                    link.click();
+                                    document.body.removeChild(link);
+                                }
+                            <\/script>
+                        </body>
+                        </html>
+                    `);
+                novaJanela.document.close();
+            } else {
+                alert('Por favor, permita pop-ups para visualizar a ficha.');
             }
 
-            document.body.insertAdjacentHTML("beforeend", html);
+            elemento.remove();
 
-            showLoading("Gerando ficha...");
+        }).catch(err => {
+            hideLoading();
+            console.error('Erro ao gerar ficha:', err);
+            alert('Erro ao gerar a ficha: ' + err.message);
+            const el = document.getElementById("fichaImagemGerada");
+            if (el) el.remove();
+        });
 
-            setTimeout(() => {
-                const elemento = document.getElementById("fichaImagemGerada");
-                if (!elemento) {
-                    hideLoading();
-                    alert('Erro ao gerar ficha: elemento não encontrado.');
-                    return;
-                }
-
-                html2canvas(elemento, {
-                    scale: 2,
-                    useCORS: true,
-                    backgroundColor: "#ffffff",
-                    logging: false,
-                    width: 800,
-                    height: elemento.scrollHeight
-                }).then(canvas => {
-                    hideLoading();
-
-                    const imagem = canvas.toDataURL("image/jpeg", 0.95);
-
-                    const novaJanela = window.open("", "_blank");
-                    if (novaJanela) {
-                        novaJanela.document.write(`
-                            <!DOCTYPE html>
-                            <html>
-                            <head>
-                                <title>Ficha - ${rec.NOME || 'Registro'}</title>
-                                <style>
-                                    * { margin: 0; padding: 0; box-sizing: border-box; }
-                                    body { 
-                                        background: #1a1a1a; 
-                                        display: flex; 
-                                        justify-content: center; 
-                                        align-items: center; 
-                                        min-height: 100vh;
-                                        padding: 20px;
-                                    }
-                                    img {
-                                        max-width: 100%;
-                                        max-height: 100vh;
-                                        border-radius: 4px;
-                                        box-shadow: 0 8px 32px rgba(0,0,0,0.8);
-                                    }
-                                    .container {
-                                        display: flex;
-                                        flex-direction: column;
-                                        align-items: center;
-                                        gap: 16px;
-                                    }
-                                    .btn-download {
-                                        background: #f5c842;
-                                        border: none;
-                                        padding: 12px 32px;
-                                        border-radius: 30px;
-                                        font-weight: 700;
-                                        font-size: 1rem;
-                                        cursor: pointer;
-                                        transition: 0.2s;
-                                        color: #1a1a1a;
-                                        box-shadow: 0 4px 12px rgba(245,200,66,0.3);
-                                    }
-                                    .btn-download:hover {
-                                        transform: scale(1.02);
-                                        box-shadow: 0 6px 20px rgba(245,200,66,0.5);
-                                    }
-                                    .btn-download:active {
-                                        transform: scale(0.96);
-                                    }
-                                    .btn-fechar {
-                                        background: #444;
-                                        border: none;
-                                        padding: 12px 32px;
-                                        border-radius: 30px;
-                                        font-weight: 700;
-                                        font-size: 1rem;
-                                        cursor: pointer;
-                                        transition: 0.2s;
-                                        color: #fff;
-                                    }
-                                    .btn-fechar:hover {
-                                        background: #555;
-                                    }
-                                    .btn-group {
-                                        display: flex;
-                                        gap: 12px;
-                                        flex-wrap: wrap;
-                                        justify-content: center;
-                                    }
-                                </style>
-                            </head>
-                            <body>
-                                <div class="container">
-                                    <img src="${imagem}" alt="Ficha Criminal">
-                                    <div class="btn-group">
-                                        <button class="btn-download" onclick="downloadImage()">📥 BAIXAR IMAGEM</button>
-                                        <button class="btn-fechar" onclick="window.close()">✕ FECHAR</button>
-                                    </div>
-                                </div>
-                                <script>
-                                    function downloadImage() {
-                                        const link = document.createElement('a');
-                                        link.download = 'ficha_${rec.ID || 'registro'}.jpg';
-                                        link.href = '${imagem}';
-                                        document.body.appendChild(link);
-                                        link.click();
-                                        document.body.removeChild(link);
-                                    }
-                                <\/script>
-                            </body>
-                            </html>
-                        `);
-                        novaJanela.document.close();
-                    } else {
-                        alert('Por favor, permita pop-ups para visualizar a ficha.');
-                    }
-
-                    elemento.remove();
-
-                }).catch(err => {
-                    hideLoading();
-                    console.error('Erro ao gerar ficha:', err);
-                    alert('Erro ao gerar a ficha: ' + err.message);
-                    const el = document.getElementById("fichaImagemGerada");
-                    if (el) el.remove();
-                });
-
-            }, 300);
-        }
+    }, 300);
+}
 
         // ============================================================
         // FUNÇÕES DE API - USANDO JSONP PARA GET E POST VIA JSON
@@ -1390,11 +1476,11 @@
         // ============================================================
         function showDashboardContent() {
             document.getElementById('dynamicContent').innerHTML = `
-                <div style="text-align:center; padding:20px; color:#888;">
-                    <p style="font-size:1.1rem;">Bem-vindo, <strong style="color:#f5c842;">${currentUser}</strong></p>
-                    <p style="font-size:0.85rem;">Selecione um card para visualizar os registros.</p>
-                </div>
-            `;
+                    <div style="text-align:center; padding:20px; color:#888;">
+                        <p style="font-size:1.1rem;">Bem-vindo, <strong style="color:#f5c842;">${currentUser}</strong></p>
+                        <p style="font-size:0.85rem;">Selecione um card para visualizar os registros.</p>
+                    </div>
+                `;
             currentView = 'dashboard';
             document.querySelector('.cards-grid').style.display = 'flex';
         }
@@ -1437,34 +1523,34 @@
             }
             const title = tipo === 'SIM' ? 'MANDADOS' : 'ANOTAÇÕES CRIMINAIS';
             let html = `
-                <div class="list-page"
-                     style="
-                        display:flex;
-                        flex-direction:column;
-                        height:100%;
-                     ">
-                    <div class="list-header">
-                        <button class="btn-back" onclick="backToDashboard()">←</button>
-                        <span class="list-title">${title} (${filtered.length})</span>
-                    </div>
-                    <div style="padding:10px 0;">
-                        <input
-                            type="text"
-                            id="searchInput"
-                            placeholder="Pesquisar qualquer informação..."
-                            onkeyup="filtrarLista()"
-                            style="
-                                width:100%;
-                                padding:12px;
-                                border-radius:12px;
-                                border:1px solid #444;
-                                background:#1e1e1e;
-                                color:#fff;
-                            "
-                        >
-                    </div>
-                    <div class="scroll-area">
-            `;
+                    <div class="list-page"
+                         style="
+                            display:flex;
+                            flex-direction:column;
+                            height:100%;
+                         ">
+                        <div class="list-header">
+                            <button class="btn-back" onclick="backToDashboard()">←</button>
+                            <span class="list-title">${title} (${filtered.length})</span>
+                        </div>
+                        <div style="padding:10px 0;">
+                            <input
+                                type="text"
+                                id="searchInput"
+                                placeholder="Pesquisar qualquer informação..."
+                                onkeyup="filtrarLista()"
+                                style="
+                                    width:100%;
+                                    padding:12px;
+                                    border-radius:12px;
+                                    border:1px solid #444;
+                                    background:#1e1e1e;
+                                    color:#fff;
+                                "
+                            >
+                        </div>
+                        <div class="scroll-area">
+                `;
             filtered.forEach(rec => {
                 const searchable = Object.values(rec)
                     .join(' ')
@@ -1475,15 +1561,15 @@
                 const imgHtml = foto ? `<img src="${foto}" alt="foto" style="width:100%;height:100%;object-fit:cover;">` :
                     '📷';
                 html += `
-                    <div class="list-item" data-search="${searchable}">
-                        <div class="avatar">${imgHtml}</div>
-                        <div class="info">
-                            <div class="nome">${rec.NOME || 'Sem nome'}</div>
-                            <div class="mae">Mãe: ${rec.MAE || 'N/I'}</div>
+                        <div class="list-item" data-search="${searchable}">
+                            <div class="avatar">${imgHtml}</div>
+                            <div class="info">
+                                <div class="nome">${rec.NOME || 'Sem nome'}</div>
+                                <div class="mae">Mãe: ${rec.MAE || 'N/I'}</div>
+                            </div>
+                            <div class="seta" onclick="openDetail(\`${String(rec.ID).trim()}\`)">▶</div>
                         </div>
-                        <div class="seta" onclick="openDetail(\`${String(rec.ID).trim()}\`)">▶</div>
-                    </div>
-                `;
+                    `;
             });
             html += `</div></div>`;
             document.getElementById('dynamicContent').innerHTML = html;
@@ -1522,24 +1608,24 @@
             const dataNasc = formatarData(record.DATA_NASC);
 
             let html = `
-                <div class="detail-page" style="display:flex;">
-                    <div class="list-header">
-                        <button class="btn-back" onclick="backToList()">←</button>
-                        <span class="list-title">Detalhes</span>
-                    </div>
+                    <div class="detail-page" style="display:flex;">
+                        <div class="list-header">
+                            <button class="btn-back" onclick="backToList()">←</button>
+                            <span class="list-title">Detalhes</span>
+                        </div>
 
-                    ${record.FOTO ? `
-                    <div class="detail-photo-header">
-                        <img
-                            src="${record.FOTO}"
-                            class="detail-photo"
-                            onclick="openImageModal('${record.FOTO}')"
-                        >
-                    </div>
-                    ` : ''}
+                        ${record.FOTO ? `
+                        <div class="detail-photo-header">
+                            <img
+                                src="${record.FOTO}"
+                                class="detail-photo"
+                                onclick="openImageModal('${record.FOTO}')"
+                            >
+                        </div>
+                        ` : ''}
 
-                    <div class="detail-card">
-            `;
+                        <div class="detail-card">
+                `;
 
             const fields = [
                 ['ID', record.ID || '—'],
@@ -1566,15 +1652,15 @@
             });
 
             html += `
+                        </div>
+                        <div class="detail-actions">
+                            <button class="btn-detail editar" onclick="editRecord(${record.ID})">✎ EDITAR</button>
+                            <button class="btn-detail compartilhar" onclick="shareRecord(${record.ID})">📱 COMPARTILHAR</button>
+                            <button class="btn-detail pdf" onclick="abrirFichaImagem(${record.ID})">📷 FICHA</button>
+                        </div>
+                        <button class="btn-back" style="margin-top:8px;" onclick="backToList()">← Voltar</button>
                     </div>
-                    <div class="detail-actions">
-                        <button class="btn-detail editar" onclick="editRecord(${record.ID})">✎ EDITAR</button>
-                        <button class="btn-detail compartilhar" onclick="shareRecord(${record.ID})">📱 COMPARTILHAR</button>
-                        <button class="btn-detail pdf" onclick="abrirFichaImagem(${record.ID})">📷 FICHA</button>
-                    </div>
-                    <button class="btn-back" style="margin-top:8px;" onclick="backToList()">← Voltar</button>
-                </div>
-            `;
+                `;
             document.getElementById('dynamicContent').innerHTML = html;
             document.getElementById('dynamicContent').scrollTop = 0;
             currentView = 'detail';
@@ -1587,53 +1673,53 @@
             document.querySelector('.cards-grid').style.display = 'none';
             const nextId = allRecords.length > 0 ? Math.max(...allRecords.map(r => Number(r.ID) || 0)) + 1 : 1;
             let html = `
-                <div class="form-page" style="display:flex;">
-                    <div class="list-header">
-                        <button class="btn-back" onclick="backToDashboard()">←</button>
-                        <span class="list-title">Novo Cadastro</span>
-                    </div>
-                    <form id="formCadastro" onsubmit="event.preventDefault(); salvarCadastro();">
-                        <div class="form-group">
-                            <label>ID (automático)</label>
-                            <input type="text" id="f_id" value="${nextId}" disabled>
+                    <div class="form-page" style="display:flex;">
+                        <div class="list-header">
+                            <button class="btn-back" onclick="backToDashboard()">←</button>
+                            <span class="list-title">Novo Cadastro</span>
                         </div>
-                        <div class="form-group">
-                            <label>FOTO (upload)</label>
-                            <div class="file-upload-wrapper">
-                                <div class="file-upload-label" onclick="document.getElementById('fotoInput').click();">📁 Selecionar imagem</div>
-                                <input type="file" id="fotoInput" accept="image/*" onchange="previewFoto(event)">
+                        <form id="formCadastro" onsubmit="event.preventDefault(); salvarCadastro();">
+                            <div class="form-group">
+                                <label>ID (automático)</label>
+                                <input type="text" id="f_id" value="${nextId}" disabled>
                             </div>
-                            <input type="hidden" id="f_foto" value="">
-                            <div id="fotoPreview" style="margin-top:6px;max-width:100px;"></div>
-                        </div>
-                        <div class="form-group"><label>NOME</label><input type="text" id="f_nome" required></div>
-                        <div class="form-group"><label>ALCUNHA</label><input type="text" id="f_alcunha"></div>
-                        <div class="form-group"><label>MÃE</label><input type="text" id="f_mae"></div>
-                        <div class="form-group"><label>PAI</label><input type="text" id="f_pai"></div>
-                        <div class="form-group"><label>DATA NASC</label><input type="text" id="f_dataNasc" placeholder="DD/MM/AAAA"></div>
-                        <div class="form-group"><label>NATURALIDADE</label><input type="text" id="f_natural"></div>
-                        <div class="form-group"><label>UF NAT</label><input type="text" id="f_ufNat" maxlength="2"></div>
-                        <div class="form-group"><label>CPF</label><input type="text" id="f_cpf"></div>
-                        <div class="form-group"><label>RG</label><input type="text" id="f_rg"></div>
-                        <div class="form-group"><label>UF RG</label><input type="text" id="f_ufRg" maxlength="2"></div>
-                        <div class="form-group"><label>TELEFONE</label><input type="text" id="f_telefone"></div>
-                        <div class="form-group"><label>ENDEREÇO</label><input type="text" id="f_endereco"></div>
-                        <div class="form-group"><label>CIDADE</label><input type="text" id="f_cidade"></div>
-                        <div class="form-group"><label>ESTADO</label><input type="text" id="f_estado" maxlength="2"></div>
-                        <div class="form-group"><label>TIPO PENAL</label><input type="text" id="f_tipoPenal"></div>
-                        <div class="form-group"><label>MANDADO</label>
-                            <select id="f_mandado">
-                                <option value="NÃO">NÃO</option>
-                                <option value="SIM">SIM</option>
-                            </select>
-                        </div>
-                        <div class="form-actions">
-                            <button type="submit" class="btn-form salvar">SALVAR</button>
-                            <button type="button" class="btn-form cancelar" onclick="backToDashboard()">CANCELAR</button>
-                        </div>
-                    </form>
-                </div>
-            `;
+                            <div class="form-group">
+                                <label>FOTO (upload)</label>
+                                <div class="file-upload-wrapper">
+                                    <div class="file-upload-label" onclick="document.getElementById('fotoInput').click();">📁 Selecionar imagem</div>
+                                    <input type="file" id="fotoInput" accept="image/*" onchange="previewFoto(event)">
+                                </div>
+                                <input type="hidden" id="f_foto" value="">
+                                <div id="fotoPreview" style="margin-top:6px;max-width:100px;"></div>
+                            </div>
+                            <div class="form-group"><label>NOME</label><input type="text" id="f_nome" required></div>
+                            <div class="form-group"><label>ALCUNHA</label><input type="text" id="f_alcunha"></div>
+                            <div class="form-group"><label>MÃE</label><input type="text" id="f_mae"></div>
+                            <div class="form-group"><label>PAI</label><input type="text" id="f_pai"></div>
+                            <div class="form-group"><label>DATA NASC</label><input type="text" id="f_dataNasc" placeholder="DD/MM/AAAA"></div>
+                            <div class="form-group"><label>NATURALIDADE</label><input type="text" id="f_natural"></div>
+                            <div class="form-group"><label>UF NAT</label><input type="text" id="f_ufNat" maxlength="2"></div>
+                            <div class="form-group"><label>CPF</label><input type="text" id="f_cpf"></div>
+                            <div class="form-group"><label>RG</label><input type="text" id="f_rg"></div>
+                            <div class="form-group"><label>UF RG</label><input type="text" id="f_ufRg" maxlength="2"></div>
+                            <div class="form-group"><label>TELEFONE</label><input type="text" id="f_telefone"></div>
+                            <div class="form-group"><label>ENDEREÇO</label><input type="text" id="f_endereco"></div>
+                            <div class="form-group"><label>CIDADE</label><input type="text" id="f_cidade"></div>
+                            <div class="form-group"><label>ESTADO</label><input type="text" id="f_estado" maxlength="2"></div>
+                            <div class="form-group"><label>TIPO PENAL</label><input type="text" id="f_tipoPenal"></div>
+                            <div class="form-group"><label>MANDADO</label>
+                                <select id="f_mandado">
+                                    <option value="NÃO">NÃO</option>
+                                    <option value="SIM">SIM</option>
+                                </select>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn-form salvar">SALVAR</button>
+                                <button type="button" class="btn-form cancelar" onclick="backToDashboard()">CANCELAR</button>
+                            </div>
+                        </form>
+                    </div>
+                `;
             document.getElementById('dynamicContent').innerHTML = html;
             document.getElementById('dynamicContent').scrollTop = 0;
             currentView = 'form';
@@ -1711,26 +1797,26 @@
             }
 
             let html = `
-                <div class="form-page" style="display:flex;">
-                    <div class="list-header">
-                        <button class="btn-back" onclick="backToList()">←</button>
-                        <span class="list-title">Editar Registro #${id}</span>
-                    </div>
-                    <form id="formEdit" onsubmit="event.preventDefault(); salvarEdicao(${id});">
-                        <div class="form-group">
-                            <label>ID</label>
-                            <input type="text" value="${id}" disabled>
+                    <div class="form-page" style="display:flex;">
+                        <div class="list-header">
+                            <button class="btn-back" onclick="backToList()">←</button>
+                            <span class="list-title">Editar Registro #${id}</span>
                         </div>
-                        <div class="form-group">
-                            <label>FOTO</label>
-                            <div class="file-upload-wrapper">
-                                <div class="file-upload-label" onclick="document.getElementById('editFotoInput').click();">📁 Alterar imagem</div>
-                                <input type="file" id="editFotoInput" accept="image/*" onchange="previewEditFoto(event)">
+                        <form id="formEdit" onsubmit="event.preventDefault(); salvarEdicao(${id});">
+                            <div class="form-group">
+                                <label>ID</label>
+                                <input type="text" value="${id}" disabled>
                             </div>
-                            <input type="hidden" id="e_foto" value="${rec.FOTO || ''}">
-                            <div id="editFotoPreview" style="margin-top:6px;">${rec.FOTO ? `<img src="${rec.FOTO}" style="max-width:100px;border-radius:8px;border:1px solid #555;">` : ''}</div>
-                        </div>
-            `;
+                            <div class="form-group">
+                                <label>FOTO</label>
+                                <div class="file-upload-wrapper">
+                                    <div class="file-upload-label" onclick="document.getElementById('editFotoInput').click();">📁 Alterar imagem</div>
+                                    <input type="file" id="editFotoInput" accept="image/*" onchange="previewEditFoto(event)">
+                                </div>
+                                <input type="hidden" id="e_foto" value="${rec.FOTO || ''}">
+                                <div id="editFotoPreview" style="margin-top:6px;">${rec.FOTO ? `<img src="${rec.FOTO}" style="max-width:100px;border-radius:8px;border:1px solid #555;">` : ''}</div>
+                            </div>
+                `;
 
             const campos = [
                 { id: 'e_nome', label: 'NOME', key: 'NOME' },
@@ -1753,28 +1839,28 @@
             campos.forEach(campo => {
                 let valor = campo.value !== undefined ? campo.value : (rec[campo.key] || '');
                 html += `
-                    <div class="form-group">
-                        <label>${campo.label}</label>
-                        <input type="text" id="${campo.id}" value="${valor}">
-                    </div>
-                `;
+                        <div class="form-group">
+                            <label>${campo.label}</label>
+                            <input type="text" id="${campo.id}" value="${valor}">
+                        </div>
+                    `;
             });
 
             html += `
-                        <div class="form-group">
-                            <label>MANDADO</label>
-                            <select id="e_mandado">
-                                <option value="NÃO" ${rec.MANDADO === 'NÃO' ? 'selected' : ''}>NÃO</option>
-                                <option value="SIM" ${rec.MANDADO === 'SIM' ? 'selected' : ''}>SIM</option>
-                            </select>
-                        </div>
-                        <div class="form-actions">
-                            <button type="submit" class="btn-form salvar">SALVAR EDIÇÃO</button>
-                            <button type="button" class="btn-form cancelar" onclick="backToList()">CANCELAR</button>
-                        </div>
-                    </form>
-                </div>
-            `;
+                            <div class="form-group">
+                                <label>MANDADO</label>
+                                <select id="e_mandado">
+                                    <option value="NÃO" ${rec.MANDADO === 'NÃO' ? 'selected' : ''}>NÃO</option>
+                                    <option value="SIM" ${rec.MANDADO === 'SIM' ? 'selected' : ''}>SIM</option>
+                                </select>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn-form salvar">SALVAR EDIÇÃO</button>
+                                <button type="button" class="btn-form cancelar" onclick="backToList()">CANCELAR</button>
+                            </div>
+                        </form>
+                    </div>
+                `;
             document.getElementById('dynamicContent').innerHTML = html;
             document.getElementById('dynamicContent').scrollTop = 0;
             currentView = 'form';
@@ -1802,7 +1888,7 @@
                 MAE: document.getElementById('e_mae') ? document.getElementById('e_mae').value.trim() : '',
                 PAI: document.getElementById('e_pai') ? document.getElementById('e_pai').value.trim() : '',
                 DATA_NASC: document.getElementById('e_data_nasc') ? document.getElementById('e_data_nasc').value.trim() :
-                '',
+                    '',
                 NATURALIDADE: document.getElementById('e_naturalidade') ? document.getElementById('e_naturalidade').value
                     .trim() : '',
                 UF_NAT: document.getElementById('e_uf_nat') ? document.getElementById('e_uf_nat').value.trim() : '',
@@ -1814,7 +1900,7 @@
                 CIDADE: document.getElementById('e_cidade') ? document.getElementById('e_cidade').value.trim() : '',
                 ESTADO: document.getElementById('e_estado') ? document.getElementById('e_estado').value.trim() : '',
                 TIPO_PENAL: document.getElementById('e_tipo_penal') ? document.getElementById('e_tipo_penal').value.trim() :
-                '',
+                    '',
                 MANDADO: document.getElementById('e_mandado') ? document.getElementById('e_mandado').value : 'NÃO'
             };
 
@@ -1953,8 +2039,8 @@
                 modal.className = 'image-modal';
 
                 modal.innerHTML = `
-                    <img id="modalImage">
-                `;
+                        <img id="modalImage">
+                    `;
 
                 modal.onclick = function() {
                     modal.style.display = 'none';
