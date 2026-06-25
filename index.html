@@ -1242,7 +1242,7 @@ htmlFicha += `
                             <div class="container">
                                 <img src="${imagem}" alt="Ficha Criminal">
                                 <div class="btn-group">
-                                    <button class="btn-download" onclick="downloadImage()">📥 BAIXAR IMAGEM</button>
+                                    <button class="btn-download" onclick="downloadImage()">📥 ENVIAR</button>
                                     <button class="btn-fechar" onclick="window.close()">✕ FECHAR</button>
                                 </div>
                             </div>
@@ -1655,7 +1655,11 @@ htmlFicha += `
                         </div>
                         <div class="detail-actions">
                             <button class="btn-detail editar" onclick="editRecord(${record.ID})">✎ EDITAR</button>
-                            <button class="btn-detail compartilhar" onclick="shareRecord(${record.ID})">📱 COMPARTILHAR</button>
+                            <button class="btn-detail compartilhar"
+        onclick="shareRecord(${record.ID})"
+        style="display:none;">
+    📱 COMPARTILHAR
+</button>
                             <button class="btn-detail pdf" onclick="abrirFichaImagem(${record.ID})">📷 FICHA</button>
                         </div>
                         <button class="btn-back" style="margin-top:8px;" onclick="backToList()">← Voltar</button>
