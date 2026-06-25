@@ -811,7 +811,7 @@
         <!-- LOADING -->
         <div class="loading-overlay" id="loadingOverlay">
             <div class="loading-spinner"></div>
-            <div class="loading-text" id="loadingText">Gerando PDF...</div>
+            <div class="loading-text" id="loadingText">Gerando ficha...</div>
         </div>
     </div>
 
@@ -947,8 +947,11 @@
 
             setTimeout(() => {
                 const elemento = document.getElementById("fichaImagemGerada");
-                if (!elemento) { hideLoading();
-                    alert('Erro ao gerar ficha.'); return; }
+                if (!elemento) { 
+                    hideLoading();
+                    alert('Erro ao gerar ficha: elemento não encontrado.');
+                    return; 
+                }
 
                 html2canvas(elemento, {
                     scale: 2.5,
@@ -967,6 +970,8 @@
                         elemento.remove();
                         return;
                     }
+
+                    const nomeArquivo = `Ficha_${rec.ID}.jpg`;
 
                     novaJanela.document.write(`
                         <!DOCTYPE html>
@@ -995,7 +1000,7 @@
                                 }
                                 img {
                                     max-width: 100%;
-                                    max-height: 80vh;
+                                    max-height: 70vh;
                                     border-radius: 4px;
                                     box-shadow: 0 8px 32px rgba(0,0,0,0.8);
                                 }
@@ -1039,7 +1044,7 @@
                         </head>
                         <body>
                             <div class="container">
-                                <img src="${imagem}" alt="Ficha Criminal">
+                                <img src="${imagem}" alt="Ficha Criminal" id="fichaImg">
                                 <div class="btn-group">
                                     <button class="btn-share" onclick="enviarFicha()">📤 ENVIAR</button>
                                     <button class="btn-close" onclick="fecharFicha()">✕ FECHAR</button>
@@ -1047,39 +1052,69 @@
                             </div>
                             <script>
                                 function enviarFicha() {
-                                    // Converte a imagem em blob e tenta compartilhar via Web Share API (WhatsApp, Telegram, etc.)
-                                    fetch('${imagem}')
+                                    // Busca a imagem do DOM
+                                    const img = document.getElementById('fichaImg');
+                                    if (!img) {
+                                        alert('Erro ao localizar a imagem.');
+                                        return;
+                                    }
+
+                                    // Converte a imagem em blob
+                                    fetch(img.src)
                                         .then(res => res.blob())
                                         .then(blob => {
-                                            const file = new File([blob], 'Ficha_${rec.ID}.jpg', { type: 'image/jpeg' });
+                                            const file = new File([blob], '${nomeArquivo}', { type: 'image/jpeg' });
+                                            
+                                            // Verifica se o navegador suporta compartilhamento de arquivos
                                             if (navigator.canShare && navigator.canShare({ files: [file] })) {
                                                 navigator.share({
                                                     title: 'Ficha SIGEC',
                                                     text: 'Registro gerado pelo SIGEC',
                                                     files: [file]
                                                 }).catch(err => {
+                                                    // Se o usuário cancelar, não mostra erro
                                                     if (err.name !== 'AbortError') {
                                                         alert('Erro ao compartilhar: ' + err.message);
                                                     }
                                                 });
                                             } else {
-                                                // Fallback: baixa a imagem para envio manual
-                                                const link = document.createElement('a');
-                                                link.download = 'Ficha_${rec.ID}.jpg';
-                                                link.href = '${imagem}';
-                                                document.body.appendChild(link);
-                                                link.click();
-                                                document.body.removeChild(link);
-                                                alert('Seu navegador não suporta compartilhamento direto. A ficha foi baixada para envio manual.');
+                                                // Fallback: tenta compartilhar apenas texto com link da imagem
+                                                try {
+                                                    // Cria um link para download
+                                                    const link = document.createElement('a');
+                                                    link.download = '${nomeArquivo}';
+                                                    link.href = img.src;
+                                                    document.body.appendChild(link);
+                                                    link.click();
+                                                    document.body.removeChild(link);
+                                                    alert('A ficha foi baixada. Você pode enviá-la manualmente pelo WhatsApp ou Telegram.');
+                                                } catch(e) {
+                                                    alert('Seu navegador não suporta compartilhamento direto. A ficha foi baixada para envio manual.');
+                                                }
                                             }
                                         })
                                         .catch(err => {
-                                            alert('Erro ao processar imagem para compartilhamento.');
-                                            console.error(err);
+                                            console.error('Erro ao processar imagem:', err);
+                                            // Fallback: baixa a imagem
+                                            try {
+                                                const link = document.createElement('a');
+                                                link.download = '${nomeArquivo}';
+                                                link.href = img.src;
+                                                document.body.appendChild(link);
+                                                link.click();
+                                                document.body.removeChild(link);
+                                                alert('A ficha foi baixada. Você pode enviá-la manualmente pelo WhatsApp ou Telegram.');
+                                            } catch(e) {
+                                                alert('Erro ao processar a ficha. Tente novamente.');
+                                            }
                                         });
                                 }
 
                                 function fecharFicha() {
+                                    // Fecha a janela atual
+                                    window.close();
+                                    
+                                    // Tenta voltar para o dashboard da página principal
                                     try {
                                         if (window.opener && !window.opener.closed) {
                                             if (typeof window.opener.voltarDashboard === 'function') {
@@ -1087,8 +1122,9 @@
                                             }
                                             window.opener.focus();
                                         }
-                                    } catch(e) { console.log(e); }
-                                    window.close();
+                                    } catch(e) { 
+                                        console.log('Erro ao tentar voltar para a página principal:', e);
+                                    }
                                 }
                             <\/script>
                         </body>
@@ -1104,7 +1140,7 @@
                     const el = document.getElementById("fichaImagemGerada");
                     if (el) el.remove();
                 });
-            }, 300);
+            }, 500);
         }
 
         // ============================================================
