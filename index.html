@@ -1259,15 +1259,57 @@ htmlFicha += `
                             </div>
                             <script>
 
-function downloadImage() {
-    const link = document.createElement('a');
-    link.download = 'ficha_${rec.ID || 'registro'}.jpg';
-    link.href = '${imagem}';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-}
+async function downloadImage() {
 
+    try {
+
+        // Converte a imagem Base64 em Blob
+        const response = await fetch('${imagem}');
+        const blob = await response.blob();
+
+        // Cria um arquivo JPG
+        const file = new File(
+            [blob],
+            'Ficha_${rec.ID}.jpg',
+            {
+                type: 'image/jpeg'
+            }
+        );
+
+        // Verifica se o navegador suporta compartilhamento
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+
+            await navigator.share({
+                title: 'Ficha SIGEC',
+                text: 'Registro gerado pelo SIGEC',
+                files: [file]
+            });
+
+        } else {
+
+            // Caso o navegador não suporte
+            const link = document.createElement('a');
+            link.download = 'Ficha_${rec.ID}.jpg';
+            link.href = '${imagem}';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            alert(
+                'Seu navegador não suporta compartilhamento direto. A ficha foi baixada para envio manual.'
+            );
+
+        }
+
+    } catch (erro) {
+
+        console.error(erro);
+
+        alert('Erro ao compartilhar a ficha.');
+
+    }
+
+}
 function fecharFicha() {
 
     try {
@@ -1278,15 +1320,17 @@ function fecharFicha() {
                 window.opener.voltarDashboard();
             }
 
+            window.opener.focus();
         }
 
-    } catch(e) {
+    } catch(e){
         console.log(e);
     }
 
+    window.open('', '_self');
     window.close();
-}
 
+}
 <\/script>
                         </body>
                         </html>
