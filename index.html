@@ -867,7 +867,18 @@
         let allRecords = [];
         let currentView = 'dashboard';
         let currentListType = null;
+// ============================================================
+// VOLTAR PARA O DASHBOARD
+// ============================================================
+function voltarDashboard() {
 
+    document.getElementById('dynamicContent').innerHTML = '';
+
+    document.querySelector('.cards-grid').style.display = 'flex';
+
+    currentView = 'dashboard';
+
+}
         // ============================================================
         // FUNÇÃO PARA FORMATAR DATA
         // ============================================================
@@ -1243,19 +1254,40 @@ htmlFicha += `
                                 <img src="${imagem}" alt="Ficha Criminal">
                                 <div class="btn-group">
                                     <button class="btn-download" onclick="downloadImage()">📥 ENVIAR</button>
-                                    <button class="btn-fechar" onclick="window.close()">✕ FECHAR</button>
+                                    <button class="btn-fechar" onclick="fecharFicha()">✕ FECHAR</button>
                                 </div>
                             </div>
                             <script>
-                                function downloadImage() {
-                                    const link = document.createElement('a');
-                                    link.download = 'ficha_${rec.ID || 'registro'}.jpg';
-                                    link.href = '${imagem}';
-                                    document.body.appendChild(link);
-                                    link.click();
-                                    document.body.removeChild(link);
-                                }
-                            <\/script>
+
+function downloadImage() {
+    const link = document.createElement('a');
+    link.download = 'ficha_${rec.ID || 'registro'}.jpg';
+    link.href = '${imagem}';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+function fecharFicha() {
+
+    try {
+
+        if (window.opener && !window.opener.closed) {
+
+            if (typeof window.opener.voltarDashboard === 'function') {
+                window.opener.voltarDashboard();
+            }
+
+        }
+
+    } catch(e) {
+        console.log(e);
+    }
+
+    window.close();
+}
+
+<\/script>
                         </body>
                         </html>
                     `);
