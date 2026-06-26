@@ -932,23 +932,22 @@
             const divFicha = document.createElement('div');
             divFicha.id = 'fichaImagemGerada';
             divFicha.style.cssText = `
-                    position: fixed;
-                    left: -99999px;
-                    top: 0;
-                    width: 1100px;
-                    background: #ffffff;
-                    padding: 25px 30px;
-                    color: #1a1a1a;
-                    font-family: 'Segoe UI', Arial, sans-serif;
-                    border: 6px double #0b2a57;
-                    border-radius: 28px;
-                    box-sizing: border-box;
-                    line-height: 1.5;
-                `;
+                position: fixed;
+                left: -99999px;
+                top: 0;
+                width: 1100px;
+                background: #ffffff;
+                padding: 25px 30px;
+                color: #1a1a1a;
+                font-family: 'Segoe UI', Arial, sans-serif;
+                border: 6px double #0b2a57;
+                border-radius: 28px;
+                box-sizing: border-box;
+                line-height: 1.5;
+            `;
 
             // Construir o HTML da ficha
             let htmlFicha = `
-
             <div style="
                 background:#08264f;
                 color:#fff;
@@ -1018,7 +1017,6 @@
             }
 
             htmlFicha += `
-
                     <div style="
                         margin-top:20px;
                         font-size:22px;
@@ -1167,108 +1165,203 @@
 
                     const imagem = canvas.toDataURL("image/jpeg", 0.95);
 
+                    // Usar window.open com target _blank para funcionar em dispositivos móveis
                     const novaJanela = window.open("", "_blank");
                     if (novaJanela) {
                         novaJanela.document.write(`
-                                <!DOCTYPE html>
-                                <html>
-                                <head>
-                                    <title>Ficha - ${rec.NOME || 'Registro'}</title>
-                                    <style>
-                                        * { margin: 0; padding: 0; box-sizing: border-box; }
-                                        body { 
-                                            background: #1a1a1a; 
-                                            display: flex; 
-                                            justify-content: center; 
-                                            align-items: center; 
-                                            min-height: 100vh;
-                                            padding: 20px;
+                            <!DOCTYPE html>
+                            <html>
+                            <head>
+                                <title>Ficha - ${rec.NOME || 'Registro'}</title>
+                                <meta charset="UTF-8">
+                                <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+                                <style>
+                                    * { margin: 0; padding: 0; box-sizing: border-box; }
+                                    body { 
+                                        background: #1a1a1a; 
+                                        display: flex; 
+                                        justify-content: center; 
+                                        align-items: center; 
+                                        min-height: 100vh;
+                                        padding: 20px;
+                                        font-family: 'Segoe UI', Arial, sans-serif;
+                                    }
+                                    img {
+                                        max-width: 100%;
+                                        max-height: 80vh;
+                                        border-radius: 4px;
+                                        box-shadow: 0 8px 32px rgba(0,0,0,0.8);
+                                    }
+                                    .container {
+                                        display: flex;
+                                        flex-direction: column;
+                                        align-items: center;
+                                        gap: 20px;
+                                        width: 100%;
+                                        max-width: 800px;
+                                    }
+                                    .btn-group {
+                                        display: flex;
+                                        gap: 15px;
+                                        flex-wrap: wrap;
+                                        justify-content: center;
+                                        width: 100%;
+                                    }
+                                    .btn-fechar {
+                                        background: #c0392b;
+                                        border: none;
+                                        padding: 16px 40px;
+                                        border-radius: 30px;
+                                        font-weight: 700;
+                                        font-size: 1.1rem;
+                                        cursor: pointer;
+                                        transition: 0.2s;
+                                        color: #fff;
+                                        flex: 1;
+                                        min-width: 150px;
+                                        box-shadow: 0 4px 12px rgba(192,57,43,0.3);
+                                    }
+                                    .btn-fechar:hover {
+                                        background: #e74c3c;
+                                        transform: scale(1.02);
+                                    }
+                                    .btn-fechar:active {
+                                        transform: scale(0.95);
+                                    }
+                                    .btn-download {
+                                        display: none;
+                                    }
+                                    .btn-voltar {
+                                        background: #444;
+                                        border: none;
+                                        padding: 16px 40px;
+                                        border-radius: 30px;
+                                        font-weight: 700;
+                                        font-size: 1.1rem;
+                                        cursor: pointer;
+                                        transition: 0.2s;
+                                        color: #fff;
+                                        flex: 1;
+                                        min-width: 150px;
+                                    }
+                                    .btn-voltar:hover {
+                                        background: #555;
+                                    }
+                                    .btn-voltar:active {
+                                        transform: scale(0.95);
+                                    }
+                                    @media (max-width: 480px) {
+                                        .btn-fechar, .btn-voltar {
+                                            padding: 14px 20px;
+                                            font-size: 1rem;
+                                            min-width: 120px;
                                         }
                                         img {
-                                            max-width: 100%;
-                                            max-height: 100vh;
-                                            border-radius: 4px;
-                                            box-shadow: 0 8px 32px rgba(0,0,0,0.8);
+                                            max-height: 70vh;
                                         }
-                                        .container {
-                                            display: flex;
-                                            flex-direction: column;
-                                            align-items: center;
-                                            gap: 16px;
-                                        }
-                                        .btn-download {
-                                            background: #f5c842;
-                                            border: none;
-                                            padding: 12px 32px;
-                                            border-radius: 30px;
-                                            font-weight: 700;
-                                            font-size: 1rem;
-                                            cursor: pointer;
-                                            transition: 0.2s;
-                                            color: #1a1a1a;
-                                            box-shadow: 0 4px 12px rgba(245,200,66,0.3);
-                                        }
-                                        .btn-download:hover {
-                                            transform: scale(1.02);
-                                            box-shadow: 0 6px 20px rgba(245,200,66,0.5);
-                                        }
-                                        .btn-download:active {
-                                            transform: scale(0.96);
-                                        }
-                                        .btn-fechar {
-                                            background: #444;
-                                            border: none;
-                                            padding: 12px 32px;
-                                            border-radius: 30px;
-                                            font-weight: 700;
-                                            font-size: 1rem;
-                                            cursor: pointer;
-                                            transition: 0.2s;
-                                            color: #fff;
-                                        }
-                                        .btn-fechar:hover {
-                                            background: #555;
-                                        }
-                                        .btn-group {
-                                            display: flex;
-                                            gap: 12px;
-                                            flex-wrap: wrap;
-                                            justify-content: center;
-                                        }
-                                    </style>
-                                </head>
-                                <body>
-                                    <div class="container">
-                                        <img src="${imagem}" alt="Ficha Criminal">
-                                        <div class="btn-group">
-                                            <button class="btn-download" onclick="downloadImage()">📥 ENVIAR</button>
-                                            <button class="btn-fechar" onclick="fecharFicha()">✕ FECHAR</button>
-                                        </div>
+                                    }
+                                </style>
+                            </head>
+                            <body>
+                                <div class="container">
+                                    <img src="${imagem}" alt="Ficha Criminal" id="fichaImage">
+                                    <div class="btn-group">
+                                        <button class="btn-fechar" onclick="fecharFicha()">✕ FECHAR</button>
                                     </div>
-                                    <script>
-                                        function downloadImage() {
-                                            const link = document.createElement('a');
-                                            link.download = 'ficha_${rec.ID || 'registro'}.jpg';
-                                            link.href = '${imagem}';
-                                            document.body.appendChild(link);
-                                            link.click();
-                                            document.body.removeChild(link);
-                                        }
-
-                                        function fecharFicha() {
+                                </div>
+                                <script>
+                                    // Função para fechar a ficha e voltar para a lista
+                                    function fecharFicha() {
+                                        // Tenta fechar a janela
+                                        try {
                                             window.close();
-                                            // Volta para a aba anterior (lista de registros)
+                                        } catch(e) {
+                                            // Se não conseguir fechar, tenta redirecionar
+                                            try {
+                                                window.location.href = 'about:blank';
+                                            } catch(e2) {}
+                                        }
+                                        
+                                        // Tenta voltar para a lista na janela pai
+                                        try {
                                             if (window.opener && window.opener.backToList) {
                                                 window.opener.backToList();
                                             }
-                                        }
-                                    <\/script>
-                                </body>
-                                </html>
-                            `);
+                                        } catch(e) {}
+                                    }
+
+                                    // Detectar se está no Android e adicionar botão Voltar como fallback
+                                    if (/Android/i.test(navigator.userAgent)) {
+                                        // Adicionar botão Voltar para Android
+                                        const container = document.querySelector('.container');
+                                        const btnGroup = document.querySelector('.btn-group');
+                                        
+                                        // Criar botão Voltar para Android
+                                        const btnVoltar = document.createElement('button');
+                                        btnVoltar.className = 'btn-voltar';
+                                        btnVoltar.textContent = '⬅ VOLTAR';
+                                        btnVoltar.onclick = function() {
+                                            // Tenta voltar via history
+                                            if (window.history && window.history.length > 1) {
+                                                window.history.back();
+                                            } else {
+                                                // Fallback: tenta fechar
+                                                try {
+                                                    window.close();
+                                                } catch(e) {}
+                                            }
+                                        };
+                                        btnGroup.appendChild(btnVoltar);
+                                    }
+
+                                    // Função de fallback para fechamento em Android
+                                    document.addEventListener('backbutton', function(e) {
+                                        e.preventDefault();
+                                        fecharFicha();
+                                    }, false);
+                                <\/script>
+                            </body>
+                            </html>
+                        `);
                         novaJanela.document.close();
+                        
+                        // Forçar o foco na nova janela
+                        if (novaJanela.focus) {
+                            novaJanela.focus();
+                        }
                     } else {
-                        alert('Por favor, permita pop-ups para visualizar a ficha.');
+                        // Fallback: se o pop-up for bloqueado, tentar abrir de outra forma
+                        const blob = new Blob([`
+                            <!DOCTYPE html>
+                            <html>
+                            <head>
+                                <title>Ficha - ${rec.NOME || 'Registro'}</title>
+                                <meta charset="UTF-8">
+                                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                            </head>
+                            <body style="margin:0;display:flex;justify-content:center;align-items:center;min-height:100vh;background:#1a1a1a;">
+                                <div style="display:flex;flex-direction:column;align-items:center;gap:20px;padding:20px;">
+                                    <img src="${imagem}" style="max-width:100%;max-height:80vh;border-radius:8px;box-shadow:0 8px 32px rgba(0,0,0,0.8);">
+                                    <button onclick="window.close()" style="background:#c0392b;border:none;padding:16px 40px;border-radius:30px;font-weight:700;font-size:1.1rem;color:#fff;cursor:pointer;">✕ FECHAR</button>
+                                </div>
+                            </body>
+                            </html>
+                        `], { type: 'text/html' });
+                        
+                        const url = URL.createObjectURL(blob);
+                        const newWindow = window.open(url, '_blank');
+                        if (newWindow) {
+                            newWindow.focus();
+                        } else {
+                            // Último recurso: redirecionar a página atual
+                            document.write(`
+                                <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;background:#1a1a1a;color:#fff;padding:20px;">
+                                    <img src="${imagem}" style="max-width:100%;max-height:70vh;border-radius:8px;margin-bottom:20px;">
+                                    <button onclick="window.close()" style="background:#c0392b;border:none;padding:16px 40px;border-radius:30px;font-weight:700;font-size:1.1rem;color:#fff;cursor:pointer;">✕ FECHAR</button>
+                                </div>
+                            `);
+                        }
+                        setTimeout(() => URL.revokeObjectURL(url), 10000);
                     }
 
                     elemento.remove();
@@ -1483,11 +1576,11 @@
         // ============================================================
         function showDashboardContent() {
             document.getElementById('dynamicContent').innerHTML = `
-                        <div style="text-align:center; padding:20px; color:#888;">
-                            <p style="font-size:1.1rem;">Bem-vindo, <strong style="color:#f5c842;">${currentUser}</strong></p>
-                            <p style="font-size:0.85rem;">Selecione um card para visualizar os registros.</p>
-                        </div>
-                    `;
+                <div style="text-align:center; padding:20px; color:#888;">
+                    <p style="font-size:1.1rem;">Bem-vindo, <strong style="color:#f5c842;">${currentUser}</strong></p>
+                    <p style="font-size:0.85rem;">Selecione um card para visualizar os registros.</p>
+                </div>
+            `;
             currentView = 'dashboard';
             document.querySelector('.cards-grid').style.display = 'flex';
         }
@@ -1530,34 +1623,34 @@
             }
             const title = tipo === 'SIM' ? 'MANDADOS' : 'ANOTAÇÕES CRIMINAIS';
             let html = `
-                        <div class="list-page"
-                             style="
-                                display:flex;
-                                flex-direction:column;
-                                height:100%;
-                             ">
-                            <div class="list-header">
-                                <button class="btn-back" onclick="backToDashboard()">←</button>
-                                <span class="list-title">${title} (${filtered.length})</span>
-                            </div>
-                            <div style="padding:10px 0;">
-                                <input
-                                    type="text"
-                                    id="searchInput"
-                                    placeholder="Pesquisar qualquer informação..."
-                                    onkeyup="filtrarLista()"
-                                    style="
-                                        width:100%;
-                                        padding:12px;
-                                        border-radius:12px;
-                                        border:1px solid #444;
-                                        background:#1e1e1e;
-                                        color:#fff;
-                                    "
-                                >
-                            </div>
-                            <div class="scroll-area">
-                    `;
+                <div class="list-page"
+                     style="
+                        display:flex;
+                        flex-direction:column;
+                        height:100%;
+                     ">
+                    <div class="list-header">
+                        <button class="btn-back" onclick="backToDashboard()">←</button>
+                        <span class="list-title">${title} (${filtered.length})</span>
+                    </div>
+                    <div style="padding:10px 0;">
+                        <input
+                            type="text"
+                            id="searchInput"
+                            placeholder="Pesquisar qualquer informação..."
+                            onkeyup="filtrarLista()"
+                            style="
+                                width:100%;
+                                padding:12px;
+                                border-radius:12px;
+                                border:1px solid #444;
+                                background:#1e1e1e;
+                                color:#fff;
+                            "
+                        >
+                    </div>
+                    <div class="scroll-area">
+            `;
             filtered.forEach(rec => {
                 const searchable = Object.values(rec)
                     .join(' ')
@@ -1568,15 +1661,15 @@
                 const imgHtml = foto ? `<img src="${foto}" alt="foto" style="width:100%;height:100%;object-fit:cover;">` :
                     '📷';
                 html += `
-                            <div class="list-item" data-search="${searchable}">
-                                <div class="avatar">${imgHtml}</div>
-                                <div class="info">
-                                    <div class="nome">${rec.NOME || 'Sem nome'}</div>
-                                    <div class="mae">Mãe: ${rec.MAE || 'N/I'}</div>
-                                </div>
-                                <div class="seta" onclick="openDetail(\`${String(rec.ID).trim()}\`)">▶</div>
-                            </div>
-                        `;
+                    <div class="list-item" data-search="${searchable}">
+                        <div class="avatar">${imgHtml}</div>
+                        <div class="info">
+                            <div class="nome">${rec.NOME || 'Sem nome'}</div>
+                            <div class="mae">Mãe: ${rec.MAE || 'N/I'}</div>
+                        </div>
+                        <div class="seta" onclick="openDetail(\`${String(rec.ID).trim()}\`)">▶</div>
+                    </div>
+                `;
             });
             html += `</div></div>`;
             document.getElementById('dynamicContent').innerHTML = html;
@@ -1615,24 +1708,24 @@
             const dataNasc = formatarData(record.DATA_NASC);
 
             let html = `
-                        <div class="detail-page" style="display:flex;">
-                            <div class="list-header">
-                                <button class="btn-back" onclick="backToList()">←</button>
-                                <span class="list-title">Detalhes</span>
-                            </div>
+                <div class="detail-page" style="display:flex;">
+                    <div class="list-header">
+                        <button class="btn-back" onclick="backToList()">←</button>
+                        <span class="list-title">Detalhes</span>
+                    </div>
 
-                            ${record.FOTO ? `
-                            <div class="detail-photo-header">
-                                <img
-                                    src="${record.FOTO}"
-                                    class="detail-photo"
-                                    onclick="openImageModal('${record.FOTO}')"
-                                >
-                            </div>
-                            ` : ''}
+                    ${record.FOTO ? `
+                    <div class="detail-photo-header">
+                        <img
+                            src="${record.FOTO}"
+                            class="detail-photo"
+                            onclick="openImageModal('${record.FOTO}')"
+                        >
+                    </div>
+                    ` : ''}
 
-                            <div class="detail-card">
-                    `;
+                    <div class="detail-card">
+            `;
 
             const fields = [
                 ['ID', record.ID || '—'],
@@ -1659,19 +1752,14 @@
             });
 
             html += `
-                            </div>
-                            <div class="detail-actions">
-                                <button class="btn-detail editar" onclick="editRecord(${record.ID})">✎ EDITAR</button>
-                                <button class="btn-detail compartilhar"
-            onclick="shareRecord(${record.ID})"
-            style="display:none;">
-        📱 COMPARTILHAR
-    </button>
-                                <button class="btn-detail pdf" onclick="abrirFichaImagem(${record.ID})">📷 FICHA</button>
-                            </div>
-                            <button class="btn-back" style="margin-top:8px;" onclick="backToList()">← Voltar</button>
-                        </div>
-                    `;
+                    </div>
+                    <div class="detail-actions">
+                        <button class="btn-detail editar" onclick="editRecord(${record.ID})">✎ EDITAR</button>
+                        <button class="btn-detail pdf" onclick="abrirFichaImagem(${record.ID})">📷 FICHA</button>
+                    </div>
+                    <button class="btn-back" style="margin-top:8px;" onclick="backToList()">← Voltar</button>
+                </div>
+            `;
             document.getElementById('dynamicContent').innerHTML = html;
             document.getElementById('dynamicContent').scrollTop = 0;
             currentView = 'detail';
@@ -1684,53 +1772,53 @@
             document.querySelector('.cards-grid').style.display = 'none';
             const nextId = allRecords.length > 0 ? Math.max(...allRecords.map(r => Number(r.ID) || 0)) + 1 : 1;
             let html = `
-                        <div class="form-page" style="display:flex;">
-                            <div class="list-header">
-                                <button class="btn-back" onclick="backToDashboard()">←</button>
-                                <span class="list-title">Novo Cadastro</span>
-                            </div>
-                            <form id="formCadastro" onsubmit="event.preventDefault(); salvarCadastro();">
-                                <div class="form-group">
-                                    <label>ID (automático)</label>
-                                    <input type="text" id="f_id" value="${nextId}" disabled>
-                                </div>
-                                <div class="form-group">
-                                    <label>FOTO (upload)</label>
-                                    <div class="file-upload-wrapper">
-                                        <div class="file-upload-label" onclick="document.getElementById('fotoInput').click();">📁 Selecionar imagem</div>
-                                        <input type="file" id="fotoInput" accept="image/*" onchange="previewFoto(event)">
-                                    </div>
-                                    <input type="hidden" id="f_foto" value="">
-                                    <div id="fotoPreview" style="margin-top:6px;max-width:100px;"></div>
-                                </div>
-                                <div class="form-group"><label>NOME</label><input type="text" id="f_nome" required></div>
-                                <div class="form-group"><label>ALCUNHA</label><input type="text" id="f_alcunha"></div>
-                                <div class="form-group"><label>MÃE</label><input type="text" id="f_mae"></div>
-                                <div class="form-group"><label>PAI</label><input type="text" id="f_pai"></div>
-                                <div class="form-group"><label>DATA NASC</label><input type="text" id="f_dataNasc" placeholder="DD/MM/AAAA"></div>
-                                <div class="form-group"><label>NATURALIDADE</label><input type="text" id="f_natural"></div>
-                                <div class="form-group"><label>UF NAT</label><input type="text" id="f_ufNat" maxlength="2"></div>
-                                <div class="form-group"><label>CPF</label><input type="text" id="f_cpf"></div>
-                                <div class="form-group"><label>RG</label><input type="text" id="f_rg"></div>
-                                <div class="form-group"><label>UF RG</label><input type="text" id="f_ufRg" maxlength="2"></div>
-                                <div class="form-group"><label>TELEFONE</label><input type="text" id="f_telefone"></div>
-                                <div class="form-group"><label>ENDEREÇO</label><input type="text" id="f_endereco"></div>
-                                <div class="form-group"><label>CIDADE</label><input type="text" id="f_cidade"></div>
-                                <div class="form-group"><label>ESTADO</label><input type="text" id="f_estado" maxlength="2"></div>
-                                <div class="form-group"><label>TIPO PENAL</label><input type="text" id="f_tipoPenal"></div>
-                                <div class="form-group"><label>MANDADO</label>
-                                    <select id="f_mandado">
-                                        <option value="NÃO">NÃO</option>
-                                        <option value="SIM">SIM</option>
-                                    </select>
-                                </div>
-                                <div class="form-actions">
-                                    <button type="submit" class="btn-form salvar">SALVAR</button>
-                                    <button type="button" class="btn-form cancelar" onclick="backToDashboard()">CANCELAR</button>
-                                </div>
-                            </form>
+                <div class="form-page" style="display:flex;">
+                    <div class="list-header">
+                        <button class="btn-back" onclick="backToDashboard()">←</button>
+                        <span class="list-title">Novo Cadastro</span>
+                    </div>
+                    <form id="formCadastro" onsubmit="event.preventDefault(); salvarCadastro();">
+                        <div class="form-group">
+                            <label>ID (automático)</label>
+                            <input type="text" id="f_id" value="${nextId}" disabled>
                         </div>
-                    `;
+                        <div class="form-group">
+                            <label>FOTO (upload)</label>
+                            <div class="file-upload-wrapper">
+                                <div class="file-upload-label" onclick="document.getElementById('fotoInput').click();">📁 Selecionar imagem</div>
+                                <input type="file" id="fotoInput" accept="image/*" onchange="previewFoto(event)">
+                            </div>
+                            <input type="hidden" id="f_foto" value="">
+                            <div id="fotoPreview" style="margin-top:6px;max-width:100px;"></div>
+                        </div>
+                        <div class="form-group"><label>NOME</label><input type="text" id="f_nome" required></div>
+                        <div class="form-group"><label>ALCUNHA</label><input type="text" id="f_alcunha"></div>
+                        <div class="form-group"><label>MÃE</label><input type="text" id="f_mae"></div>
+                        <div class="form-group"><label>PAI</label><input type="text" id="f_pai"></div>
+                        <div class="form-group"><label>DATA NASC</label><input type="text" id="f_dataNasc" placeholder="DD/MM/AAAA"></div>
+                        <div class="form-group"><label>NATURALIDADE</label><input type="text" id="f_natural"></div>
+                        <div class="form-group"><label>UF NAT</label><input type="text" id="f_ufNat" maxlength="2"></div>
+                        <div class="form-group"><label>CPF</label><input type="text" id="f_cpf"></div>
+                        <div class="form-group"><label>RG</label><input type="text" id="f_rg"></div>
+                        <div class="form-group"><label>UF RG</label><input type="text" id="f_ufRg" maxlength="2"></div>
+                        <div class="form-group"><label>TELEFONE</label><input type="text" id="f_telefone"></div>
+                        <div class="form-group"><label>ENDEREÇO</label><input type="text" id="f_endereco"></div>
+                        <div class="form-group"><label>CIDADE</label><input type="text" id="f_cidade"></div>
+                        <div class="form-group"><label>ESTADO</label><input type="text" id="f_estado" maxlength="2"></div>
+                        <div class="form-group"><label>TIPO PENAL</label><input type="text" id="f_tipoPenal"></div>
+                        <div class="form-group"><label>MANDADO</label>
+                            <select id="f_mandado">
+                                <option value="NÃO">NÃO</option>
+                                <option value="SIM">SIM</option>
+                            </select>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn-form salvar">SALVAR</button>
+                            <button type="button" class="btn-form cancelar" onclick="backToDashboard()">CANCELAR</button>
+                        </div>
+                    </form>
+                </div>
+            `;
             document.getElementById('dynamicContent').innerHTML = html;
             document.getElementById('dynamicContent').scrollTop = 0;
             currentView = 'form';
@@ -1808,26 +1896,26 @@
             }
 
             let html = `
-                        <div class="form-page" style="display:flex;">
-                            <div class="list-header">
-                                <button class="btn-back" onclick="backToList()">←</button>
-                                <span class="list-title">Editar Registro #${id}</span>
+                <div class="form-page" style="display:flex;">
+                    <div class="list-header">
+                        <button class="btn-back" onclick="backToList()">←</button>
+                        <span class="list-title">Editar Registro #${id}</span>
+                    </div>
+                    <form id="formEdit" onsubmit="event.preventDefault(); salvarEdicao(${id});">
+                        <div class="form-group">
+                            <label>ID</label>
+                            <input type="text" value="${id}" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label>FOTO</label>
+                            <div class="file-upload-wrapper">
+                                <div class="file-upload-label" onclick="document.getElementById('editFotoInput').click();">📁 Alterar imagem</div>
+                                <input type="file" id="editFotoInput" accept="image/*" onchange="previewEditFoto(event)">
                             </div>
-                            <form id="formEdit" onsubmit="event.preventDefault(); salvarEdicao(${id});">
-                                <div class="form-group">
-                                    <label>ID</label>
-                                    <input type="text" value="${id}" disabled>
-                                </div>
-                                <div class="form-group">
-                                    <label>FOTO</label>
-                                    <div class="file-upload-wrapper">
-                                        <div class="file-upload-label" onclick="document.getElementById('editFotoInput').click();">📁 Alterar imagem</div>
-                                        <input type="file" id="editFotoInput" accept="image/*" onchange="previewEditFoto(event)">
-                                    </div>
-                                    <input type="hidden" id="e_foto" value="${rec.FOTO || ''}">
-                                    <div id="editFotoPreview" style="margin-top:6px;">${rec.FOTO ? `<img src="${rec.FOTO}" style="max-width:100px;border-radius:8px;border:1px solid #555;">` : ''}</div>
-                                </div>
-                    `;
+                            <input type="hidden" id="e_foto" value="${rec.FOTO || ''}">
+                            <div id="editFotoPreview" style="margin-top:6px;">${rec.FOTO ? `<img src="${rec.FOTO}" style="max-width:100px;border-radius:8px;border:1px solid #555;">` : ''}</div>
+                        </div>
+            `;
 
             const campos = [
                 { id: 'e_nome', label: 'NOME', key: 'NOME' },
@@ -1850,28 +1938,28 @@
             campos.forEach(campo => {
                 let valor = campo.value !== undefined ? campo.value : (rec[campo.key] || '');
                 html += `
-                            <div class="form-group">
-                                <label>${campo.label}</label>
-                                <input type="text" id="${campo.id}" value="${valor}">
-                            </div>
-                        `;
+                    <div class="form-group">
+                        <label>${campo.label}</label>
+                        <input type="text" id="${campo.id}" value="${valor}">
+                    </div>
+                `;
             });
 
             html += `
-                                <div class="form-group">
-                                    <label>MANDADO</label>
-                                    <select id="e_mandado">
-                                        <option value="NÃO" ${rec.MANDADO === 'NÃO' ? 'selected' : ''}>NÃO</option>
-                                        <option value="SIM" ${rec.MANDADO === 'SIM' ? 'selected' : ''}>SIM</option>
-                                    </select>
-                                </div>
-                                <div class="form-actions">
-                                    <button type="submit" class="btn-form salvar">SALVAR EDIÇÃO</button>
-                                    <button type="button" class="btn-form cancelar" onclick="backToList()">CANCELAR</button>
-                                </div>
-                            </form>
+                        <div class="form-group">
+                            <label>MANDADO</label>
+                            <select id="e_mandado">
+                                <option value="NÃO" ${rec.MANDADO === 'NÃO' ? 'selected' : ''}>NÃO</option>
+                                <option value="SIM" ${rec.MANDADO === 'SIM' ? 'selected' : ''}>SIM</option>
+                            </select>
                         </div>
-                    `;
+                        <div class="form-actions">
+                            <button type="submit" class="btn-form salvar">SALVAR EDIÇÃO</button>
+                            <button type="button" class="btn-form cancelar" onclick="backToList()">CANCELAR</button>
+                        </div>
+                    </form>
+                </div>
+            `;
             document.getElementById('dynamicContent').innerHTML = html;
             document.getElementById('dynamicContent').scrollTop = 0;
             currentView = 'form';
@@ -1992,39 +2080,6 @@
         }
 
         // ============================================================
-        // COMPARTILHAR
-        // ============================================================
-        function shareRecord(id) {
-            const rec = allRecords.find(r => r.ID == id);
-            if (!rec) return;
-
-            const dataNasc = formatarData(rec.DATA_NASC);
-
-            let msg = '*SIGEC - Registro #' + rec.ID + '*\n\n';
-            msg += '📌 *Nome:* ' + (rec.NOME || 'N/I') + '\n';
-            msg += '📌 *Alcunha:* ' + (rec.ALCUNHA || 'N/I') + '\n';
-            msg += '📌 *Mãe:* ' + (rec.MAE || 'N/I') + '\n';
-            msg += '📌 *Pai:* ' + (rec.PAI || 'N/I') + '\n';
-            msg += '📌 *Data Nasc.:* ' + dataNasc + '\n';
-            msg += '📌 *Naturalidade:* ' + (rec.NATURALIDADE || 'N/I') + '/' + (rec.UF_NAT || 'N/I') + '\n';
-            msg += '📌 *CPF:* ' + (rec.CPF || 'N/I') + '\n';
-            msg += '📌 *RG:* ' + (rec.RG || 'N/I') + ' - ' + (rec.UF_RG || 'N/I') + '\n';
-            msg += '📌 *Telefone:* ' + (rec.TELEFONE || 'N/I') + '\n';
-            msg += '📌 *Endereço:* ' + (rec.ENDERECO || 'N/I') + '\n';
-            msg += '📌 *Cidade/UF:* ' + (rec.CIDADE || 'N/I') + '/' + (rec.ESTADO || 'N/I') + '\n';
-            msg += '📌 *Tipo Penal:* ' + (rec.TIPO_PENAL || 'N/I') + '\n';
-            msg += '⚖️ *Mandado:* ' + (rec.MANDADO || 'N/I');
-
-            const url = 'https://wa.me/?text=' + encodeURIComponent(msg);
-
-            try {
-                window.open(url, '_blank');
-            } catch (e) {
-                window.location.href = url;
-            }
-        }
-
-        // ============================================================
         // FUNÇÕES DE LOADING
         // ============================================================
         function showLoading(text) {
@@ -2050,8 +2105,8 @@
                 modal.className = 'image-modal';
 
                 modal.innerHTML = `
-                            <img id="modalImage">
-                        `;
+                    <img id="modalImage">
+                `;
 
                 modal.onclick = function() {
                     modal.style.display = 'none';
