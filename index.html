@@ -859,296 +859,14 @@
         }
 
         // ============================================================
-        // GERAR FICHA IMAGEM (com botões ENVIAR e FECHAR nativos Android)
-        // ============================================================
-        function abrirFichaImagem(id) {
-            const rec = allRecords.find(r => r.ID == id);
-            if (!rec) { alert("Registro não encontrado"); return; }
-
-            const dataNasc = formatarData(rec.DATA_NASC);
-            const mandadoStatus = (rec.MANDADO || '').toUpperCase() === 'SIM' ? 'CONSTA MANDADO DE PRISÃO' :
-                'NÃO CONSTA MANDADO DE PRISÃO';
-
-            const filiacao = [];
-            if (rec.MAE) filiacao.push(`MÃE: ${rec.MAE}`);
-            if (rec.PAI) filiacao.push(`PAI: ${rec.PAI}`);
-            if (filiacao.length === 0) filiacao.push('MÃE: –', 'PAI: –');
-            const ufRg = rec.UF_RG || '';
-
-            const divFicha = document.createElement('div');
-            divFicha.id = 'fichaImagemGerada';
-            divFicha.style.cssText = `
-                position: fixed; left: -99999px; top: 0; width: 1100px;
-                background: #ffffff; padding: 25px 30px; color: #1a1a1a;
-                font-family: 'Segoe UI', Arial, sans-serif;
-                border: 6px double #0b2a57; border-radius: 28px;
-                box-sizing: border-box; line-height: 1.5;
-            `;
-
-            let htmlFicha = `
-                <div style="background:#08264f;color:#fff;text-align:center;padding:25px;border-radius:18px 18px 0 0;margin:-25px -30px 25px -30px;">
-                    <div style="font-size:70px;font-weight:900;letter-spacing:8px;">SIGEC</div>
-                    <div style="font-size:22px;font-weight:600;">SISTEMA INTEGRADO DE GESTÃO E CONTROLE</div>
-                </div>
-                <div style="text-align:center;margin-bottom:25px;">
-                    <div style="font-size:32px;font-weight:900;color:#111;">REGISTRO DE ANOTAÇÕES CRIMINAIS</div>
-                    <div style="font-size:22px;font-weight:800;color:#c62828;margin-top:8px;">${mandadoStatus}</div>
-                </div>
-                <div style="display:flex;gap:40px;align-items:flex-start;">
-                    <div style="width:320px;text-align:center;">
-            `;
-            if (rec.FOTO) {
-                htmlFicha += `
-                    <img src="${rec.FOTO}" style="width:260px;height:330px;object-fit:cover;border:4px solid #0b2a57;border-radius:18px;">
-                `;
-            }
-            htmlFicha += `
-                        <div style="margin-top:20px;font-size:22px;font-weight:900;">ID</div>
-                        <div style="font-size:70px;font-weight:900;">${rec.ID}</div>
-                    </div>
-                    <div style="flex:1;">
-            `;
-
-            const fields = [
-                ['NOME', rec.NOME || '—'],
-                ['ALCUNHA', rec.ALCUNHA || '–'],
-                ['FILIAÇÃO', filiacao.join('<br>')],
-                ['DATA NASC.', dataNasc],
-                ['CPF', rec.CPF || '—'],
-                ['RG', (rec.RG || '—') + (ufRg ? ` SSP ${ufRg}` : '')],
-                ['ENDEREÇO', rec.ENDERECO || '—'],
-                ['CIDADE', rec.CIDADE || '—'],
-                ['UF', rec.UF || rec.ESTADO || '—'],
-                ['TIPO PENAL', rec.TIPO_PENAL || '–'],
-                ['MANDADO', rec.MANDADO || '—']
-            ];
-
-            fields.forEach(([label, val]) => {
-                htmlFicha += `
-                    <div style="display:flex;border-bottom:1px solid #cfd8dc;padding:14px 0;">
-                        <div style="width:170px;font-weight:800;color:#0b2a57;">${label}</div>
-                        <div style="flex:1;font-size:18px;">${val}</div>
-                    </div>
-                `;
-            });
-
-            htmlFicha += `
-                    </div>
-                </div>
-                <div style="background:#08264f;color:#fff;margin:25px -30px -25px -30px;padding:18px 25px;display:flex;justify-content:space-between;align-items:center;font-size:14px;border-radius:0 0 18px 18px;">
-                    <div>SIGEC - SISTEMA INTEGRADO DE GESTÃO E CONTROLE<br>USO EXCLUSIVO DAS FORÇAS DE SEGURANÇA</div>
-                    <div>DATA/HORA: ${new Date().toLocaleString('pt-BR')}</div>
-                </div>
-            `;
-            divFicha.innerHTML = htmlFicha;
-            document.body.appendChild(divFicha);
-
-            showLoading("Gerando ficha...");
-
-            setTimeout(() => {
-                const elemento = document.getElementById("fichaImagemGerada");
-                if (!elemento) { 
-                    hideLoading();
-                    alert('Erro ao gerar ficha: elemento não encontrado.');
-                    return; 
-                }
-
-                html2canvas(elemento, {
-                    scale: 2.5,
-                    useCORS: true,
-                    backgroundColor: "#ffffff",
-                    logging: false,
-                    width: 1100,
-                    height: elemento.scrollHeight
-                }).then(canvas => {
-                    hideLoading();
-                    const imagem = canvas.toDataURL("image/jpeg", 0.95);
-
-                    const novaJanela = window.open("", "_blank");
-                    if (!novaJanela) {
-                        alert('Permita pop-ups para visualizar a ficha.');
-                        elemento.remove();
-                        return;
-                    }
-
-                    const nomeArquivo = `Ficha_${rec.ID}.jpg`;
-
-                    novaJanela.document.write(`
-                        <!DOCTYPE html>
-                        <html>
-                        <head>
-                            <title>Ficha - ${rec.NOME || 'Registro'}</title>
-                            <meta charset="UTF-8">
-                            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-                            <style>
-                                * { margin: 0; padding: 0; box-sizing: border-box; }
-                                body {
-                                    background: #1a1a1a;
-                                    display: flex;
-                                    justify-content: center;
-                                    align-items: center;
-                                    min-height: 100vh;
-                                    padding: 20px;
-                                    font-family: 'Segoe UI', Arial, sans-serif;
-                                }
-                                .container {
-                                    display: flex;
-                                    flex-direction: column;
-                                    align-items: center;
-                                    gap: 16px;
-                                    max-width: 100%;
-                                }
-                                img {
-                                    max-width: 100%;
-                                    max-height: 70vh;
-                                    border-radius: 4px;
-                                    box-shadow: 0 8px 32px rgba(0,0,0,0.8);
-                                }
-                                .btn-group {
-                                    display: flex;
-                                    gap: 12px;
-                                    flex-wrap: wrap;
-                                    justify-content: center;
-                                    width: 100%;
-                                    padding: 0 8px;
-                                }
-                                .btn-share, .btn-close {
-                                    flex: 1;
-                                    min-width: 120px;
-                                    padding: 14px 20px;
-                                    border: none;
-                                    border-radius: 30px;
-                                    font-weight: 700;
-                                    font-size: 1rem;
-                                    cursor: pointer;
-                                    transition: 0.2s;
-                                    text-align: center;
-                                    touch-action: manipulation;
-                                }
-                                .btn-share {
-                                    background: #25D366;
-                                    color: #fff;
-                                    box-shadow: 0 4px 12px rgba(37,211,102,0.3);
-                                }
-                                .btn-share:active { transform: scale(0.95); }
-                                .btn-close {
-                                    background: #d32f2f;
-                                    color: #fff;
-                                    box-shadow: 0 4px 12px rgba(211,47,47,0.3);
-                                }
-                                .btn-close:active { transform: scale(0.95); }
-                                @media (max-width: 400px) {
-                                    .btn-share, .btn-close { min-width: 100px; font-size: 0.9rem; padding: 12px 16px; }
-                                }
-                            </style>
-                        </head>
-                        <body>
-                            <div class="container">
-                                <img src="${imagem}" alt="Ficha Criminal" id="fichaImg">
-                                <div class="btn-group">
-                                    <button class="btn-share" onclick="enviarFicha()">📤 ENVIAR</button>
-                                    <button class="btn-close" onclick="fecharFicha()">✕ FECHAR</button>
-                                </div>
-                            </div>
-                            <script>
-                                function enviarFicha() {
-                                    // Busca a imagem do DOM
-                                    const img = document.getElementById('fichaImg');
-                                    if (!img) {
-                                        alert('Erro ao localizar a imagem.');
-                                        return;
-                                    }
-
-                                    // Converte a imagem em blob
-                                    fetch(img.src)
-                                        .then(res => res.blob())
-                                        .then(blob => {
-                                            const file = new File([blob], '${nomeArquivo}', { type: 'image/jpeg' });
-                                            
-                                            // Verifica se o navegador suporta compartilhamento de arquivos
-                                            if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                                                navigator.share({
-                                                    title: 'Ficha SIGEC',
-                                                    text: 'Registro gerado pelo SIGEC',
-                                                    files: [file]
-                                                }).catch(err => {
-                                                    // Se o usuário cancelar, não mostra erro
-                                                    if (err.name !== 'AbortError') {
-                                                        alert('Erro ao compartilhar: ' + err.message);
-                                                    }
-                                                });
-                                            } else {
-                                                // Fallback: tenta compartilhar apenas texto com link da imagem
-                                                try {
-                                                    // Cria um link para download
-                                                    const link = document.createElement('a');
-                                                    link.download = '${nomeArquivo}';
-                                                    link.href = img.src;
-                                                    document.body.appendChild(link);
-                                                    link.click();
-                                                    document.body.removeChild(link);
-                                                    alert('A ficha foi baixada. Você pode enviá-la manualmente pelo WhatsApp ou Telegram.');
-                                                } catch(e) {
-                                                    alert('Seu navegador não suporta compartilhamento direto. A ficha foi baixada para envio manual.');
-                                                }
-                                            }
-                                        })
-                                        .catch(err => {
-                                            console.error('Erro ao processar imagem:', err);
-                                            // Fallback: baixa a imagem
-                                            try {
-                                                const link = document.createElement('a');
-                                                link.download = '${nomeArquivo}';
-                                                link.href = img.src;
-                                                document.body.appendChild(link);
-                                                link.click();
-                                                document.body.removeChild(link);
-                                                alert('A ficha foi baixada. Você pode enviá-la manualmente pelo WhatsApp ou Telegram.');
-                                            } catch(e) {
-                                                alert('Erro ao processar a ficha. Tente novamente.');
-                                            }
-                                        });
-                                }
-
-                                function fecharFicha() {
-                                    // Fecha a janela atual
-                                    window.close();
-                                    
-                                    // Tenta voltar para o dashboard da página principal
-                                    try {
-                                        if (window.opener && !window.opener.closed) {
-                                            if (typeof window.opener.voltarDashboard === 'function') {
-                                                window.opener.voltarDashboard();
-                                            }
-                                            window.opener.focus();
-                                        }
-                                    } catch(e) { 
-                                        console.log('Erro ao tentar voltar para a página principal:', e);
-                                    }
-                                }
-                            <\/script>
-                        </body>
-                        </html>
-                    `);
-                    novaJanela.document.close();
-                    elemento.remove();
-
-                }).catch(err => {
-                    hideLoading();
-                    console.error('Erro ao gerar ficha:', err);
-                    alert('Erro ao gerar a ficha: ' + err.message);
-                    const el = document.getElementById("fichaImagemGerada");
-                    if (el) el.remove();
-                });
-            }, 500);
-        }
-
-        // ============================================================
-        // API - JSONP e POST
+        // API - JSONP (CORRIGIDO)
         // ============================================================
         function callAPIGet(action, data = {}, callback) {
-            const callbackName = 'jsonp_' + action + '_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
-            let url = API_URL + '?action=' + encodeURIComponent(action) + '&callback=' + encodeURIComponent(callbackName);
+            const callbackName = 'jsonp_callback_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+            
+            let url = API_URL + '?action=' + encodeURIComponent(action);
+            url += '&callback=' + encodeURIComponent(callbackName);
+            
             for (let key in data) {
                 if (data[key] !== undefined && data[key] !== null) {
                     url += '&' + encodeURIComponent(key) + '=' + encodeURIComponent(
@@ -1156,17 +874,48 @@
                     );
                 }
             }
+            url += '&_nocache=' + Date.now();
+
+            // Define a função callback global
             window[callbackName] = function(response) {
-                delete window[callbackName];
-                if (callback) callback(response);
+                try {
+                    delete window[callbackName];
+                    if (callback) callback(response);
+                } catch (e) {
+                    console.error('Erro no callback:', e);
+                    if (callback) callback({ success: false, message: 'Erro ao processar resposta: ' + e.message });
+                }
             };
+
+            // Cria e insere o script
             const script = document.createElement('script');
-            script.src = url + '&_nocache=' + Date.now();
+            script.src = url;
             script.onerror = function() {
                 delete window[callbackName];
-                if (callback) callback({ success: false, message: 'Erro na comunicação com o servidor.' });
+                if (callback) callback({ 
+                    success: false, 
+                    message: 'Erro na comunicação com o servidor. Verifique sua conexão e tente novamente.' 
+                });
+            };
+            script.onload = function() {
+                // O script já foi executado, o callback foi chamado
+                // Remove o script após execução
+                setTimeout(() => {
+                    if (script.parentNode) script.parentNode.removeChild(script);
+                }, 100);
             };
             document.body.appendChild(script);
+
+            // Timeout de segurança
+            setTimeout(() => {
+                if (window[callbackName]) {
+                    delete window[callbackName];
+                    if (callback) callback({ 
+                        success: false, 
+                        message: 'Tempo limite excedido. O servidor pode estar lento ou indisponível.' 
+                    });
+                }
+            }, 30000);
         }
 
         function callAPIPost(action, data = {}) {
@@ -1284,10 +1033,10 @@
                         document.getElementById('loginError').textContent = 'Usuário ou senha inválidos.';
                     }
                 } else {
-                    document.getElementById('loginError').textContent = 'Erro ao validar login.';
+                    document.getElementById('loginError').textContent = 'Erro ao validar login: ' + result.message;
                 }
             } catch (e) {
-                document.getElementById('loginError').textContent = 'Erro de comunicação.';
+                document.getElementById('loginError').textContent = 'Erro de comunicação: ' + e.message;
             }
         }
 
@@ -1729,6 +1478,225 @@
 
         function hideLoading() {
             document.getElementById('loadingOverlay').style.display = 'none';
+        }
+
+        // ============================================================
+        // GERAR FICHA IMAGEM (COM BOTÕES ENVIAR E FECHAR)
+        // ============================================================
+        function abrirFichaImagem(id) {
+            const rec = allRecords.find(r => r.ID == id);
+            if (!rec) { alert("Registro não encontrado"); return; }
+
+            const dataNasc = formatarData(rec.DATA_NASC);
+            const mandadoStatus = (rec.MANDADO || '').toUpperCase() === 'SIM' ? 'CONSTA MANDADO DE PRISÃO' :
+                'NÃO CONSTA MANDADO DE PRISÃO';
+
+            const filiacao = [];
+            if (rec.MAE) filiacao.push(`MÃE: ${rec.MAE}`);
+            if (rec.PAI) filiacao.push(`PAI: ${rec.PAI}`);
+            if (filiacao.length === 0) filiacao.push('MÃE: –', 'PAI: –');
+            const ufRg = rec.UF_RG || '';
+
+            // Cria um visualizador flutuante
+            const visualizador = document.createElement('div');
+            visualizador.id = 'visualizadorFicha';
+            visualizador.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.9);
+                z-index: 9998;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                padding: 20px;
+                overflow-y: auto;
+            `;
+
+            // Conteúdo da ficha
+            const divFicha = document.createElement('div');
+            divFicha.id = 'fichaImagemGerada';
+            divFicha.style.cssText = `
+                width: 100%;
+                max-width: 500px;
+                background: #ffffff;
+                padding: 20px;
+                color: #1a1a1a;
+                font-family: 'Segoe UI', Arial, sans-serif;
+                border: 4px double #0b2a57;
+                border-radius: 18px;
+                box-sizing: border-box;
+                line-height: 1.4;
+                margin-bottom: 20px;
+            `;
+
+            let htmlFicha = `
+                <div style="background:#08264f;color:#fff;text-align:center;padding:15px;border-radius:12px 12px 0 0;margin:-20px -20px 20px -20px;">
+                    <div style="font-size:36px;font-weight:900;letter-spacing:4px;">SIGEC</div>
+                    <div style="font-size:14px;font-weight:600;">SISTEMA INTEGRADO DE GESTÃO E CONTROLE</div>
+                </div>
+                <div style="text-align:center;margin-bottom:15px;">
+                    <div style="font-size:18px;font-weight:900;color:#111;">REGISTRO DE ANOTAÇÕES CRIMINAIS</div>
+                    <div style="font-size:16px;font-weight:800;color:#c62828;margin-top:4px;">${mandadoStatus}</div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:15px;">
+                    <div style="text-align:center;">
+            `;
+            if (rec.FOTO) {
+                htmlFicha += `
+                    <img src="${rec.FOTO}" style="width:120px;height:150px;object-fit:cover;border:3px solid #0b2a57;border-radius:12px;">
+                `;
+            }
+            htmlFicha += `
+                        <div style="margin-top:8px;font-size:14px;font-weight:900;">ID</div>
+                        <div style="font-size:40px;font-weight:900;">${rec.ID}</div>
+                    </div>
+                    <div>
+            `;
+
+            const fields = [
+                ['NOME', rec.NOME || '—'],
+                ['ALCUNHA', rec.ALCUNHA || '–'],
+                ['FILIAÇÃO', filiacao.join('<br>')],
+                ['DATA NASC.', dataNasc],
+                ['CPF', rec.CPF || '—'],
+                ['RG', (rec.RG || '—') + (ufRg ? ` SSP ${ufRg}` : '')],
+                ['ENDEREÇO', rec.ENDERECO || '—'],
+                ['CIDADE', rec.CIDADE || '—'],
+                ['UF', rec.UF || rec.ESTADO || '—'],
+                ['TIPO PENAL', rec.TIPO_PENAL || '–'],
+                ['MANDADO', rec.MANDADO || '—']
+            ];
+
+            fields.forEach(([label, val]) => {
+                htmlFicha += `
+                    <div style="display:flex;border-bottom:1px solid #cfd8dc;padding:8px 0;font-size:13px;">
+                        <div style="width:100px;font-weight:800;color:#0b2a57;">${label}</div>
+                        <div style="flex:1;">${val}</div>
+                    </div>
+                `;
+            });
+
+            htmlFicha += `
+                    </div>
+                </div>
+                <div style="background:#08264f;color:#fff;margin:20px -20px -20px -20px;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;font-size:10px;border-radius:0 0 12px 12px;">
+                    <div>SIGEC - SISTEMA INTEGRADO DE GESTÃO E CONTROLE<br>USO EXCLUSIVO DAS FORÇAS DE SEGURANÇA</div>
+                    <div>${new Date().toLocaleString('pt-BR')}</div>
+                </div>
+            `;
+            divFicha.innerHTML = htmlFicha;
+
+            // Botões
+            const btnContainer = document.createElement('div');
+            btnContainer.style.cssText = `
+                display: flex;
+                gap: 12px;
+                width: 100%;
+                max-width: 500px;
+                flex-wrap: wrap;
+            `;
+
+            const btnEnviar = document.createElement('button');
+            btnEnviar.textContent = '📤 ENVIAR FICHA';
+            btnEnviar.style.cssText = `
+                flex: 1;
+                padding: 14px;
+                background: #25D366;
+                border: none;
+                border-radius: 12px;
+                color: #fff;
+                font-weight: 700;
+                font-size: 1rem;
+                cursor: pointer;
+                min-width: 120px;
+            `;
+            btnEnviar.onclick = function() {
+                const elemento = document.getElementById('fichaImagemGerada');
+                if (!elemento) { alert('Erro ao gerar ficha.'); return; }
+
+                showLoading("Preparando ficha...");
+
+                html2canvas(elemento, {
+                    scale: 2,
+                    useCORS: true,
+                    backgroundColor: "#ffffff",
+                    logging: false
+                }).then(canvas => {
+                    hideLoading();
+                    const dataUrl = canvas.toDataURL("image/jpeg", 0.95);
+                    const nomeArquivo = `Ficha_SIGEC_${rec.NOME || rec.ID}.jpg`;
+
+                    if (navigator.share) {
+                        fetch(dataUrl)
+                            .then(res => res.blob())
+                            .then(blob => {
+                                const file = new File([blob], nomeArquivo, { type: 'image/jpeg' });
+                                if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                                    return navigator.share({
+                                        title: 'SIGEC - Ficha Criminal',
+                                        text: `Ficha de ${rec.NOME}`,
+                                        files: [file]
+                                    });
+                                } else {
+                                    const a = document.createElement('a');
+                                    a.href = dataUrl;
+                                    a.download = nomeArquivo;
+                                    document.body.appendChild(a);
+                                    a.click();
+                                    document.body.removeChild(a);
+                                    alert('Ficha baixada. Compartilhe manualmente pelo WhatsApp ou Telegram.');
+                                }
+                            })
+                            .catch(err => {
+                                if (err.name !== 'AbortError') {
+                                    alert('Erro ao compartilhar: ' + err.message);
+                                }
+                            });
+                    } else {
+                        const a = document.createElement('a');
+                        a.href = dataUrl;
+                        a.download = nomeArquivo;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        alert('Ficha baixada. Compartilhe manualmente pelo WhatsApp ou Telegram.');
+                    }
+                }).catch(err => {
+                    hideLoading();
+                    alert('Erro ao gerar ficha: ' + err.message);
+                });
+            };
+
+            const btnFechar = document.createElement('button');
+            btnFechar.textContent = '✕ FECHAR';
+            btnFechar.style.cssText = `
+                flex: 1;
+                padding: 14px;
+                background: #c0392b;
+                border: none;
+                border-radius: 12px;
+                color: #fff;
+                font-weight: 700;
+                font-size: 1rem;
+                cursor: pointer;
+                min-width: 120px;
+            `;
+            btnFechar.onclick = function() {
+                if (visualizador.parentNode) {
+                    visualizador.parentNode.removeChild(visualizador);
+                }
+            };
+
+            btnContainer.appendChild(btnEnviar);
+            btnContainer.appendChild(btnFechar);
+
+            visualizador.appendChild(divFicha);
+            visualizador.appendChild(btnContainer);
+            document.body.appendChild(visualizador);
         }
 
         // ============================================================
