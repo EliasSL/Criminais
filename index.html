@@ -179,7 +179,34 @@
         .btn-header:active {
             transform: scale(0.94);
         }
-        .btn-header.sair {
+      .cadastrar-btn {
+    background: linear-gradient(135deg,#00ff88,#00ccff);
+    color: #111;
+    border: 2px solid #ffffff;
+    font-weight: 800;
+
+    box-shadow:
+        0 0 8px #00ff88,
+        0 0 18px #00ccff,
+        0 0 28px #ffffff;
+
+    animation: pulseCadastro 1.5s infinite;
+}
+@keyframes pulseCadastro {
+
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.08);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+  .btn-header.sair {
             border-color: #b33;
             color: #f66;
         }
@@ -198,14 +225,20 @@
             background: #3b2b1a;
             border-radius: 24px;
             padding: 42px 30px;
-            border: 2px solid #d4af37;
-            box-shadow:
-                0 0 3px #d4af37,
-                0 0 8px #d4af37,
-                0 0 12px #ffff00,
-                0 0 18px #ccff00,
-                0 0 25px rgba(204,255,0,0.7),
-                0 4px 12px rgba(0,0,0,0.5);
+           display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+text-align: center;
+ border: 2px solid #00aaff;
+
+box-shadow:
+    0 0 5px #00aaff,
+    0 0 12px #00aaff,
+    0 0 20px #ffffff,
+    0 0 30px #ffffff,
+    0 0 40px #66ccff,
+    0 4px 12px rgba(0,0,0,0.5);
             transition: all 0.3s ease;
             cursor: pointer;
             position: relative;
@@ -222,33 +255,45 @@
         }
 
         .card h3 {
-            font-size: 2rem;
-            color: #f5e6c8;
-            letter-spacing: 0.5px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+    font-size: 2rem;
+    color: #f5e6c8;
+    letter-spacing: 0.5px;
 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+
+    text-align: center;
+}
         .card .badge {
-            background: #f5c842;
-            color: #1a1a1a;
-            font-weight: 700;
-            border-radius: 40px;
-            font-size: 2rem;
-            padding: 8px 24px;
-        }
+    background: #f5c842;
+    color: #1a1a1a;
+    font-weight: 900;
+    border-radius: 40px;
 
+    font-size: 3.5rem;
+
+    padding: 12px 30px;
+    min-width: 120px;
+
+    text-align: center;
+}
         .card .card-sub {
-            font-size: 0.9rem;
-            color: #b99f7a;
-            margin-top: 10px;
-            display: flex;
-            gap: 12px;
-        }
+    font-size: 1rem;
+    color: #d6d6d6;
+    margin-top: 15px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    text-align: center;
+}
 
         .card.mandados {
-            border: 2px solid #00ff66;
+          border: 2px solid #00ff66;
             box-shadow:
                 0 0 4px #00ff66,
                 0 0 10px #00ff66,
@@ -286,8 +331,36 @@
                     0 0 32px #ff3300;
             }
         }
+#cardAnotacoes {
+    animation: neonAzul 2s infinite;
+}
+ @keyframes neonAzul {
 
-        /* ===== PÁGINAS DE LISTA ===== */
+    0% {
+        box-shadow:
+            0 0 5px #00aaff,
+            0 0 12px #00aaff,
+            0 0 20px #ffffff,
+            0 0 30px #66ccff;
+    }
+
+    50% {
+        box-shadow:
+            0 0 10px #00aaff,
+            0 0 20px #00aaff,
+            0 0 35px #ffffff,
+            0 0 50px #66ccff;
+    }
+
+    100% {
+        box-shadow:
+            0 0 5px #00aaff,
+            0 0 12px #00aaff,
+            0 0 20px #ffffff,
+            0 0 30px #66ccff;
+    }
+}   
+    /* ===== PÁGINAS DE LISTA ===== */
         .list-page {
             display: none;
             flex-direction: column;
@@ -316,14 +389,39 @@
         }
 
         .btn-back {
-            background: none;
-            border: none;
-            color: #f5c842;
-            font-size: 1.6rem;
-            cursor: pointer;
-            padding: 0 6px;
-        }
 
+    background: #f5c842;
+
+    color: #1a1a1a;
+
+    border: none;
+
+    border-radius: 12px;
+
+    width: 46px;
+    height: 46px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 1.4rem;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 4px 12px rgba(245,200,66,.45);
+
+    transition: .2s;
+}
+.btn-back:hover {
+    transform: translateY(-2px);
+}
+
+.btn-back:active {
+    transform: scale(.95);
+}
         .list-title {
             font-size: 1.3rem;
             font-weight: 600;
@@ -447,10 +545,11 @@
             border-color: #25D366;
         }
         .btn-detail.pdf {
-            background: #c0392b;
-            color: #fff;
-            border-color: #c0392b;
-        }
+    background: #38bdf8;
+    color: #ffffff;
+    border-color: #38bdf8;
+    box-shadow: 0 0 10px rgba(56,189,248,0.6);
+}
 
         /* ===== FORMULÁRIO ===== */
         .form-page {
@@ -806,7 +905,7 @@
                     <div class="logo-text">SIG<span>EC</span></div>
                 </div>
                 <div class="header-actions">
-                    <button class="btn-header" onclick="openCadastro()">CADASTRAR</button>
+                    <button class="btn-header cadastrar-btn" onclick="openCadastro()">CADASTRAR</button>
                     <button class="btn-header" onclick="openSenha()">SENHA</button>
                     <button class="btn-header sair" onclick="logout()">SAIR</button>
                 </div>
@@ -2073,4 +2172,3 @@ function compartilharImagem(imagem,id){
     </script>
 </body>
 </html>
-
