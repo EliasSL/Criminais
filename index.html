@@ -1598,13 +1598,13 @@
                             .catch(err => {
                                 if (err.name !== 'AbortError') {
                                     console.error('Erro no compartilhamento:', err);
-                                    // Fallback: download
-                                    baixarEEnviar(dataUrl, nomeArquivo);
+                                    // Fallback: baixar e abrir WhatsApp
+                                    baixarEEnviarWhatsApp(dataUrl, nomeArquivo);
                                 }
                             });
                     } else {
                         // Fallback para navegadores sem Web Share
-                        baixarEEnviar(dataUrl, nomeArquivo);
+                        baixarEEnviarWhatsApp(dataUrl, nomeArquivo);
                     }
                 }).catch(err => {
                     hideLoading();
@@ -1643,10 +1643,10 @@
         }
 
         // ============================================================
-        // FUNÇÃO DE FALLBACK - BAIXAR E ABRIR WHATSAPP
+        // FUNÇÃO CORRIGIDA - BAIXAR E ABRIR WHATSAPP
         // ============================================================
-        function baixarEEnviar(dataUrl, nomeArquivo) {
-            // Baixa a imagem
+        function baixarEEnviarWhatsApp(dataUrl, nomeArquivo) {
+            // 1. Baixa a imagem
             const a = document.createElement('a');
             a.href = dataUrl;
             a.download = nomeArquivo;
@@ -1656,21 +1656,27 @@
             
             showToast('📥 Imagem baixada! Abrindo WhatsApp...', 4000);
             
-            // Tenta abrir o WhatsApp
+            // 2. Abre o WhatsApp CORRETAMENTE
             setTimeout(() => {
-                // Tenta via intent do WhatsApp (Android)
-                const linkWhatsApp = document.createElement('a');
-                linkWhatsApp.href = `whatsapp://send?text=${encodeURIComponent('*SIGEC - Ficha Criminal*%0A%0AFicha gerada pelo sistema SIGEC.')}`;
-                linkWhatsApp.target = '_blank';
+                // Mensagem com informações da ficha
+                const mensagem = `*SIGEC - Ficha Criminal*%0A%0AFicha gerada pelo sistema SIGEC.`;
                 
-                const janela = window.open(linkWhatsApp.href, '_blank');
-                if (!janela || janela.closed) {
-                    // Fallback para WhatsApp Web
-                    const linkWeb = document.createElement('a');
-                    linkWeb.href = `https://wa.me/?text=${encodeURIComponent('*SIGEC - Ficha Criminal*%0A%0AFicha gerada pelo sistema SIGEC.')}`;
-                    linkWeb.target = '_blank';
-                    linkWeb.click();
+                // Tenta abrir o WhatsApp no Android (usando window.location)
+                try {
+                    // Primeiro tenta o intent do WhatsApp (Android)
+                    window.location.href = `whatsapp://send?text=${mensagem}`;
+                } catch (e) {
+                    console.log('Erro ao abrir whatsapp://, tentando wa.me');
                 }
+                
+                // Fallback: tenta abrir o WhatsApp Web após 1 segundo
+                setTimeout(() => {
+                    try {
+                        window.open(`https://wa.me/?text=${mensagem}`, '_blank');
+                    } catch (e) {
+                        console.log('Erro ao abrir wa.me');
+                    }
+                }, 1000);
             }, 500);
         }
 
