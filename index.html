@@ -1404,7 +1404,69 @@
         }
 
         // ============================================================
-        // ABRIR FICHA E ENVIAR DIRETO PARA O WHATSAPP
+        // COMPARTILHAR IMAGEM - SOLUÇÃO DEFINITIVA
+        // ============================================================
+        function compartilharImagem(blob, nomeArquivo, nomePessoa) {
+            return new Promise((resolve, reject) => {
+                try {
+                    // Verifica se o navegador suporta Web Share API
+                    if (navigator.share) {
+                        const file = new File([blob], nomeArquivo, { type: 'image/jpeg' });
+                        
+                        // Verifica se pode compartilhar arquivos
+                        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                            navigator.share({
+                                title: 'SIGEC - Ficha Criminal',
+                                text: `Ficha de ${nomePessoa} - SIGEC`,
+                                files: [file]
+                            })
+                            .then(() => {
+                                showToast('✅ Ficha compartilhada com sucesso!', 3000);
+                                resolve();
+                            })
+                            .catch(err => {
+                                if (err.name !== 'AbortError') {
+                                    console.error('Erro no compartilhamento:', err);
+                                    // Fallback
+                                    baixarImagem(blob, nomeArquivo);
+                                } else {
+                                    resolve();
+                                }
+                            });
+                            return;
+                        }
+                    }
+                    
+                    // Fallback: baixar a imagem
+                    baixarImagem(blob, nomeArquivo);
+                    resolve();
+                    
+                } catch (error) {
+                    console.error('Erro ao compartilhar:', error);
+                    baixarImagem(blob, nomeArquivo);
+                    resolve();
+                }
+            });
+        }
+
+        function baixarImagem(blob, nomeArquivo) {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = nomeArquivo;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            
+            setTimeout(() => {
+                URL.revokeObjectURL(url);
+            }, 5000);
+            
+            showToast('📥 Imagem baixada! Compartilhe manualmente.', 4000);
+        }
+
+        // ============================================================
+        // ABRIR FICHA E ENVIAR
         // ============================================================
         function abrirFichaImagem(id) {
             const rec = allRecords.find(r => r.ID == id);
@@ -1418,6 +1480,12 @@
             if (rec.PAI) filiacao.push(`PAI: ${rec.PAI}`);
             if (filiacao.length === 0) filiacao.push('MÃE: –', 'PAI: –');
             const ufRg = rec.UF_RG || '';
+
+            // Remove visualizador anterior
+            const visualizadorAntigo = document.getElementById('visualizadorFicha');
+            if (visualizadorAntigo) {
+                visualizadorAntigo.parentNode.removeChild(visualizadorAntigo);
+            }
 
             // Cria um visualizador flutuante
             const visualizador = document.createElement('div');
@@ -1523,7 +1591,7 @@
             `;
 
             const btnEnviar = document.createElement('button');
-            btnEnviar.textContent = '📤 ENVIAR PARA WHATSAPP';
+            btnEnviar.textContent = '📤 COMPARTILHAR FICHA';
             btnEnviar.style.cssText = `
                 flex: 1;
                 padding: 14px 20px;
@@ -1539,7 +1607,10 @@
             `;
             btnEnviar.onclick = function() {
                 const elemento = document.getElementById('fichaImagemGerada');
-                if (!elemento) { alert('Erro ao gerar ficha.'); return; }
+                if (!elemento) { 
+                    showToast('❌ Erro ao gerar ficha.', 3000);
+                    return; 
+                }
 
                 showLoading("Gerando ficha...");
 
@@ -1567,49 +1638,29 @@
                 }).then(canvas => {
                     hideLoading();
                     
-                    // Converte para dataUrl
-                    const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
-                    const nomeArquivo = `Ficha_SIGEC_${(rec.NOME || rec.ID).replace(/\s+/g, '_')}.jpg`;
-                    
                     // Fecha o visualizador
                     if (visualizador.parentNode) {
                         visualizador.parentNode.removeChild(visualizador);
                     }
                     
-                    // Tenta compartilhar via Web Share API
-                    if (navigator.share && navigator.canShare) {
-                        fetch(dataUrl)
-                            .then(res => res.blob())
-                            .then(blob => {
-                                const file = new File([blob], nomeArquivo, { type: 'image/jpeg' });
-                                if (navigator.canShare({ files: [file] })) {
-                                    return navigator.share({
-                                        title: 'SIGEC - Ficha Criminal',
-                                        text: `Ficha de ${rec.NOME}`,
-                                        files: [file]
-                                    });
-                                } else {
-                                    throw new Error('Compartilhamento não suportado');
-                                }
-                            })
-                            .then(() => {
-                                showToast('✅ Ficha enviada com sucesso!', 3000);
-                            })
-                            .catch(err => {
-                                if (err.name !== 'AbortError') {
-                                    console.error('Erro no compartilhamento:', err);
-                                    // Fallback: baixar e abrir WhatsApp
-                                    baixarEEnviarWhatsApp(dataUrl, nomeArquivo);
-                                }
-                            });
-                    } else {
-                        // Fallback para navegadores sem Web Share
-                        baixarEEnviarWhatsApp(dataUrl, nomeArquivo);
-                    }
+                    // Converte para blob
+                    canvas.toBlob(function(blob) {
+                        if (!blob) {
+                            showToast('❌ Erro ao gerar imagem.', 3000);
+                            return;
+                        }
+                        
+                        const nomeArquivo = `Ficha_SIGEC_${(rec.NOME || rec.ID).replace(/\s+/g, '_')}.jpg`;
+                        
+                        // Compartilha a imagem
+                        compartilharImagem(blob, nomeArquivo, rec.NOME || 'SIGEC');
+                        
+                    }, 'image/jpeg', 0.95);
+                    
                 }).catch(err => {
                     hideLoading();
                     console.error('Erro ao gerar ficha:', err);
-                    alert('Erro ao gerar a ficha: ' + err.message);
+                    showToast('❌ Erro ao gerar ficha: ' + err.message, 4000);
                 });
             };
 
@@ -1632,6 +1683,11 @@
                 if (visualizador.parentNode) {
                     visualizador.parentNode.removeChild(visualizador);
                 }
+                // Remove também a ficha se ainda existir
+                const fichaEl = document.getElementById('fichaImagemGerada');
+                if (fichaEl && fichaEl.parentNode && fichaEl.parentNode !== visualizador) {
+                    fichaEl.parentNode.removeChild(fichaEl);
+                }
             };
 
             btnContainer.appendChild(btnEnviar);
@@ -1640,44 +1696,6 @@
             visualizador.appendChild(divFicha);
             visualizador.appendChild(btnContainer);
             document.body.appendChild(visualizador);
-        }
-
-        // ============================================================
-        // FUNÇÃO CORRIGIDA - BAIXAR E ABRIR WHATSAPP
-        // ============================================================
-        function baixarEEnviarWhatsApp(dataUrl, nomeArquivo) {
-            // 1. Baixa a imagem
-            const a = document.createElement('a');
-            a.href = dataUrl;
-            a.download = nomeArquivo;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            
-            showToast('📥 Imagem baixada! Abrindo WhatsApp...', 4000);
-            
-            // 2. Abre o WhatsApp CORRETAMENTE
-            setTimeout(() => {
-                // Mensagem com informações da ficha
-                const mensagem = `*SIGEC - Ficha Criminal*%0A%0AFicha gerada pelo sistema SIGEC.`;
-                
-                // Tenta abrir o WhatsApp no Android (usando window.location)
-                try {
-                    // Primeiro tenta o intent do WhatsApp (Android)
-                    window.location.href = `whatsapp://send?text=${mensagem}`;
-                } catch (e) {
-                    console.log('Erro ao abrir whatsapp://, tentando wa.me');
-                }
-                
-                // Fallback: tenta abrir o WhatsApp Web após 1 segundo
-                setTimeout(() => {
-                    try {
-                        window.open(`https://wa.me/?text=${mensagem}`, '_blank');
-                    } catch (e) {
-                        console.log('Erro ao abrir wa.me');
-                    }
-                }, 1000);
-            }, 500);
         }
 
         // ============================================================
