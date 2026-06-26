@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>SIGEC - Segurança Pública</title>
     <style>
-        /* ===== RESET E BASE ===== */
         * {
             margin: 0;
             padding: 0;
@@ -195,13 +194,7 @@
             border-radius: 24px;
             padding: 42px 30px;
             border: 2px solid #d4af37;
-            box-shadow:
-                0 0 3px #d4af37,
-                0 0 8px #d4af37,
-                0 0 12px #ffff00,
-                0 0 18px #ccff00,
-                0 0 25px rgba(204,255,0,0.7),
-                0 4px 12px rgba(0,0,0,0.5);
+            box-shadow: 0 0 3px #d4af37, 0 0 8px #d4af37, 0 0 12px #ffff00, 0 0 18px #ccff00, 0 0 25px rgba(204,255,0,0.7), 0 4px 12px rgba(0,0,0,0.5);
             transition: all 0.3s ease;
             cursor: pointer;
             position: relative;
@@ -210,11 +203,7 @@
 
         .card:active {
             transform: scale(0.97);
-            box-shadow:
-                0 0 5px #d4af37,
-                0 0 15px #ffff00,
-                0 0 25px #ccff00,
-                0 0 35px #99ff00;
+            box-shadow: 0 0 5px #d4af37, 0 0 15px #ffff00, 0 0 25px #ccff00, 0 0 35px #99ff00;
         }
 
         .card h3 {
@@ -245,62 +234,19 @@
 
         .card.mandados {
             border: 2px solid #00ff66;
-            box-shadow:
-                0 0 4px #00ff66,
-                0 0 10px #00ff66,
-                0 0 16px #ffff00,
-                0 0 24px #ffff00,
-                0 0 32px #ff3300,
-                0 0 42px #ff0000,
-                0 4px 12px rgba(0,0,0,0.5);
+            box-shadow: 0 0 4px #00ff66, 0 0 10px #00ff66, 0 0 16px #ffff00, 0 0 24px #ffff00, 0 0 32px #ff3300, 0 0 42px #ff0000, 0 4px 12px rgba(0,0,0,0.5);
             animation: neonMandado 2s infinite;
         }
 
         @keyframes neonMandado {
-            0% {
-                box-shadow:
-                    0 0 4px #00ff66,
-                    0 0 10px #00ff66,
-                    0 0 16px #ffff00,
-                    0 0 24px #ffff00,
-                    0 0 32px #ff3300;
-            }
-            50% {
-                box-shadow:
-                    0 0 8px #00ff66,
-                    0 0 18px #00ff66,
-                    0 0 28px #ffff00,
-                    0 0 38px #ff3300,
-                    0 0 50px #ff0000;
-            }
-            100% {
-                box-shadow:
-                    0 0 4px #00ff66,
-                    0 0 10px #00ff66,
-                    0 0 16px #ffff00,
-                    0 0 24px #ffff00,
-                    0 0 32px #ff3300;
-            }
+            0% { box-shadow: 0 0 4px #00ff66, 0 0 10px #00ff66, 0 0 16px #ffff00, 0 0 24px #ffff00, 0 0 32px #ff3300; }
+            50% { box-shadow: 0 0 8px #00ff66, 0 0 18px #00ff66, 0 0 28px #ffff00, 0 0 38px #ff3300, 0 0 50px #ff0000; }
+            100% { box-shadow: 0 0 4px #00ff66, 0 0 10px #00ff66, 0 0 16px #ffff00, 0 0 24px #ffff00, 0 0 32px #ff3300; }
         }
 
-        .list-page {
-            display: none;
-            flex-direction: column;
-            gap: 16px;
-            height: 100%;
-        }
-
-        .detail-page {
-            display: none;
-            flex-direction: column;
-            height: 100%;
-        }
-
-        .form-page {
-            display: none;
-            flex-direction: column;
-            height: 100%;
-        }
+        .list-page { display: none; flex-direction: column; gap: 16px; height: 100%; }
+        .detail-page { display: none; flex-direction: column; height: 100%; }
+        .form-page { display: none; flex-direction: column; height: 100%; }
 
         .list-header {
             display: flex;
@@ -428,11 +374,6 @@
             background: #f5c842;
             color: #1a1a1a;
             border-color: #f5c842;
-        }
-        .btn-detail.compartilhar {
-            background: #25D366;
-            color: #fff;
-            border-color: #25D366;
         }
         .btn-detail.pdf {
             background: #c0392b;
@@ -689,7 +630,6 @@
             font-weight: 600;
         }
 
-        /* Toast notification */
         .toast {
             position: fixed;
             bottom: 30px;
@@ -707,60 +647,28 @@
             border: 1px solid #f5c84255;
         }
 
+        .btn-whatsapp {
+            background: #25D366 !important;
+            color: #fff !important;
+            border-color: #25D366 !important;
+        }
+
         @media (max-width: 480px) {
-            #app {
-                padding: 16px 14px 24px;
-            }
-            .header-dash {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 12px;
-            }
-            .logo-area {
-                justify-content: center;
-            }
-            .header-actions {
-                justify-content: center;
-                margin-left: 0;
-            }
-            .btn-header {
-                font-size: 0.7rem;
-                padding: 6px 12px;
-                flex: 1;
-                text-align: center;
-                min-width: 60px;
-            }
-            .card {
-                padding: 48px 32px;
-                min-height: 320px;
-            }
-            .card h3 {
-                font-size: 1.2rem;
-            }
-            .card .badge {
-                font-size: 1rem;
-                padding: 3px 14px;
-                min-width: 30px;
-            }
-            .card .card-sub {
-                font-size: 0.8rem;
-            }
+            #app { padding: 16px 14px 24px; }
+            .header-dash { flex-direction: column; align-items: stretch; gap: 12px; }
+            .logo-area { justify-content: center; }
+            .header-actions { justify-content: center; margin-left: 0; }
+            .btn-header { font-size: 0.7rem; padding: 6px 12px; flex: 1; text-align: center; min-width: 60px; }
+            .card { padding: 48px 32px; min-height: 320px; }
+            .card h3 { font-size: 1.2rem; }
+            .card .badge { font-size: 1rem; padding: 3px 14px; min-width: 30px; }
+            .card .card-sub { font-size: 0.8rem; }
         }
 
         @media (max-width: 380px) {
-            .btn-header {
-                font-size: 0.6rem;
-                padding: 4px 8px;
-                min-width: 50px;
-            }
-            .logo-text {
-                font-size: 1.2rem;
-            }
-            .logo-icon {
-                width: 40px;
-                height: 40px;
-                font-size: 1.3rem;
-            }
+            .btn-header { font-size: 0.6rem; padding: 4px 8px; min-width: 50px; }
+            .logo-text { font-size: 1.2rem; }
+            .logo-icon { width: 40px; height: 40px; font-size: 1.3rem; }
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js">
@@ -847,9 +755,6 @@
         let currentView = 'dashboard';
         let currentListType = null;
 
-        // ============================================================
-        // TOAST NOTIFICATION
-        // ============================================================
         function showToast(message, duration = 3000) {
             const toast = document.getElementById('toast');
             toast.textContent = message;
@@ -926,7 +831,7 @@
                 delete window[callbackName];
                 if (callback) callback({ 
                     success: false, 
-                    message: 'Erro na comunicação com o servidor. Verifique sua conexão e tente novamente.' 
+                    message: 'Erro na comunicação com o servidor.' 
                 });
             };
             script.onload = function() {
@@ -941,7 +846,7 @@
                     delete window[callbackName];
                     if (callback) callback({ 
                         success: false, 
-                        message: 'Tempo limite excedido. O servidor pode estar lento ou indisponível.' 
+                        message: 'Tempo limite excedido.' 
                     });
                 }
             }, 30000);
@@ -985,14 +890,11 @@
                 reader.onload = function(e) {
                     const img = new Image();
                     img.onload = function() {
-                        let width = img.width,
-                            height = img.height;
+                        let width = img.width, height = img.height;
                         if (width > height) {
-                            if (width > maxWidth) { height = Math.round(height * (maxWidth / width));
-                                width = maxWidth; }
+                            if (width > maxWidth) { height = Math.round(height * (maxWidth / width)); width = maxWidth; }
                         } else {
-                            if (height > maxHeight) { width = Math.round(width * (maxHeight / height));
-                                height = maxHeight; }
+                            if (height > maxHeight) { width = Math.round(width * (maxHeight / height)); height = maxHeight; }
                         }
                         const canvas = document.createElement('canvas');
                         canvas.width = width;
@@ -1031,8 +933,7 @@
         }
 
         function updateBadges() {
-            const nao = allRecords.filter(r => (r.MANDADO || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase() ===
-                'NAO').length;
+            const nao = allRecords.filter(r => (r.MANDADO || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase() === 'NAO').length;
             const sim = allRecords.filter(r => (r.MANDADO || '').toUpperCase() === 'SIM').length;
             document.getElementById('badgeNao').textContent = nao;
             document.getElementById('badgeSim').textContent = sim;
@@ -1139,8 +1040,7 @@
                     <div class="scroll-area">
             `;
             filtered.forEach(rec => {
-                const searchable = Object.values(rec).join(' ').normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-                    .toUpperCase();
+                const searchable = Object.values(rec).join(' ').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toUpperCase();
                 const foto = rec.FOTO || '';
                 const imgHtml = foto ? `<img src="${foto}" style="width:100%;height:100%;object-fit:cover;">` : '📷';
                 html += `
@@ -1209,14 +1109,13 @@
                 ['MANDADO', record.MANDADO || '—']
             ];
             fields.forEach(([label, val]) => {
-                html +=
-                    `<div class="detail-field"><span class="label">${label}</span><span class="value">${val}</span></div>`;
+                html += `<div class="detail-field"><span class="label">${label}</span><span class="value">${val}</span></div>`;
             });
             html += `
                     </div>
                     <div class="detail-actions">
                         <button class="btn-detail editar" onclick="editRecord(${record.ID})">✎ EDITAR</button>
-                        <button class="btn-detail pdf" onclick="abrirFichaImagem(${record.ID})">📷 FICHA</button>
+                        <button class="btn-detail pdf btn-whatsapp" onclick="abrirFichaImagem(${record.ID})">📤 ENVIAR WHATSAPP</button>
                     </div>
                     <button class="btn-back" style="margin-top:8px;" onclick="backToList()">← Voltar</button>
                 </div>
@@ -1284,8 +1183,7 @@
             if (file) {
                 try {
                     const resizedDataUrl = await resizeImage(file, 150, 150, 0.4);
-                    document.getElementById('fotoPreview').innerHTML =
-                        `<img src="${resizedDataUrl}" style="max-width:100px;border-radius:8px;border:1px solid #555;">`;
+                    document.getElementById('fotoPreview').innerHTML = `<img src="${resizedDataUrl}" style="max-width:100px;border-radius:8px;border:1px solid #555;">`;
                     document.getElementById('f_foto').value = resizedDataUrl;
                 } catch (error) {
                     alert('Erro ao processar imagem: ' + error.message);
@@ -1377,9 +1275,7 @@
             ];
             campos.forEach(campo => {
                 let valor = campo.value !== undefined ? campo.value : (rec[campo.key] || '');
-                html += `
-                    <div class="form-group"><label>${campo.label}</label><input type="text" id="${campo.id}" value="${valor}"></div>
-                `;
+                html += `<div class="form-group"><label>${campo.label}</label><input type="text" id="${campo.id}" value="${valor}"></div>`;
             });
             html += `
                         <div class="form-group"><label>MANDADO</label>
@@ -1405,8 +1301,7 @@
             if (file) {
                 try {
                     const resizedDataUrl = await resizeImage(file, 150, 150, 0.4);
-                    document.getElementById('editFotoPreview').innerHTML =
-                        `<img src="${resizedDataUrl}" style="max-width:100px;border-radius:8px;border:1px solid #555;">`;
+                    document.getElementById('editFotoPreview').innerHTML = `<img src="${resizedDataUrl}" style="max-width:100px;border-radius:8px;border:1px solid #555;">`;
                     document.getElementById('e_foto').value = resizedDataUrl;
                 } catch (error) {
                     alert('Erro ao processar imagem: ' + error.message);
@@ -1422,8 +1317,7 @@
                 MAE: document.getElementById('e_mae') ? document.getElementById('e_mae').value.trim() : '',
                 PAI: document.getElementById('e_pai') ? document.getElementById('e_pai').value.trim() : '',
                 DATA_NASC: document.getElementById('e_data_nasc') ? document.getElementById('e_data_nasc').value.trim() : '',
-                NATURALIDADE: document.getElementById('e_naturalidade') ? document.getElementById('e_naturalidade').value
-                    .trim() : '',
+                NATURALIDADE: document.getElementById('e_naturalidade') ? document.getElementById('e_naturalidade').value.trim() : '',
                 UF_NAT: document.getElementById('e_uf_nat') ? document.getElementById('e_uf_nat').value.trim() : '',
                 CPF: document.getElementById('e_cpf') ? document.getElementById('e_cpf').value.trim() : '',
                 RG: document.getElementById('e_rg') ? document.getElementById('e_rg').value.trim() : '',
@@ -1510,93 +1404,20 @@
         }
 
         // ============================================================
-        // ENVIAR PARA WHATSAPP - FUNÇÃO PRINCIPAL
-        // ============================================================
-        function enviarParaWhatsApp(dataUrl, nomeArquivo) {
-            return new Promise((resolve, reject) => {
-                try {
-                    // Verifica se o navegador suporta Web Share API
-                    if (navigator.share) {
-                        // Converte dataUrl para Blob
-                        fetch(dataUrl)
-                            .then(res => res.blob())
-                            .then(blob => {
-                                const file = new File([blob], nomeArquivo, { type: 'image/jpeg' });
-                                if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                                    navigator.share({
-                                        title: 'SIGEC - Ficha Criminal',
-                                        text: 'Ficha criminal do sistema SIGEC',
-                                        files: [file]
-                                    })
-                                    .then(() => resolve())
-                                    .catch(err => {
-                                        if (err.name !== 'AbortError') {
-                                            reject(err);
-                                        } else {
-                                            resolve();
-                                        }
-                                    });
-                                } else {
-                                    reject(new Error('Compartilhamento de arquivos não suportado'));
-                                }
-                            })
-                            .catch(err => reject(err));
-                    } else {
-                        // Fallback: tenta abrir o WhatsApp com a imagem
-                        // Para Android, podemos usar o intent do WhatsApp
-                        const linkWhatsApp = document.createElement('a');
-                        linkWhatsApp.href = `whatsapp://send?text=*SIGEC - Ficha Criminal*%0A%0A${encodeURIComponent('Ficha gerada pelo sistema SIGEC.')}`;
-                        linkWhatsApp.target = '_blank';
-                        
-                        // Tenta abrir o WhatsApp
-                        const resultado = window.open(linkWhatsApp.href, '_blank');
-                        if (!resultado || resultado.closed) {
-                            // Se não abrir, tenta o link da web
-                            const linkWeb = document.createElement('a');
-                            linkWeb.href = `https://wa.me/?text=${encodeURIComponent('*SIGEC - Ficha Criminal*%0A%0AFicha gerada pelo sistema SIGEC.')}`;
-                            linkWeb.target = '_blank';
-                            linkWeb.click();
-                        }
-                        
-                        // Baixa a imagem para o usuário
-                        const a = document.createElement('a');
-                        a.href = dataUrl;
-                        a.download = nomeArquivo;
-                        document.body.appendChild(a);
-                        a.click();
-                        document.body.removeChild(a);
-                        
-                        showToast('📱 Abrindo WhatsApp... A imagem foi baixada para enviar.', 4000);
-                        resolve();
-                    }
-                } catch (error) {
-                    reject(error);
-                }
-            });
-        }
-
-        // ============================================================
-        // GERAR FICHA IMAGEM (CORRIGIDO PARA ENVIAR DIRETO AO WHATSAPP)
+        // ABRIR FICHA E ENVIAR DIRETO PARA O WHATSAPP
         // ============================================================
         function abrirFichaImagem(id) {
             const rec = allRecords.find(r => r.ID == id);
             if (!rec) { alert("Registro não encontrado"); return; }
 
             const dataNasc = formatarData(rec.DATA_NASC);
-            const mandadoStatus = (rec.MANDADO || '').toUpperCase() === 'SIM' ? 'CONSTA MANDADO DE PRISÃO' :
-                'NÃO CONSTA MANDADO DE PRISÃO';
+            const mandadoStatus = (rec.MANDADO || '').toUpperCase() === 'SIM' ? 'CONSTA MANDADO DE PRISÃO' : 'NÃO CONSTA MANDADO DE PRISÃO';
 
             const filiacao = [];
             if (rec.MAE) filiacao.push(`MÃE: ${rec.MAE}`);
             if (rec.PAI) filiacao.push(`PAI: ${rec.PAI}`);
             if (filiacao.length === 0) filiacao.push('MÃE: –', 'PAI: –');
             const ufRg = rec.UF_RG || '';
-
-            // Remove visualizador anterior se existir
-            const visualizadorAntigo = document.getElementById('visualizadorFicha');
-            if (visualizadorAntigo) {
-                visualizadorAntigo.parentNode.removeChild(visualizadorAntigo);
-            }
 
             // Cria um visualizador flutuante
             const visualizador = document.createElement('div');
@@ -1648,9 +1469,7 @@
                     <div style="text-align:center;">
             `;
             if (rec.FOTO) {
-                htmlFicha += `
-                    <img src="${rec.FOTO}" style="width:100px;height:130px;object-fit:cover;border:3px solid #0b2a57;border-radius:12px;">
-                `;
+                htmlFicha += `<img src="${rec.FOTO}" style="width:100px;height:130px;object-fit:cover;border:3px solid #0b2a57;border-radius:12px;">`;
             }
             htmlFicha += `
                         <div style="margin-top:6px;font-size:13px;font-weight:900;">ID</div>
@@ -1704,7 +1523,7 @@
             `;
 
             const btnEnviar = document.createElement('button');
-            btnEnviar.textContent = '📤 ENVIAR WHATSAPP';
+            btnEnviar.textContent = '📤 ENVIAR PARA WHATSAPP';
             btnEnviar.style.cssText = `
                 flex: 1;
                 padding: 14px 20px;
@@ -1717,18 +1536,13 @@
                 cursor: pointer;
                 min-width: 120px;
                 touch-action: manipulation;
-                -webkit-tap-highlight-color: transparent;
             `;
             btnEnviar.onclick = function() {
                 const elemento = document.getElementById('fichaImagemGerada');
-                if (!elemento) { 
-                    alert('Erro ao gerar ficha.');
-                    return; 
-                }
+                if (!elemento) { alert('Erro ao gerar ficha.'); return; }
 
                 showLoading("Gerando ficha...");
 
-                // Força o reflow para garantir que o elemento está renderizado
                 elemento.offsetHeight;
 
                 html2canvas(elemento, {
@@ -1757,23 +1571,41 @@
                     const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
                     const nomeArquivo = `Ficha_SIGEC_${(rec.NOME || rec.ID).replace(/\s+/g, '_')}.jpg`;
                     
-                    // Tenta enviar para o WhatsApp
-                    enviarParaWhatsApp(dataUrl, nomeArquivo)
-                        .then(() => {
-                            showToast('✅ Ficha enviada com sucesso!', 3000);
-                        })
-                        .catch(err => {
-                            console.error('Erro ao enviar:', err);
-                            // Fallback: baixa a imagem
-                            const a = document.createElement('a');
-                            a.href = dataUrl;
-                            a.download = nomeArquivo;
-                            document.body.appendChild(a);
-                            a.click();
-                            document.body.removeChild(a);
-                            showToast('📥 Ficha baixada. Compartilhe manualmente.', 4000);
-                        });
+                    // Fecha o visualizador
+                    if (visualizador.parentNode) {
+                        visualizador.parentNode.removeChild(visualizador);
+                    }
                     
+                    // Tenta compartilhar via Web Share API
+                    if (navigator.share && navigator.canShare) {
+                        fetch(dataUrl)
+                            .then(res => res.blob())
+                            .then(blob => {
+                                const file = new File([blob], nomeArquivo, { type: 'image/jpeg' });
+                                if (navigator.canShare({ files: [file] })) {
+                                    return navigator.share({
+                                        title: 'SIGEC - Ficha Criminal',
+                                        text: `Ficha de ${rec.NOME}`,
+                                        files: [file]
+                                    });
+                                } else {
+                                    throw new Error('Compartilhamento não suportado');
+                                }
+                            })
+                            .then(() => {
+                                showToast('✅ Ficha enviada com sucesso!', 3000);
+                            })
+                            .catch(err => {
+                                if (err.name !== 'AbortError') {
+                                    console.error('Erro no compartilhamento:', err);
+                                    // Fallback: download
+                                    baixarEEnviar(dataUrl, nomeArquivo);
+                                }
+                            });
+                    } else {
+                        // Fallback para navegadores sem Web Share
+                        baixarEEnviar(dataUrl, nomeArquivo);
+                    }
                 }).catch(err => {
                     hideLoading();
                     console.error('Erro ao gerar ficha:', err);
@@ -1795,15 +1627,10 @@
                 cursor: pointer;
                 min-width: 120px;
                 touch-action: manipulation;
-                -webkit-tap-highlight-color: transparent;
             `;
             btnFechar.onclick = function() {
                 if (visualizador.parentNode) {
                     visualizador.parentNode.removeChild(visualizador);
-                }
-                const fichaEl = document.getElementById('fichaImagemGerada');
-                if (fichaEl && fichaEl.parentNode && fichaEl.parentNode !== visualizador) {
-                    fichaEl.parentNode.removeChild(fichaEl);
                 }
             };
 
@@ -1813,11 +1640,38 @@
             visualizador.appendChild(divFicha);
             visualizador.appendChild(btnContainer);
             document.body.appendChild(visualizador);
+        }
 
-            // Adiciona scroll suave para mobile
-            visualizador.addEventListener('touchmove', function(e) {
-                e.stopPropagation();
-            }, { passive: true });
+        // ============================================================
+        // FUNÇÃO DE FALLBACK - BAIXAR E ABRIR WHATSAPP
+        // ============================================================
+        function baixarEEnviar(dataUrl, nomeArquivo) {
+            // Baixa a imagem
+            const a = document.createElement('a');
+            a.href = dataUrl;
+            a.download = nomeArquivo;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            
+            showToast('📥 Imagem baixada! Abrindo WhatsApp...', 4000);
+            
+            // Tenta abrir o WhatsApp
+            setTimeout(() => {
+                // Tenta via intent do WhatsApp (Android)
+                const linkWhatsApp = document.createElement('a');
+                linkWhatsApp.href = `whatsapp://send?text=${encodeURIComponent('*SIGEC - Ficha Criminal*%0A%0AFicha gerada pelo sistema SIGEC.')}`;
+                linkWhatsApp.target = '_blank';
+                
+                const janela = window.open(linkWhatsApp.href, '_blank');
+                if (!janela || janela.closed) {
+                    // Fallback para WhatsApp Web
+                    const linkWeb = document.createElement('a');
+                    linkWeb.href = `https://wa.me/?text=${encodeURIComponent('*SIGEC - Ficha Criminal*%0A%0AFicha gerada pelo sistema SIGEC.')}`;
+                    linkWeb.target = '_blank';
+                    linkWeb.click();
+                }
+            }, 500);
         }
 
         // ============================================================
@@ -1850,7 +1704,6 @@
             if (typeof html2canvas === "undefined") {
                 console.warn("html2canvas não carregou.");
             }
-            console.log('Função abrirFichaImagem disponível:', typeof abrirFichaImagem === 'function');
         });
     </script>
 </body>
