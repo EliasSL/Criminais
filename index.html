@@ -780,6 +780,32 @@
                 font-size: 1.3rem;
             }
         }
+
+        /* Estilo para o botão FECHAR na ficha */
+        .btn-fechar-ficha {
+            background: #c0392b;
+            border: none;
+            padding: 16px 40px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #fff;
+            flex: 1;
+            min-width: 150px;
+            box-shadow: 0 4px 12px rgba(192,57,43,0.3);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .btn-fechar-ficha:active {
+            transform: scale(0.95);
+        }
+
+        .btn-fechar-ficha:hover {
+            background: #e74c3c;
+            transform: scale(1.02);
+        }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js">
     </script>
@@ -906,7 +932,33 @@
         }
 
         // ============================================================
-        // FUNÇÃO PARA ABRIR FICHA NO FORMATO DA IMAGEM (CORRIGIDA)
+        // FUNÇÃO PARA FECHAR A FICHA E VOLTAR PARA A LISTA
+        // ============================================================
+        function fecharFichaEVoltar() {
+            // Tenta fechar a janela
+            try {
+                window.close();
+            } catch(e) {
+                // Se não conseguir fechar, tenta navegar de volta
+                try {
+                    if (window.history && window.history.length > 1) {
+                        window.history.back();
+                    } else {
+                        window.location.href = 'about:blank';
+                    }
+                } catch(e2) {}
+            }
+            
+            // Tenta voltar para a lista na janela pai
+            try {
+                if (window.opener && window.opener.backToList) {
+                    window.opener.backToList();
+                }
+            } catch(e) {}
+        }
+
+        // ============================================================
+        // FUNÇÃO PARA ABRIR FICHA NO FORMATO DA IMAGEM
         // ============================================================
         function abrirFichaImagem(id) {
             const rec = allRecords.find(r => r.ID == id);
@@ -1168,11 +1220,14 @@
                     // Usar window.open com target _blank para funcionar em dispositivos móveis
                     const novaJanela = window.open("", "_blank");
                     if (novaJanela) {
+                        // Obter o nome do registro para o título
+                        const nomeRegistro = rec.NOME || 'Registro';
+                        
                         novaJanela.document.write(`
                             <!DOCTYPE html>
                             <html>
                             <head>
-                                <title>Ficha - ${rec.NOME || 'Registro'}</title>
+                                <title>Ficha - ${nomeRegistro}</title>
                                 <meta charset="UTF-8">
                                 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
                                 <style>
@@ -1188,7 +1243,7 @@
                                     }
                                     img {
                                         max-width: 100%;
-                                        max-height: 80vh;
+                                        max-height: 75vh;
                                         border-radius: 4px;
                                         box-shadow: 0 8px 32px rgba(0,0,0,0.8);
                                     }
@@ -1207,7 +1262,7 @@
                                         justify-content: center;
                                         width: 100%;
                                     }
-                                    .btn-fechar {
+                                    .btn-fechar-ficha {
                                         background: #c0392b;
                                         border: none;
                                         padding: 16px 40px;
@@ -1220,18 +1275,17 @@
                                         flex: 1;
                                         min-width: 150px;
                                         box-shadow: 0 4px 12px rgba(192,57,43,0.3);
+                                        -webkit-tap-highlight-color: transparent;
+                                        touch-action: manipulation;
                                     }
-                                    .btn-fechar:hover {
+                                    .btn-fechar-ficha:active {
+                                        transform: scale(0.95);
+                                    }
+                                    .btn-fechar-ficha:hover {
                                         background: #e74c3c;
                                         transform: scale(1.02);
                                     }
-                                    .btn-fechar:active {
-                                        transform: scale(0.95);
-                                    }
-                                    .btn-download {
-                                        display: none;
-                                    }
-                                    .btn-voltar {
+                                    .btn-voltar-ficha {
                                         background: #444;
                                         border: none;
                                         padding: 16px 40px;
@@ -1243,22 +1297,32 @@
                                         color: #fff;
                                         flex: 1;
                                         min-width: 150px;
+                                        -webkit-tap-highlight-color: transparent;
+                                        touch-action: manipulation;
                                     }
-                                    .btn-voltar:hover {
-                                        background: #555;
-                                    }
-                                    .btn-voltar:active {
+                                    .btn-voltar-ficha:active {
                                         transform: scale(0.95);
                                     }
+                                    .btn-voltar-ficha:hover {
+                                        background: #555;
+                                    }
                                     @media (max-width: 480px) {
-                                        .btn-fechar, .btn-voltar {
+                                        .btn-fechar-ficha, .btn-voltar-ficha {
                                             padding: 14px 20px;
                                             font-size: 1rem;
                                             min-width: 120px;
                                         }
                                         img {
-                                            max-height: 70vh;
+                                            max-height: 65vh;
                                         }
+                                    }
+                                    /* Ocultar o botão ENVIAR */
+                                    .btn-download {
+                                        display: none !important;
+                                    }
+                                    /* Botão ENVIAR fica oculto */
+                                    .btn-enviar {
+                                        display: none !important;
                                     }
                                 </style>
                             </head>
@@ -1266,7 +1330,7 @@
                                 <div class="container">
                                     <img src="${imagem}" alt="Ficha Criminal" id="fichaImage">
                                     <div class="btn-group">
-                                        <button class="btn-fechar" onclick="fecharFicha()">✕ FECHAR</button>
+                                        <button class="btn-fechar-ficha" onclick="fecharFicha()">✕ FECHAR</button>
                                     </div>
                                 </div>
                                 <script>
@@ -1276,9 +1340,13 @@
                                         try {
                                             window.close();
                                         } catch(e) {
-                                            // Se não conseguir fechar, tenta redirecionar
+                                            // Se não conseguir fechar, tenta navegar de volta
                                             try {
-                                                window.location.href = 'about:blank';
+                                                if (window.history && window.history.length > 1) {
+                                                    window.history.back();
+                                                } else {
+                                                    window.location.href = 'about:blank';
+                                                }
                                             } catch(e2) {}
                                         }
                                         
@@ -1298,7 +1366,7 @@
                                         
                                         // Criar botão Voltar para Android
                                         const btnVoltar = document.createElement('button');
-                                        btnVoltar.className = 'btn-voltar';
+                                        btnVoltar.className = 'btn-voltar-ficha';
                                         btnVoltar.textContent = '⬅ VOLTAR';
                                         btnVoltar.onclick = function() {
                                             // Tenta voltar via history
@@ -1306,15 +1374,13 @@
                                                 window.history.back();
                                             } else {
                                                 // Fallback: tenta fechar
-                                                try {
-                                                    window.close();
-                                                } catch(e) {}
+                                                fecharFicha();
                                             }
                                         };
                                         btnGroup.appendChild(btnVoltar);
                                     }
 
-                                    // Função de fallback para fechamento em Android
+                                    // Função de fallback para fechamento em Android (botão físico de voltar)
                                     document.addEventListener('backbutton', function(e) {
                                         e.preventDefault();
                                         fecharFicha();
@@ -1327,39 +1393,99 @@
                         
                         // Forçar o foco na nova janela
                         if (novaJanela.focus) {
-                            novaJanela.focus();
+                            setTimeout(function() {
+                                novaJanela.focus();
+                            }, 100);
                         }
                     } else {
                         // Fallback: se o pop-up for bloqueado, tentar abrir de outra forma
-                        const blob = new Blob([`
+                        // Usar Blob para criar uma página em memória
+                        const conteudo = `
                             <!DOCTYPE html>
                             <html>
                             <head>
                                 <title>Ficha - ${rec.NOME || 'Registro'}</title>
                                 <meta charset="UTF-8">
-                                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                                <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+                                <style>
+                                    * { margin: 0; padding: 0; box-sizing: border-box; }
+                                    body { 
+                                        background: #1a1a1a; 
+                                        display: flex; 
+                                        justify-content: center; 
+                                        align-items: center; 
+                                        min-height: 100vh;
+                                        padding: 20px;
+                                        font-family: 'Segoe UI', Arial, sans-serif;
+                                    }
+                                    img {
+                                        max-width: 100%;
+                                        max-height: 75vh;
+                                        border-radius: 8px;
+                                        box-shadow: 0 8px 32px rgba(0,0,0,0.8);
+                                    }
+                                    .container {
+                                        display: flex;
+                                        flex-direction: column;
+                                        align-items: center;
+                                        gap: 20px;
+                                        width: 100%;
+                                        max-width: 800px;
+                                    }
+                                    .btn-fechar-ficha {
+                                        background: #c0392b;
+                                        border: none;
+                                        padding: 16px 40px;
+                                        border-radius: 30px;
+                                        font-weight: 700;
+                                        font-size: 1.1rem;
+                                        cursor: pointer;
+                                        color: #fff;
+                                        box-shadow: 0 4px 12px rgba(192,57,43,0.3);
+                                        touch-action: manipulation;
+                                        -webkit-tap-highlight-color: transparent;
+                                    }
+                                    .btn-fechar-ficha:active {
+                                        transform: scale(0.95);
+                                    }
+                                    .btn-download {
+                                        display: none !important;
+                                    }
+                                    @media (max-width: 480px) {
+                                        .btn-fechar-ficha {
+                                            padding: 14px 20px;
+                                            font-size: 1rem;
+                                            min-width: 120px;
+                                        }
+                                    }
+                                </style>
                             </head>
-                            <body style="margin:0;display:flex;justify-content:center;align-items:center;min-height:100vh;background:#1a1a1a;">
-                                <div style="display:flex;flex-direction:column;align-items:center;gap:20px;padding:20px;">
-                                    <img src="${imagem}" style="max-width:100%;max-height:80vh;border-radius:8px;box-shadow:0 8px 32px rgba(0,0,0,0.8);">
-                                    <button onclick="window.close()" style="background:#c0392b;border:none;padding:16px 40px;border-radius:30px;font-weight:700;font-size:1.1rem;color:#fff;cursor:pointer;">✕ FECHAR</button>
+                            <body>
+                                <div class="container">
+                                    <img src="${imagem}" alt="Ficha Criminal">
+                                    <button class="btn-fechar-ficha" onclick="window.close();">✕ FECHAR</button>
                                 </div>
                             </body>
                             </html>
-                        `], { type: 'text/html' });
+                        `;
                         
+                        const blob = new Blob([conteudo], { type: 'text/html' });
                         const url = URL.createObjectURL(blob);
                         const newWindow = window.open(url, '_blank');
                         if (newWindow) {
-                            newWindow.focus();
+                            setTimeout(function() {
+                                newWindow.focus();
+                            }, 100);
                         } else {
-                            // Último recurso: redirecionar a página atual
+                            // Último recurso: substituir a página atual
+                            document.body.innerHTML = '';
                             document.write(`
                                 <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;background:#1a1a1a;color:#fff;padding:20px;">
-                                    <img src="${imagem}" style="max-width:100%;max-height:70vh;border-radius:8px;margin-bottom:20px;">
-                                    <button onclick="window.close()" style="background:#c0392b;border:none;padding:16px 40px;border-radius:30px;font-weight:700;font-size:1.1rem;color:#fff;cursor:pointer;">✕ FECHAR</button>
+                                    <img src="${imagem}" style="max-width:100%;max-height:65vh;border-radius:8px;margin-bottom:20px;">
+                                    <button onclick="window.close()" style="background:#c0392b;border:none;padding:16px 40px;border-radius:30px;font-weight:700;font-size:1.1rem;color:#fff;cursor:pointer;touch-action:manipulation;">✕ FECHAR</button>
                                 </div>
                             `);
+                            document.close();
                         }
                         setTimeout(() => URL.revokeObjectURL(url), 10000);
                     }
