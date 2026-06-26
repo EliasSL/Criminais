@@ -1168,104 +1168,52 @@ htmlFicha += `
 
             const imagem = canvas.toDataURL("image/jpeg", 0.95);
 
-            const novaJanela = window.open("", "_blank");
-            if (novaJanela) {
-                novaJanela.document.write(`
-                        <!DOCTYPE html>
-                        <html>
-                        <head>
-                            <title>Ficha - ${rec.NOME || 'Registro'}</title>
-                            <style>
-                                * { margin: 0; padding: 0; box-sizing: border-box; }
-                                body { 
-                                    background: #1a1a1a; 
-                                    display: flex; 
-                                    justify-content: center; 
-                                    align-items: center; 
-                                    min-height: 100vh;
-                                    padding: 20px;
-                                }
-                                img {
-                                    max-width: 100%;
-                                    max-height: 100vh;
-                                    border-radius: 4px;
-                                    box-shadow: 0 8px 32px rgba(0,0,0,0.8);
-                                }
-                                .container {
-                                    display: flex;
-                                    flex-direction: column;
-                                    align-items: center;
-                                    gap: 16px;
-                                }
-                                .btn-download {
-                                    background: #f5c842;
-                                    border: none;
-                                    padding: 12px 32px;
-                                    border-radius: 30px;
-                                    font-weight: 700;
-                                    font-size: 1rem;
-                                    cursor: pointer;
-                                    transition: 0.2s;
-                                    color: #1a1a1a;
-                                    box-shadow: 0 4px 12px rgba(245,200,66,0.3);
-                                }
-                                .btn-download:hover {
-                                    transform: scale(1.02);
-                                    box-shadow: 0 6px 20px rgba(245,200,66,0.5);
-                                }
-                                .btn-download:active {
-                                    transform: scale(0.96);
-                                }
-                                .btn-fechar {
-                                    background: #444;
-                                    border: none;
-                                    padding: 12px 32px;
-                                    border-radius: 30px;
-                                    font-weight: 700;
-                                    font-size: 1rem;
-                                    cursor: pointer;
-                                    transition: 0.2s;
-                                    color: #fff;
-                                }
-                                .btn-fechar:hover {
-                                    background: #555;
-                                }
-                                .btn-group {
-                                    display: flex;
-                                    gap: 12px;
-                                    flex-wrap: wrap;
-                                    justify-content: center;
-                                }
-                            </style>
-                        </head>
-                        <body>
-                            <div class="container">
-                                <img src="${imagem}" alt="Ficha Criminal">
-                                <div class="btn-group">
-                                    <button class="btn-download" onclick="downloadImage()">📥 BAIXAR PC</button>
-                                    <button class="btn-fechar" onclick="window.close()">✕ VOLTAR</button>
-                                </div>
-                            </div>
-                            <script>
-                                function downloadImage() {
-                                    const link = document.createElement('a');
-                                    link.download = 'ficha_${rec.ID || 'registro'}.jpg';
-                                    link.href = '${imagem}';
-                                    document.body.appendChild(link);
-                                    link.click();
-                                    document.body.removeChild(link);
-                                }
-                            <\/script>
-                        </body>
-                        </html>
-                    `);
-                novaJanela.document.close();
-            } else {
-                alert('Por favor, permita pop-ups para visualizar a ficha.');
-            }
+const dynamic = document.getElementById("dynamicContent");
 
-            elemento.remove();
+dynamic.innerHTML = `
+<div
+    style="
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        gap:18px;
+        padding:20px;
+    ">
 
+    <img
+        src="${imagem}"
+        style="
+            width:100%;
+            max-width:420px;
+            border-radius:10px;
+            box-shadow:0 8px 25px rgba(0,0,0,.45);
+        ">
+
+    <div
+        style="
+            display:flex;
+            gap:12px;
+            width:100%;
+        ">
+
+        <button
+            class="btn-detail compartilhar"
+            onclick="compartilharImagem('${imagem}','${rec.ID}')">
+            📤 ENVIAR
+        </button>
+
+        <button
+            class="btn-detail"
+            onclick="voltarListaCadastro()">
+            ← VOLTAR
+        </button>
+
+    </div>
+
+</div>
+`;
+
+elemento.remove();
         }).catch(err => {
             hideLoading();
             console.error('Erro ao gerar ficha:', err);
@@ -1498,8 +1446,58 @@ htmlFicha += `
                 backToDashboard();
             }
         }
+function voltarListaCadastro(){
 
-        function openList(tipo) {
+    if(currentListType){
+
+        openList(currentListType);
+
+    }else{
+
+        backToDashboard();
+
+    }
+
+}
+function compartilharImagem(imagem,id){
+
+    fetch(imagem)
+        .then(r=>r.blob())
+        .then(blob=>{
+
+            const arquivo = new File(
+                [blob],
+                "Ficha_"+id+".jpg",
+                {type:"image/jpeg"}
+            );
+
+            if(navigator.canShare &&
+               navigator.canShare({files:[arquivo]})){
+
+                navigator.share({
+
+                    files:[arquivo],
+
+                    title:"Ficha SIGEC"
+
+                });
+
+            }else{
+
+                const a=document.createElement("a");
+
+                a.href=imagem;
+
+                a.download="Ficha_"+id+".jpg";
+
+                a.click();
+
+            }
+
+        });
+
+}     
+   function openList(tipo) {
             document.querySelector('.cards-grid').style.display = 'none';
 
             const filtered = allRecords.filter(r => {
@@ -2075,3 +2073,4 @@ htmlFicha += `
     </script>
 </body>
 </html>
+
