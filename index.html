@@ -1243,34 +1243,39 @@ htmlFicha += `
                                 <img src="${imagem}" alt="Ficha Criminal">
                                 <div class="btn-group">
                                     <button class="btn-download" onclick="downloadImage()">📥 ENVIAR</button>
-                                    const btnFechar = document.createElement('button');
-            btnFechar.textContent = '✕ FECHAR';
-            btnFechar.style.cssText = `
-                flex: 1;
-                padding: 14px 20px;
-                background: #c0392b;
-                border: none;
-                border-radius: 12px;
-                color: #fff;
-                font-weight: 700;
-                font-size: 1rem;
-                cursor: pointer;
-                min-width: 120px;
-                touch-action: manipulation;
-            `;
-            btnFechar.onclick = function() {
-                if (visualizador.parentNode) {
-                    visualizador.parentNode.removeChild(visualizador);
-                }
-            };
+                                    <button class="btn-fechar" onclick="window.close()">✕ FECHAR</button>
+                                </div>
+                            </div>
+                            <script>
+                                function downloadImage() {
+                                    const link = document.createElement('a');
+                                    link.download = 'ficha_${rec.ID || 'registro'}.jpg';
+                                    link.href = '${imagem}';
+                                    document.body.appendChild(link);
+                                    link.click();
+                                    document.body.removeChild(link);
+                                }
+                            <\/script>
+                        </body>
+                        </html>
+                    `);
+                novaJanela.document.close();
+            } else {
+                alert('Por favor, permita pop-ups para visualizar a ficha.');
+            }
 
-            btnContainer.appendChild(btnEnviar);
-            btnContainer.appendChild(btnFechar);
+            elemento.remove();
 
-            visualizador.appendChild(divFicha);
-            visualizador.appendChild(btnContainer);
-            document.body.appendChild(visualizador);
-        }
+        }).catch(err => {
+            hideLoading();
+            console.error('Erro ao gerar ficha:', err);
+            alert('Erro ao gerar a ficha: ' + err.message);
+            const el = document.getElementById("fichaImagemGerada");
+            if (el) el.remove();
+        });
+
+    }, 300);
+}
 
         // ============================================================
         // FUNÇÕES DE API - USANDO JSONP PARA GET E POST VIA JSON
