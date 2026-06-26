@@ -780,32 +780,6 @@
                 font-size: 1.3rem;
             }
         }
-
-        /* Estilo para o botão FECHAR na ficha */
-        .btn-fechar-ficha {
-            background: #c0392b;
-            border: none;
-            padding: 16px 40px;
-            border-radius: 30px;
-            font-weight: 700;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: 0.2s;
-            color: #fff;
-            flex: 1;
-            min-width: 150px;
-            box-shadow: 0 4px 12px rgba(192,57,43,0.3);
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        .btn-fechar-ficha:active {
-            transform: scale(0.95);
-        }
-
-        .btn-fechar-ficha:hover {
-            background: #e74c3c;
-            transform: scale(1.02);
-        }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js">
     </script>
@@ -932,33 +906,7 @@
         }
 
         // ============================================================
-        // FUNÇÃO PARA FECHAR A FICHA E VOLTAR PARA A LISTA
-        // ============================================================
-        function fecharFichaEVoltar() {
-            // Tenta fechar a janela
-            try {
-                window.close();
-            } catch(e) {
-                // Se não conseguir fechar, tenta navegar de volta
-                try {
-                    if (window.history && window.history.length > 1) {
-                        window.history.back();
-                    } else {
-                        window.location.href = 'about:blank';
-                    }
-                } catch(e2) {}
-            }
-            
-            // Tenta voltar para a lista na janela pai
-            try {
-                if (window.opener && window.opener.backToList) {
-                    window.opener.backToList();
-                }
-            } catch(e) {}
-        }
-
-        // ============================================================
-        // FUNÇÃO PARA ABRIR FICHA NO FORMATO DA IMAGEM
+        // FUNÇÃO PARA ABRIR FICHA NO FORMATO DA IMAGEM (CORRIGIDA)
         // ============================================================
         function abrirFichaImagem(id) {
             const rec = allRecords.find(r => r.ID == id);
@@ -1220,187 +1168,7 @@
                     // Usar window.open com target _blank para funcionar em dispositivos móveis
                     const novaJanela = window.open("", "_blank");
                     if (novaJanela) {
-                        // Obter o nome do registro para o título
-                        const nomeRegistro = rec.NOME || 'Registro';
-                        
                         novaJanela.document.write(`
-                            <!DOCTYPE html>
-                            <html>
-                            <head>
-                                <title>Ficha - ${nomeRegistro}</title>
-                                <meta charset="UTF-8">
-                                <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-                                <style>
-                                    * { margin: 0; padding: 0; box-sizing: border-box; }
-                                    body { 
-                                        background: #1a1a1a; 
-                                        display: flex; 
-                                        justify-content: center; 
-                                        align-items: center; 
-                                        min-height: 100vh;
-                                        padding: 20px;
-                                        font-family: 'Segoe UI', Arial, sans-serif;
-                                    }
-                                    img {
-                                        max-width: 100%;
-                                        max-height: 75vh;
-                                        border-radius: 4px;
-                                        box-shadow: 0 8px 32px rgba(0,0,0,0.8);
-                                    }
-                                    .container {
-                                        display: flex;
-                                        flex-direction: column;
-                                        align-items: center;
-                                        gap: 20px;
-                                        width: 100%;
-                                        max-width: 800px;
-                                    }
-                                    .btn-group {
-                                        display: flex;
-                                        gap: 15px;
-                                        flex-wrap: wrap;
-                                        justify-content: center;
-                                        width: 100%;
-                                    }
-                                    .btn-fechar-ficha {
-                                        background: #c0392b;
-                                        border: none;
-                                        padding: 16px 40px;
-                                        border-radius: 30px;
-                                        font-weight: 700;
-                                        font-size: 1.1rem;
-                                        cursor: pointer;
-                                        transition: 0.2s;
-                                        color: #fff;
-                                        flex: 1;
-                                        min-width: 150px;
-                                        box-shadow: 0 4px 12px rgba(192,57,43,0.3);
-                                        -webkit-tap-highlight-color: transparent;
-                                        touch-action: manipulation;
-                                    }
-                                    .btn-fechar-ficha:active {
-                                        transform: scale(0.95);
-                                    }
-                                    .btn-fechar-ficha:hover {
-                                        background: #e74c3c;
-                                        transform: scale(1.02);
-                                    }
-                                    .btn-voltar-ficha {
-                                        background: #444;
-                                        border: none;
-                                        padding: 16px 40px;
-                                        border-radius: 30px;
-                                        font-weight: 700;
-                                        font-size: 1.1rem;
-                                        cursor: pointer;
-                                        transition: 0.2s;
-                                        color: #fff;
-                                        flex: 1;
-                                        min-width: 150px;
-                                        -webkit-tap-highlight-color: transparent;
-                                        touch-action: manipulation;
-                                    }
-                                    .btn-voltar-ficha:active {
-                                        transform: scale(0.95);
-                                    }
-                                    .btn-voltar-ficha:hover {
-                                        background: #555;
-                                    }
-                                    @media (max-width: 480px) {
-                                        .btn-fechar-ficha, .btn-voltar-ficha {
-                                            padding: 14px 20px;
-                                            font-size: 1rem;
-                                            min-width: 120px;
-                                        }
-                                        img {
-                                            max-height: 65vh;
-                                        }
-                                    }
-                                    /* Ocultar o botão ENVIAR */
-                                    .btn-download {
-                                        display: none !important;
-                                    }
-                                    /* Botão ENVIAR fica oculto */
-                                    .btn-enviar {
-                                        display: none !important;
-                                    }
-                                </style>
-                            </head>
-                            <body>
-                                <div class="container">
-                                    <img src="${imagem}" alt="Ficha Criminal" id="fichaImage">
-                                    <div class="btn-group">
-                                        <button class="btn-fechar-ficha" onclick="fecharFicha()">✕ FECHAR</button>
-                                    </div>
-                                </div>
-                                <script>
-                                    // Função para fechar a ficha e voltar para a lista
-                                    function fecharFicha() {
-                                        // Tenta fechar a janela
-                                        try {
-                                            window.close();
-                                        } catch(e) {
-                                            // Se não conseguir fechar, tenta navegar de volta
-                                            try {
-                                                if (window.history && window.history.length > 1) {
-                                                    window.history.back();
-                                                } else {
-                                                    window.location.href = 'about:blank';
-                                                }
-                                            } catch(e2) {}
-                                        }
-                                        
-                                        // Tenta voltar para a lista na janela pai
-                                        try {
-                                            if (window.opener && window.opener.backToList) {
-                                                window.opener.backToList();
-                                            }
-                                        } catch(e) {}
-                                    }
-
-                                    // Detectar se está no Android e adicionar botão Voltar como fallback
-                                    if (/Android/i.test(navigator.userAgent)) {
-                                        // Adicionar botão Voltar para Android
-                                        const container = document.querySelector('.container');
-                                        const btnGroup = document.querySelector('.btn-group');
-                                        
-                                        // Criar botão Voltar para Android
-                                        const btnVoltar = document.createElement('button');
-                                        btnVoltar.className = 'btn-voltar-ficha';
-                                        btnVoltar.textContent = '⬅ VOLTAR';
-                                        btnVoltar.onclick = function() {
-                                            // Tenta voltar via history
-                                            if (window.history && window.history.length > 1) {
-                                                window.history.back();
-                                            } else {
-                                                // Fallback: tenta fechar
-                                                fecharFicha();
-                                            }
-                                        };
-                                        btnGroup.appendChild(btnVoltar);
-                                    }
-
-                                    // Função de fallback para fechamento em Android (botão físico de voltar)
-                                    document.addEventListener('backbutton', function(e) {
-                                        e.preventDefault();
-                                        fecharFicha();
-                                    }, false);
-                                <\/script>
-                            </body>
-                            </html>
-                        `);
-                        novaJanela.document.close();
-                        
-                        // Forçar o foco na nova janela
-                        if (novaJanela.focus) {
-                            setTimeout(function() {
-                                novaJanela.focus();
-                            }, 100);
-                        }
-                    } else {
-                        // Fallback: se o pop-up for bloqueado, tentar abrir de outra forma
-                        // Usar Blob para criar uma página em memória
-                        const conteudo = `
                             <!DOCTYPE html>
                             <html>
                             <head>
@@ -1420,8 +1188,8 @@
                                     }
                                     img {
                                         max-width: 100%;
-                                        max-height: 75vh;
-                                        border-radius: 8px;
+                                        max-height: 80vh;
+                                        border-radius: 4px;
                                         box-shadow: 0 8px 32px rgba(0,0,0,0.8);
                                     }
                                     .container {
@@ -1432,7 +1200,14 @@
                                         width: 100%;
                                         max-width: 800px;
                                     }
-                                    .btn-fechar-ficha {
+                                    .btn-group {
+                                        display: flex;
+                                        gap: 15px;
+                                        flex-wrap: wrap;
+                                        justify-content: center;
+                                        width: 100%;
+                                    }
+                                    .btn-fechar {
                                         background: #c0392b;
                                         border: none;
                                         padding: 16px 40px;
@@ -1440,52 +1215,151 @@
                                         font-weight: 700;
                                         font-size: 1.1rem;
                                         cursor: pointer;
+                                        transition: 0.2s;
                                         color: #fff;
+                                        flex: 1;
+                                        min-width: 150px;
                                         box-shadow: 0 4px 12px rgba(192,57,43,0.3);
-                                        touch-action: manipulation;
-                                        -webkit-tap-highlight-color: transparent;
                                     }
-                                    .btn-fechar-ficha:active {
+                                    .btn-fechar:hover {
+                                        background: #e74c3c;
+                                        transform: scale(1.02);
+                                    }
+                                    .btn-fechar:active {
                                         transform: scale(0.95);
                                     }
                                     .btn-download {
-                                        display: none !important;
+                                        display: none;
+                                    }
+                                    .btn-voltar {
+                                        background: #444;
+                                        border: none;
+                                        padding: 16px 40px;
+                                        border-radius: 30px;
+                                        font-weight: 700;
+                                        font-size: 1.1rem;
+                                        cursor: pointer;
+                                        transition: 0.2s;
+                                        color: #fff;
+                                        flex: 1;
+                                        min-width: 150px;
+                                    }
+                                    .btn-voltar:hover {
+                                        background: #555;
+                                    }
+                                    .btn-voltar:active {
+                                        transform: scale(0.95);
                                     }
                                     @media (max-width: 480px) {
-                                        .btn-fechar-ficha {
+                                        .btn-fechar, .btn-voltar {
                                             padding: 14px 20px;
                                             font-size: 1rem;
                                             min-width: 120px;
+                                        }
+                                        img {
+                                            max-height: 70vh;
                                         }
                                     }
                                 </style>
                             </head>
                             <body>
                                 <div class="container">
-                                    <img src="${imagem}" alt="Ficha Criminal">
-                                    <button class="btn-fechar-ficha" onclick="window.close();">✕ FECHAR</button>
+                                    <img src="${imagem}" alt="Ficha Criminal" id="fichaImage">
+                                    <div class="btn-group">
+                                        <button class="btn-fechar" onclick="fecharFicha()">✕ FECHAR</button>
+                                    </div>
+                                </div>
+                                <script>
+                                    // Função para fechar a ficha e voltar para a lista
+                                    function fecharFicha() {
+                                        // Tenta fechar a janela
+                                        try {
+                                            window.close();
+                                        } catch(e) {
+                                            // Se não conseguir fechar, tenta redirecionar
+                                            try {
+                                                window.location.href = 'about:blank';
+                                            } catch(e2) {}
+                                        }
+                                        
+                                        // Tenta voltar para a lista na janela pai
+                                        try {
+                                            if (window.opener && window.opener.backToList) {
+                                                window.opener.backToList();
+                                            }
+                                        } catch(e) {}
+                                    }
+
+                                    // Detectar se está no Android e adicionar botão Voltar como fallback
+                                    if (/Android/i.test(navigator.userAgent)) {
+                                        // Adicionar botão Voltar para Android
+                                        const container = document.querySelector('.container');
+                                        const btnGroup = document.querySelector('.btn-group');
+                                        
+                                        // Criar botão Voltar para Android
+                                        const btnVoltar = document.createElement('button');
+                                        btnVoltar.className = 'btn-voltar';
+                                        btnVoltar.textContent = '⬅ VOLTAR';
+                                        btnVoltar.onclick = function() {
+                                            // Tenta voltar via history
+                                            if (window.history && window.history.length > 1) {
+                                                window.history.back();
+                                            } else {
+                                                // Fallback: tenta fechar
+                                                try {
+                                                    window.close();
+                                                } catch(e) {}
+                                            }
+                                        };
+                                        btnGroup.appendChild(btnVoltar);
+                                    }
+
+                                    // Função de fallback para fechamento em Android
+                                    document.addEventListener('backbutton', function(e) {
+                                        e.preventDefault();
+                                        fecharFicha();
+                                    }, false);
+                                <\/script>
+                            </body>
+                            </html>
+                        `);
+                        novaJanela.document.close();
+                        
+                        // Forçar o foco na nova janela
+                        if (novaJanela.focus) {
+                            novaJanela.focus();
+                        }
+                    } else {
+                        // Fallback: se o pop-up for bloqueado, tentar abrir de outra forma
+                        const blob = new Blob([`
+                            <!DOCTYPE html>
+                            <html>
+                            <head>
+                                <title>Ficha - ${rec.NOME || 'Registro'}</title>
+                                <meta charset="UTF-8">
+                                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                            </head>
+                            <body style="margin:0;display:flex;justify-content:center;align-items:center;min-height:100vh;background:#1a1a1a;">
+                                <div style="display:flex;flex-direction:column;align-items:center;gap:20px;padding:20px;">
+                                    <img src="${imagem}" style="max-width:100%;max-height:80vh;border-radius:8px;box-shadow:0 8px 32px rgba(0,0,0,0.8);">
+                                    <button onclick="window.close()" style="background:#c0392b;border:none;padding:16px 40px;border-radius:30px;font-weight:700;font-size:1.1rem;color:#fff;cursor:pointer;">✕ FECHAR</button>
                                 </div>
                             </body>
                             </html>
-                        `;
+                        `], { type: 'text/html' });
                         
-                        const blob = new Blob([conteudo], { type: 'text/html' });
                         const url = URL.createObjectURL(blob);
                         const newWindow = window.open(url, '_blank');
                         if (newWindow) {
-                            setTimeout(function() {
-                                newWindow.focus();
-                            }, 100);
+                            newWindow.focus();
                         } else {
-                            // Último recurso: substituir a página atual
-                            document.body.innerHTML = '';
+                            // Último recurso: redirecionar a página atual
                             document.write(`
                                 <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;background:#1a1a1a;color:#fff;padding:20px;">
-                                    <img src="${imagem}" style="max-width:100%;max-height:65vh;border-radius:8px;margin-bottom:20px;">
-                                    <button onclick="window.close()" style="background:#c0392b;border:none;padding:16px 40px;border-radius:30px;font-weight:700;font-size:1.1rem;color:#fff;cursor:pointer;touch-action:manipulation;">✕ FECHAR</button>
+                                    <img src="${imagem}" style="max-width:100%;max-height:70vh;border-radius:8px;margin-bottom:20px;">
+                                    <button onclick="window.close()" style="background:#c0392b;border:none;padding:16px 40px;border-radius:30px;font-weight:700;font-size:1.1rem;color:#fff;cursor:pointer;">✕ FECHAR</button>
                                 </div>
                             `);
-                            document.close();
                         }
                         setTimeout(() => URL.revokeObjectURL(url), 10000);
                     }
