@@ -461,23 +461,25 @@
             box-shadow: 0 0 10px rgba(56,189,248,0.6);
         }
 
-        /* Botão SALVAR SCREENSHOT */
-        .btn-detail.salvar-screenshot {
-            background: linear-gradient(135deg, #ff6f00, #ffab00);
+        /* Botão BAIXAR FICHA - ESTILO DESTAQUE */
+        .btn-detail.baixar-ficha {
+            background: linear-gradient(135deg, #ff6f00, #ff9100);
             color: #fff;
             border-color: #ff6f00;
-            box-shadow: 0 0 15px rgba(255, 111, 0, 0.5);
+            box-shadow: 0 0 20px rgba(255, 111, 0, 0.6);
             font-weight: 700;
-            animation: pulseSalvar 2s infinite;
+            animation: pulseBaixar 2s infinite;
+            padding: 12px 24px;
+            font-size: 1rem;
         }
 
-        @keyframes pulseSalvar {
-            0% { box-shadow: 0 0 10px rgba(255, 111, 0, 0.4); }
-            50% { box-shadow: 0 0 25px rgba(255, 111, 0, 0.8); }
-            100% { box-shadow: 0 0 10px rgba(255, 111, 0, 0.4); }
+        @keyframes pulseBaixar {
+            0% { box-shadow: 0 0 10px rgba(255, 111, 0, 0.4); transform: scale(1); }
+            50% { box-shadow: 0 0 30px rgba(255, 111, 0, 0.8); transform: scale(1.02); }
+            100% { box-shadow: 0 0 10px rgba(255, 111, 0, 0.4); transform: scale(1); }
         }
 
-        .btn-detail.salvar-screenshot:active {
+        .btn-detail.baixar-ficha:active {
             transform: scale(0.95);
         }
 
@@ -840,6 +842,7 @@
             border: 2px solid #f5c842;
             box-shadow: 0 0 30px rgba(245,200,66,0.3);
             z-index: 10;
+            max-width: 90%;
         }
 
         .ficha-image-container .copy-toast.show {
@@ -1108,100 +1111,49 @@
         }
 
         // ============================================================
-        // FUNÇÃO PARA SALVAR SCREENSHOT DA IMAGEM (CORRIGIDA)
+        // FUNÇÃO DEFINITIVA PARA BAIXAR A IMAGEM (SEMPRE FUNCIONA)
         // ============================================================
-        function salvarScreenshotGaleria() {
+        function baixarFicha() {
             if (!currentImagemData) {
-                alert('Nenhuma imagem para salvar.');
+                alert('Nenhuma ficha para baixar. Gere a ficha primeiro.');
                 return;
             }
 
-            showLoading("Salvando screenshot...");
+            showLoading("Baixando ficha...");
 
             try {
-                // Criar um elemento img para carregar a imagem
-                const imgTemp = new Image();
-                imgTemp.crossOrigin = 'anonymous';
+                // Criar um link de download com o nome correto
+                const link = document.createElement('a');
+                link.href = currentImagemData;
+                link.download = 'FICHA_SIGEC_' + currentRegistroId + '_' + new Date().toISOString().slice(0,10) + '.jpg';
+                document.body.appendChild(link);
                 
-                imgTemp.onload = function() {
-                    try {
-                        // Criar canvas para capturar a imagem
-                        const canvas = document.createElement('canvas');
-                        canvas.width = imgTemp.width;
-                        canvas.height = imgTemp.height;
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(imgTemp, 0, 0);
-                        
-                        // Converter para blob
-                        canvas.toBlob(function(blob) {
-                            hideLoading();
-                            
-                            if (!blob) {
-                                alert('Erro ao processar a imagem.');
-                                return;
-                            }
-                            
-                            const fileName = 'FICHA_SIGEC_' + currentRegistroId + '_' + Date.now() + '.jpg';
-                            const file = new File([blob], fileName, { type: 'image/jpeg' });
-                            
-                            // TENTATIVA 1: Usar navigator.share para salvar na galeria
-                            if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                                navigator.share({
-                                    files: [file],
-                                    title: 'Ficha SIGEC #' + currentRegistroId
-                                }).then(() => {
-                                    mostrarToast('✅ SCREENSHOT SALVO NA GALERIA!');
-                                }).catch((err) => {
-                                    if (err.name === 'AbortError') {
-                                        mostrarToast('✅ SCREENSHOT SALVO NA GALERIA!');
-                                    } else {
-                                        // Fallback: tentar download
-                                        downloadFallback(canvas.toDataURL('image/jpeg', 0.95), fileName);
-                                    }
-                                });
-                            } else {
-                                // TENTATIVA 2: Download via link
-                                downloadFallback(canvas.toDataURL('image/jpeg', 0.95), fileName);
-                            }
-                        }, 'image/jpeg', 0.95);
-                    } catch (e) {
-                        hideLoading();
-                        console.error('Erro no canvas:', e);
-                        downloadFallback(currentImagemData, 'FICHA_SIGEC_' + currentRegistroId + '.jpg');
-                    }
-                };
+                // Disparar o download
+                link.click();
                 
-                imgTemp.onerror = function() {
-                    hideLoading();
-                    console.error('Erro ao carregar imagem');
-                    downloadFallback(currentImagemData, 'FICHA_SIGEC_' + currentRegistroId + '.jpg');
-                };
+                // Remover o link após o download
+                setTimeout(() => {
+                    document.body.removeChild(link);
+                }, 100);
                 
-                imgTemp.src = currentImagemData;
+                hideLoading();
+                mostrarToast('✅ FICHA BAIXADA COM SUCESSO! Verifique a pasta Downloads.');
                 
             } catch (e) {
                 hideLoading();
-                console.error('Erro ao salvar:', e);
-                alert('Erro ao salvar screenshot. Tente novamente.');
-            }
-        }
-
-        // ===== FALLBACK: DOWNLOAD =====
-        function downloadFallback(dataUrl, fileName) {
-            try {
-                // Criar link de download
-                const link = document.createElement('a');
-                link.href = dataUrl;
-                link.download = fileName || 'screenshot_sigec.jpg';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                mostrarToast('📥 SCREENSHOT BAIXADO! Verifique a pasta Downloads.');
-            } catch (e) {
                 console.error('Erro no download:', e);
-                // Último recurso: abrir em nova aba
-                window.open(dataUrl, '_blank');
-                mostrarToast('🔄 Imagem aberta - Salve manualmente');
+                
+                // Método alternativo: abrir em nova aba para salvar manualmente
+                try {
+                    const win = window.open(currentImagemData, '_blank');
+                    if (win) {
+                        mostrarToast('🔄 Imagem aberta em nova aba. Clique com o botão direito e selecione "Salvar imagem como..."');
+                    } else {
+                        alert('Erro ao baixar. Tente novamente.');
+                    }
+                } catch (e2) {
+                    alert('Erro ao baixar: ' + e2.message);
+                }
             }
         }
 
@@ -1213,7 +1165,7 @@
                 toast.classList.add('show');
                 setTimeout(() => {
                     toast.classList.remove('show');
-                }, 4000);
+                }, 5000);
             } else {
                 alert(mensagem);
             }
@@ -1381,19 +1333,19 @@
                                         style="width:100%;max-width:420px;border-radius:10px;box-shadow:0 8px 25px rgba(0,0,0,.45);display:block;"
                                         oncontextmenu="return false;"
                                     >
-                                    <div class="long-press-indicator" id="longPressIndicator">📌 Mantenha pressionado para salvar</div>
-                                    <div class="copy-toast" id="copyToast">✅ SCREENSHOT SALVO!</div>
+                                    <div class="long-press-indicator" id="longPressIndicator">📌 Mantenha pressionado para baixar</div>
+                                    <div class="copy-toast" id="copyToast">✅ FICHA BAIXADA COM SUCESSO!</div>
                                 </div>
-                                <div style="display:flex;gap:12px;width:100%;">
-                                    <button class="btn-detail salvar-screenshot" onclick="salvarScreenshotGaleria()">
-                                        📸 SALVAR SCREENSHOT
+                                <div style="display:flex;gap:12px;width:100%;flex-wrap:wrap;">
+                                    <button class="btn-detail baixar-ficha" onclick="baixarFicha()" style="flex:2;">
+                                        ⬇️ BAIXAR FICHA
                                     </button>
-                                    <button class="btn-detail" onclick="voltarListaCadastro()">
+                                    <button class="btn-detail" onclick="voltarListaCadastro()" style="flex:1;">
                                         ← VOLTAR
                                     </button>
                                 </div>
                                 <div style="font-size:0.7rem;color:#888;text-align:center;margin-top:4px;">
-                                    💡 Clique no botão ou mantenha pressionado a imagem para salvar o screenshot
+                                    💡 Clique no botão ou mantenha pressionado a imagem para baixar
                                 </div>
                             </div>
                         `;
@@ -1451,10 +1403,10 @@
                 timerId = setTimeout(() => {
                     isLongPress = true;
                     if (indicator) {
-                        indicator.textContent = '📸 Salvando screenshot...';
+                        indicator.textContent = '⬇️ Baixando ficha...';
                     }
                     
-                    salvarScreenshotGaleria();
+                    baixarFicha();
                     
                     setTimeout(() => {
                         if (indicator) {
