@@ -753,6 +753,7 @@
             width: 100%;
             max-width: 420px;
             margin: 0 auto;
+            touch-action: none;
         }
 
         .ficha-image-container img {
@@ -763,6 +764,9 @@
             -webkit-user-select: none;
             user-select: none;
             -webkit-touch-callout: none;
+            touch-action: none;
+            pointer-events: auto;
+            cursor: pointer;
         }
 
         .ficha-image-container .long-press-indicator {
@@ -770,21 +774,31 @@
             bottom: 10px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(0,0,0,0.7);
+            background: rgba(0,0,0,0.8);
             color: #f5c842;
-            padding: 4px 12px;
+            padding: 6px 16px;
             border-radius: 20px;
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             font-weight: 600;
             letter-spacing: 0.5px;
             opacity: 0;
             transition: opacity 0.3s;
             pointer-events: none;
             white-space: nowrap;
+            border: 1px solid #f5c84255;
         }
 
         .ficha-image-container .long-press-indicator.active {
             opacity: 1;
+        }
+
+        .ficha-image-container .long-press-indicator.progress {
+            animation: pulseProgress 0.5s ease-in-out;
+        }
+
+        @keyframes pulseProgress {
+            0%, 100% { opacity: 1; transform: translateX(-50%) scale(1); }
+            50% { opacity: 0.7; transform: translateX(-50%) scale(1.05); }
         }
 
         .ficha-image-container .copy-toast {
@@ -792,17 +806,18 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: rgba(0,0,0,0.85);
+            background: rgba(0,0,0,0.9);
             color: #fff;
-            padding: 12px 24px;
-            border-radius: 12px;
+            padding: 16px 28px;
+            border-radius: 16px;
             font-weight: 700;
-            font-size: 0.9rem;
+            font-size: 1rem;
             opacity: 0;
             transition: opacity 0.3s;
             pointer-events: none;
             text-align: center;
             border: 2px solid #f5c842;
+            box-shadow: 0 0 30px rgba(245,200,66,0.3);
         }
 
         .ficha-image-container .copy-toast.show {
@@ -1218,7 +1233,7 @@
 
                     const dynamic = document.getElementById("dynamicContent");
 
-                    // HTML com long press para copiar
+                    // HTML com long press para copiar - CORRIGIDO PARA MOBILE
                     dynamic.innerHTML = `
                             <div style="display:flex;flex-direction:column;align-items:center;gap:18px;padding:20px;">
                                 <div class="ficha-image-container" id="fichaImageContainer">
@@ -1246,8 +1261,10 @@
                             </div>
                         `;
 
-                    // Inicializar o long press
-                    iniciarLongPress();
+                    // Aguardar o DOM ser renderizado antes de inicializar o long press
+                    setTimeout(function() {
+                        iniciarLongPress();
+                    }, 100);
 
                     elemento.remove();
                 }).catch(err => {
@@ -1262,7 +1279,7 @@
         }
 
         // ============================================================
-        // FUNÇÃO DE LONG PRESS (3 SEGUNDOS) PARA COPIAR IMAGEM
+        // FUNÇÃO DE LONG PRESS (3 SEGUNDOS) PARA COPIAR IMAGEM - CORRIGIDA PARA MOBILE
         // ============================================================
         function iniciarLongPress() {
             const container = document.getElementById('fichaImageContainer');
@@ -1270,19 +1287,24 @@
             const indicator = document.getElementById('longPressIndicator');
             const toast = document.getElementById('copyToast');
 
-            if (!container || !img) return;
+            if (!container || !img) {
+                console.warn('Elementos do long press não encontrados');
+                return;
+            }
 
             let timerId = null;
             let isLongPress = false;
+            let touchStartTime = 0;
 
             // Função para copiar a imagem
             function copiarImagem() {
                 try {
                     const src = img.src;
+                    
+                    // Tentar copiar via fetch + Clipboard API
                     fetch(src)
                         .then(response => response.blob())
                         .then(blob => {
-                            // Tentar copiar usando a Clipboard API
                             if (navigator.clipboard && navigator.clipboard.write) {
                                 const item = new ClipboardItem({
                                     [blob.type]: blob
@@ -1292,7 +1314,6 @@
                                         mostrarToast('✅ IMAGEM COPIADA!');
                                     })
                                     .catch(() => {
-                                        // Fallback: criar elemento para download
                                         copiarComoFallback(src);
                                     });
                             } else {
@@ -1300,15 +1321,14 @@
                             }
                         })
                         .catch(() => {
-                            // Fallback: se fetch falhar, tenta com canvas
                             copiarImagemViaCanvas(img);
                         });
                 } catch (e) {
+                    console.error('Erro ao copiar:', e);
                     alert('Não foi possível copiar a imagem. Tente usar o botão ENVIAR.');
                 }
             }
 
-            // Fallback: criar link de download
             function copiarComoFallback(src) {
                 try {
                     const a = document.createElement('a');
@@ -1323,12 +1343,11 @@
                 }
             }
 
-            // Fallback via Canvas (para imagens com CORS)
             function copiarImagemViaCanvas(imgElement) {
                 try {
                     const canvas = document.createElement('canvas');
-                    canvas.width = imgElement.naturalWidth || imgElement.width;
-                    canvas.height = imgElement.naturalHeight || imgElement.height;
+                    canvas.width = imgElement.naturalWidth || imgElement.width || 800;
+                    canvas.height = imgElement.naturalHeight || imgElement.height || 600;
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(imgElement, 0, 0);
                     canvas.toBlob(blob => {
@@ -1340,7 +1359,6 @@
                                 .then(() => mostrarToast('✅ IMAGEM COPIADA!'))
                                 .catch(() => alert('Não foi possível copiar. Use o botão ENVIAR.'));
                         } else {
-                            // Download como fallback
                             const a = document.createElement('a');
                             a.href = canvas.toDataURL('image/jpeg', 0.95);
                             a.download = 'ficha_sigec.jpg';
@@ -1365,58 +1383,106 @@
                 }
             }
 
-            function startTimer(e) {
-                isLongPress = false;
-                if (timerId) clearTimeout(timerId);
-
+            function atualizarIndicador(mensagem) {
                 if (indicator) {
+                    indicator.textContent = mensagem;
                     indicator.classList.add('active');
-                    indicator.textContent = '⏳ Mantenha pressionado...';
                 }
-
-                timerId = setTimeout(() => {
-                    isLongPress = true;
-                    if (indicator) {
-                        indicator.textContent = '📋 Copiando...';
-                    }
-                    copiarImagem();
-                    if (indicator) {
-                        setTimeout(() => {
-                            indicator.classList.remove('active');
-                        }, 500);
-                    }
-                }, 3000);
             }
 
-            function endTimer() {
-                if (timerId) {
-                    clearTimeout(timerId);
-                    timerId = null;
-                }
+            function esconderIndicador() {
                 if (indicator) {
                     indicator.classList.remove('active');
                 }
             }
 
-            // Eventos para mouse
-            img.addEventListener('mousedown', startTimer);
+            function startTimer(e) {
+                e.preventDefault();
+                isLongPress = false;
+                touchStartTime = Date.now();
+
+                if (timerId) {
+                    clearTimeout(timerId);
+                    timerId = null;
+                }
+
+                atualizarIndicador('⏳ Mantenha pressionado...');
+
+                // Adicionar feedback visual de progresso
+                if (indicator) {
+                    indicator.classList.add('progress');
+                }
+
+                timerId = setTimeout(() => {
+                    isLongPress = true;
+                    atualizarIndicador('📋 Copiando...');
+                    
+                    // Tentar copiar com força
+                    copiarImagem();
+                    
+                    setTimeout(() => {
+                        esconderIndicador();
+                        if (indicator) {
+                            indicator.classList.remove('progress');
+                        }
+                    }, 800);
+                    
+                    timerId = null;
+                }, 3000);
+            }
+
+            function endTimer(e) {
+                if (e) e.preventDefault();
+                
+                if (timerId) {
+                    clearTimeout(timerId);
+                    timerId = null;
+                }
+                
+                // Se não for long press e já passou 500ms, mostrar dica
+                if (!isLongPress && Date.now() - touchStartTime > 500) {
+                    if (indicator) {
+                        indicator.textContent = '📌 Mantenha pressionado por 3 segundos';
+                        setTimeout(() => {
+                            esconderIndicador();
+                        }, 1000);
+                    }
+                }
+                
+                esconderIndicador();
+                if (indicator) {
+                    indicator.classList.remove('progress');
+                }
+                img.style.opacity = '1';
+            }
+
+            // ====== EVENTOS PARA MOUSE ======
+            img.addEventListener('mousedown', function(e) {
+                this.style.opacity = '0.85';
+                startTimer(e);
+            });
+
             img.addEventListener('mouseup', endTimer);
             img.addEventListener('mouseleave', endTimer);
 
-            // Eventos para touch (mobile)
+            // ====== EVENTOS PARA TOUCH (MOBILE) ======
+            // Usando touchstart com passive: false para permitir preventDefault
             img.addEventListener('touchstart', function(e) {
                 e.preventDefault();
+                this.style.opacity = '0.85';
                 startTimer(e);
             }, { passive: false });
 
             img.addEventListener('touchend', function(e) {
                 e.preventDefault();
-                endTimer();
+                this.style.opacity = '1';
+                endTimer(e);
             }, { passive: false });
 
             img.addEventListener('touchcancel', function(e) {
                 e.preventDefault();
-                endTimer();
+                this.style.opacity = '1';
+                endTimer(e);
             }, { passive: false });
 
             // Prevenir menu de contexto
@@ -1425,18 +1491,13 @@
                 return false;
             });
 
-            // Feedback visual ao pressionar
-            img.addEventListener('mousedown', function() {
-                this.style.opacity = '0.85';
+            // Prevenir seleção
+            img.addEventListener('selectstart', function(e) {
+                e.preventDefault();
+                return false;
             });
 
-            img.addEventListener('mouseup', function() {
-                this.style.opacity = '1';
-            });
-
-            img.addEventListener('mouseleave', function() {
-                this.style.opacity = '1';
-            });
+            console.log('Long press inicializado com sucesso!');
         }
 
         // ============================================================
