@@ -111,76 +111,39 @@
             min-height: 0;
         }
 
-.header-dash{
+        .header-dash {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 8px;
+            gap: 20px;
+            position: relative;
+        }
 
-display:flex;
+        .header-dash::after {
+            content: "";
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, #0b4b8a, #f5c842, #0b4b8a);
+        }
 
-justify-content:space-between;
+        .logo-area {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 18px;
+            flex: 1;
+            min-width: 0;
+        }
 
-align-items:center;
-
-padding:10px 8px;
-
-gap:20px;
-
-}
-.header-dash{
-
-    position:relative;
-
-}
-.header-dash::after{
-
-    content:"";
-
-    position:absolute;
-
-    bottom:-2px;
-
-    left:0;
-
-    width:100%;
-
-    height:2px;
-
-    background:linear-gradient(
-
-        90deg,
-
-        #0b4b8a,
-
-        #f5c842,
-
-        #0b4b8a
-
-    );
-
-}
-.logo-area{
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:flex-start;
-
-    gap:18px;
-
-    flex:1;
-
-    min-width:0;
-
-}
-
-.header-actions{
-
-    display:flex;
-
-    flex-direction:column;
-
-    gap:8px;
-
-}
+        .header-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
 
         .btn-header {
             background: transparent;
@@ -200,34 +163,23 @@ gap:20px;
         .btn-header:active {
             transform: scale(0.94);
         }
-      .cadastrar-btn {
-    background: linear-gradient(135deg,#00ff88,#00ccff);
-    color: #111;
-    border: 2px solid #ffffff;
-    font-weight: 800;
 
-    box-shadow:
-        0 0 8px #00ff88,
-        0 0 18px #00ccff,
-        0 0 28px #ffffff;
+        .cadastrar-btn {
+            background: linear-gradient(135deg, #00ff88, #00ccff);
+            color: #111;
+            border: 2px solid #ffffff;
+            font-weight: 800;
+            box-shadow: 0 0 8px #00ff88, 0 0 18px #00ccff, 0 0 28px #ffffff;
+            animation: pulseCadastro 1.5s infinite;
+        }
 
-    animation: pulseCadastro 1.5s infinite;
-}
-@keyframes pulseCadastro {
+        @keyframes pulseCadastro {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+            100% { transform: scale(1); }
+        }
 
-    0% {
-        transform: scale(1);
-    }
-
-    50% {
-        transform: scale(1.08);
-    }
-
-    100% {
-        transform: scale(1);
-    }
-}
-  .btn-header.sair {
+        .btn-header.sair {
             border-color: #b33;
             color: #f66;
         }
@@ -246,20 +198,13 @@ gap:20px;
             background: #3b2b1a;
             border-radius: 24px;
             padding: 42px 30px;
-           display: flex;
-flex-direction: column;
-justify-content: center;
-align-items: center;
-text-align: center;
- border: 2px solid #00aaff;
-
-box-shadow:
-    0 0 5px #00aaff,
-    0 0 12px #00aaff,
-    0 0 20px #ffffff,
-    0 0 30px #ffffff,
-    0 0 40px #66ccff,
-    0 4px 12px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            border: 2px solid #00aaff;
+            box-shadow: 0 0 5px #00aaff, 0 0 12px #00aaff, 0 0 20px #ffffff, 0 0 30px #ffffff, 0 0 40px #66ccff, 0 4px 12px rgba(0,0,0,0.5);
             transition: all 0.3s ease;
             cursor: pointer;
             position: relative;
@@ -268,120 +213,65 @@ box-shadow:
 
         .card:active {
             transform: scale(0.97);
-            box-shadow:
-                0 0 5px #d4af37,
-                0 0 15px #ffff00,
-                0 0 25px #ccff00,
-                0 0 35px #99ff00;
+            box-shadow: 0 0 5px #d4af37, 0 0 15px #ffff00, 0 0 25px #ccff00, 0 0 35px #99ff00;
         }
 
         .card h3 {
-    font-size: 2rem;
-    color: #f5e6c8;
-    letter-spacing: 0.5px;
+            font-size: 2rem;
+            color: #f5e6c8;
+            letter-spacing: 0.5px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 18px;
+            text-align: center;
+        }
 
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 18px;
-
-    text-align: center;
-}
         .card .badge {
-    background: #f5c842;
-    color: #1a1a1a;
-    font-weight: 900;
-    border-radius: 40px;
+            background: #f5c842;
+            color: #1a1a1a;
+            font-weight: 900;
+            border-radius: 40px;
+            font-size: 3.5rem;
+            padding: 12px 30px;
+            min-width: 120px;
+            text-align: center;
+        }
 
-    font-size: 3.5rem;
-
-    padding: 12px 30px;
-    min-width: 120px;
-
-    text-align: center;
-}
         .card .card-sub {
-    font-size: 1rem;
-    color: #d6d6d6;
-    margin-top: 15px;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    text-align: center;
-}
+            font-size: 1rem;
+            color: #d6d6d6;
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
 
         .card.mandados {
-          border: 2px solid #00ff66;
-            box-shadow:
-                0 0 4px #00ff66,
-                0 0 10px #00ff66,
-                0 0 16px #ffff00,
-                0 0 24px #ffff00,
-                0 0 32px #ff3300,
-                0 0 42px #ff0000,
-                0 4px 12px rgba(0,0,0,0.5);
+            border: 2px solid #00ff66;
+            box-shadow: 0 0 4px #00ff66, 0 0 10px #00ff66, 0 0 16px #ffff00, 0 0 24px #ffff00, 0 0 32px #ff3300, 0 0 42px #ff0000, 0 4px 12px rgba(0,0,0,0.5);
             animation: neonMandado 2s infinite;
         }
 
         @keyframes neonMandado {
-            0% {
-                box-shadow:
-                    0 0 4px #00ff66,
-                    0 0 10px #00ff66,
-                    0 0 16px #ffff00,
-                    0 0 24px #ffff00,
-                    0 0 32px #ff3300;
-            }
-            50% {
-                box-shadow:
-                    0 0 8px #00ff66,
-                    0 0 18px #00ff66,
-                    0 0 28px #ffff00,
-                    0 0 38px #ff3300,
-                    0 0 50px #ff0000;
-            }
-            100% {
-                box-shadow:
-                    0 0 4px #00ff66,
-                    0 0 10px #00ff66,
-                    0 0 16px #ffff00,
-                    0 0 24px #ffff00,
-                    0 0 32px #ff3300;
-            }
+            0% { box-shadow: 0 0 4px #00ff66, 0 0 10px #00ff66, 0 0 16px #ffff00, 0 0 24px #ffff00, 0 0 32px #ff3300; }
+            50% { box-shadow: 0 0 8px #00ff66, 0 0 18px #00ff66, 0 0 28px #ffff00, 0 0 38px #ff3300, 0 0 50px #ff0000; }
+            100% { box-shadow: 0 0 4px #00ff66, 0 0 10px #00ff66, 0 0 16px #ffff00, 0 0 24px #ffff00, 0 0 32px #ff3300; }
         }
-#cardAnotacoes {
-    animation: neonAzul 2s infinite;
-}
- @keyframes neonAzul {
 
-    0% {
-        box-shadow:
-            0 0 5px #00aaff,
-            0 0 12px #00aaff,
-            0 0 20px #ffffff,
-            0 0 30px #66ccff;
-    }
+        #cardAnotacoes {
+            animation: neonAzul 2s infinite;
+        }
 
-    50% {
-        box-shadow:
-            0 0 10px #00aaff,
-            0 0 20px #00aaff,
-            0 0 35px #ffffff,
-            0 0 50px #66ccff;
-    }
+        @keyframes neonAzul {
+            0% { box-shadow: 0 0 5px #00aaff, 0 0 12px #00aaff, 0 0 20px #ffffff, 0 0 30px #66ccff; }
+            50% { box-shadow: 0 0 10px #00aaff, 0 0 20px #00aaff, 0 0 35px #ffffff, 0 0 50px #66ccff; }
+            100% { box-shadow: 0 0 5px #00aaff, 0 0 12px #00aaff, 0 0 20px #ffffff, 0 0 30px #66ccff; }
+        }
 
-    100% {
-        box-shadow:
-            0 0 5px #00aaff,
-            0 0 12px #00aaff,
-            0 0 20px #ffffff,
-            0 0 30px #66ccff;
-    }
-}   
-    /* ===== PÁGINAS DE LISTA ===== */
+        /* ===== PÁGINAS DE LISTA ===== */
         .list-page {
             display: none;
             flex-direction: column;
@@ -410,39 +300,30 @@ box-shadow:
         }
 
         .btn-back {
+            background: #f5c842;
+            color: #1a1a1a;
+            border: none;
+            border-radius: 12px;
+            width: 46px;
+            height: 46px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(245,200,66,.45);
+            transition: .2s;
+        }
 
-    background: #f5c842;
+        .btn-back:hover {
+            transform: translateY(-2px);
+        }
 
-    color: #1a1a1a;
+        .btn-back:active {
+            transform: scale(.95);
+        }
 
-    border: none;
-
-    border-radius: 12px;
-
-    width: 46px;
-    height: 46px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    font-size: 1.4rem;
-    font-weight: bold;
-
-    cursor: pointer;
-
-    box-shadow:
-        0 4px 12px rgba(245,200,66,.45);
-
-    transition: .2s;
-}
-.btn-back:hover {
-    transform: translateY(-2px);
-}
-
-.btn-back:active {
-    transform: scale(.95);
-}
         .list-title {
             font-size: 1.3rem;
             font-weight: 600;
@@ -483,10 +364,12 @@ box-shadow:
         .list-item .info {
             flex: 1;
         }
+
         .list-item .info .nome {
             font-weight: 600;
             font-size: 1rem;
         }
+
         .list-item .info .mae {
             font-size: 0.8rem;
             color: #aaa;
@@ -520,9 +403,11 @@ box-shadow:
             border-bottom: 1px solid #2e2e2e;
             font-size: 0.95rem;
         }
+
         .detail-field .label {
             color: #aaa;
         }
+
         .detail-field .value {
             font-weight: 500;
             text-align: right;
@@ -555,22 +440,25 @@ box-shadow:
         .btn-detail:active {
             transform: scale(0.95);
         }
+
         .btn-detail.editar {
             background: #f5c842;
             color: #1a1a1a;
             border-color: #f5c842;
         }
+
         .btn-detail.compartilhar {
             background: #25D366;
             color: #fff;
             border-color: #25D366;
         }
+
         .btn-detail.pdf {
-    background: #38bdf8;
-    color: #ffffff;
-    border-color: #38bdf8;
-    box-shadow: 0 0 10px rgba(56,189,248,0.6);
-}
+            background: #38bdf8;
+            color: #ffffff;
+            border-color: #38bdf8;
+            box-shadow: 0 0 10px rgba(56,189,248,0.6);
+        }
 
         /* ===== FORMULÁRIO ===== */
         .form-page {
@@ -592,7 +480,8 @@ box-shadow:
             letter-spacing: 0.3px;
         }
 
-        .form-group input, .form-group select {
+        .form-group input,
+        .form-group select {
             padding: 12px 14px;
             border-radius: 12px;
             border: 1px solid #444;
@@ -603,7 +492,8 @@ box-shadow:
             transition: 0.2s;
         }
 
-        .form-group input:focus, .form-group select:focus {
+        .form-group input:focus,
+        .form-group select:focus {
             border-color: #f5c842;
         }
 
@@ -633,6 +523,7 @@ box-shadow:
             background: #f5c842;
             color: #1a1a1a;
         }
+
         .btn-form.cancelar {
             background: #3d3d3d;
             color: #ccc;
@@ -646,7 +537,10 @@ box-shadow:
         .modal-overlay {
             display: none;
             position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
             background: rgba(0,0,0,0.7);
             align-items: center;
             justify-content: center;
@@ -697,17 +591,32 @@ box-shadow:
             background: #f5c842;
             color: #1a1a1a;
         }
+
         .modal-box .btn-group .cancelar-modal {
             background: #3d3d3d;
             color: #ccc;
         }
 
         /* ===== UTILITÁRIOS ===== */
-        .hidden { display: none !important; }
-        .text-center { text-align: center; }
-        .mt-8 { margin-top: 8px; }
-        .mb-8 { margin-bottom: 8px; }
-        .w-full { width: 100%; }
+        .hidden {
+            display: none !important;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .mt-8 {
+            margin-top: 8px;
+        }
+
+        .mb-8 {
+            margin-bottom: 8px;
+        }
+
+        .w-full {
+            width: 100%;
+        }
 
         .file-upload-wrapper {
             position: relative;
@@ -744,12 +653,15 @@ box-shadow:
             overflow-y: auto;
             padding-right: 4px;
         }
+
         .scroll-area::-webkit-scrollbar {
             width: 4px;
         }
+
         .scroll-area::-webkit-scrollbar-track {
             background: #1a1a1a;
         }
+
         .scroll-area::-webkit-scrollbar-thumb {
             background: #f5c842;
             border-radius: 10px;
@@ -834,6 +746,69 @@ box-shadow:
             font-weight: 600;
         }
 
+        /* ===== ESTILO DA IMAGEM GERADA (LONG PRESS) ===== */
+        .ficha-image-container {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+            max-width: 420px;
+            margin: 0 auto;
+        }
+
+        .ficha-image-container img {
+            width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 8px 25px rgba(0,0,0,.45);
+            display: block;
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+        }
+
+        .ficha-image-container .long-press-indicator {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.7);
+            color: #f5c842;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        .ficha-image-container .long-press-indicator.active {
+            opacity: 1;
+        }
+
+        .ficha-image-container .copy-toast {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.85);
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            text-align: center;
+            border: 2px solid #f5c842;
+        }
+
+        .ficha-image-container .copy-toast.show {
+            opacity: 1;
+        }
+
         /* ===== RESPONSIVO ===== */
         @media (max-width: 480px) {
             #app {
@@ -846,123 +821,76 @@ box-shadow:
                 gap: 12px;
             }
 
-.logo-area{
+            .logo-area {
+                justify-content: center;
+            }
 
-    justify-content:center;
+            .logo-brasao {
+                width: 92px;
+                height: 92px;
+                object-fit: contain;
+                flex-shrink: 0;
+            }
 
-}
-.logo-brasao{
+            .logo-title {
+                font-size: 42px;
+                font-weight: 900;
+                letter-spacing: 3px;
+                color: white;
+                line-height: 1;
+                text-shadow: 0 0 8px rgba(255,255,255,.35);
+            }
 
-    width:92px;
+            .logo-title span {
+                color: #f5c842;
+            }
 
-    height:92px;
+            .logo-subtitle {
+                margin-top: 5px;
+                font-size: 15px;
+                font-weight: 700;
+                line-height: 1.25;
+                color: #f5c842;
+                letter-spacing: 1px;
+                text-transform: uppercase;
+            }
 
-    object-fit:contain;
+            .logo-brasao {
+                width: 82px;
+                height: auto;
+                flex-shrink: 0;
+                filter: drop-shadow(0 0 6px rgba(255,215,0,.6)) drop-shadow(0 0 10px rgba(0,153,255,.35));
+            }
 
-    flex-shrink:0;
+            .logo-info {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
 
-}
+            .logo-title {
+                font-size: 2.3rem;
+                font-weight: 900;
+                letter-spacing: 2px;
+                color: #ffffff;
+                line-height: 1;
+            }
 
-.logo-title{
+            .logo-title span {
+                color: #f5c842;
+            }
 
-font-size:42px;
+            .logo-subtitle {
+                margin-top: 6px;
+                font-size: .82rem;
+                line-height: 1.25;
+                color: #f5c842;
+                font-weight: 700;
+                letter-spacing: .8px;
+                text-transform: uppercase;
+            }
 
-font-weight:900;
-
-letter-spacing:3px;
-
-color:white;
-
-line-height:1;
-
-text-shadow:
-
-0 0 8px rgba(255,255,255,.35);
-
-}
-.logo-title span{
-
-color:#f5c842;
-
-}
-.logo-subtitle{
-
-margin-top:5px;
-
-font-size:15px;
-
-font-weight:700;
-
-line-height:1.25;
-
-color:#f5c842;
-
-letter-spacing:1px;
-
-text-transform:uppercase;
-
-}
-.logo-brasao{
-
-    width:82px;
-
-    height:auto;
-
-    flex-shrink:0;
-
-    filter:
-
-        drop-shadow(0 0 6px rgba(255,215,0,.6))
-
-        drop-shadow(0 0 10px rgba(0,153,255,.35));
-
-}
-      .logo-info{
-
-    display:flex;
-
-    flex-direction:column;
-
-    justify-content:center;
-
-}
-.logo-title{
-
-    font-size:2.3rem;
-
-    font-weight:900;
-
-    letter-spacing:2px;
-
-    color:#ffffff;
-
-    line-height:1;
-
-}
-.logo-title span{
-
-    color:#f5c842;
-
-}
-.logo-subtitle{
-
-    margin-top:6px;
-
-    font-size:.82rem;
-
-    line-height:1.25;
-
-    color:#f5c842;
-
-    font-weight:700;
-
-    letter-spacing:.8px;
-
-    text-transform:uppercase;
-
-}
-
-      .header-actions {
+            .header-actions {
                 justify-content: center;
                 margin-left: 0;
             }
@@ -1034,30 +962,12 @@ text-transform:uppercase;
             <!-- HEADER -->
             <div class="header-dash">
                 <div class="logo-area">
-
-    <img
-    src="brasao_sigec.png"
-    class="logo-brasao"
-    alt="Brasão SIGEC">
-
-    <div class="logo-info">
-
-        <div class="logo-title">
-
-            SIG<span>EC</span>
-
-        </div>
-
-        <div class="logo-subtitle">
-
-            SISTEMA INTEGRADO<br>
-            DE GESTÃO E CONTROLE
-
-        </div>
-
-    </div>
-
-</div>
+                    <img src="brasao_sigec.png" class="logo-brasao" alt="Brasão SIGEC">
+                    <div class="logo-info">
+                        <div class="logo-title">SIG<span>EC</span></div>
+                        <div class="logo-subtitle">SISTEMA INTEGRADO<br>DE GESTÃO E CONTROLE</div>
+                    </div>
+                </div>
                 <div class="header-actions">
                     <button class="btn-header cadastrar-btn" onclick="openCadastro()">CADASTRAR</button>
                     <button class="btn-header" onclick="openSenha()">SENHA</button>
@@ -1159,324 +1069,375 @@ text-transform:uppercase;
         }
 
         // ============================================================
-// FUNÇÃO PARA ABRIR FICHA NO FORMATO DA IMAGEM (CORRIGIDA)
-// ============================================================
-function abrirFichaImagem(id) {
-    const rec = allRecords.find(r => r.ID == id);
+        // FUNÇÃO PARA ABRIR FICHA NO FORMATO DA IMAGEM (CORRIGIDA)
+        // ============================================================
+        function abrirFichaImagem(id) {
+            const rec = allRecords.find(r => r.ID == id);
 
-    if (!rec) {
-        alert("Registro não encontrado");
-        return;
-    }
+            if (!rec) {
+                alert("Registro não encontrado");
+                return;
+            }
 
-    const dataNasc = formatarData(rec.DATA_NASC);
+            const dataNasc = formatarData(rec.DATA_NASC);
 
-    const mandadoStatus = (rec.MANDADO || '').toUpperCase() === 'SIM' ? 'CONSTA MANDADO DE PRISÃO' :
-        'NÃO CONSTA MANDADO DE PRISÃO';
+            const mandadoStatus = (rec.MANDADO || '').toUpperCase() === 'SIM' ? 'CONSTA MANDADO DE PRISÃO' :
+                'NÃO CONSTA MANDADO DE PRISÃO';
 
-    const filiacao = [];
-    if (rec.MAE) filiacao.push(`MÃE: ${rec.MAE}`);
-    if (rec.PAI) filiacao.push(`PAI: ${rec.PAI}`);
-    if (filiacao.length === 0) filiacao.push('MÃE: –', 'PAI: –');
+            const filiacao = [];
+            if (rec.MAE) filiacao.push(`MÃE: ${rec.MAE}`);
+            if (rec.PAI) filiacao.push(`PAI: ${rec.PAI}`);
+            if (filiacao.length === 0) filiacao.push('MÃE: –', 'PAI: –');
 
-    const ufRg = rec.UF_RG || '';
+            const ufRg = rec.UF_RG || '';
 
-    // Criar o elemento da ficha
-    const divFicha = document.createElement('div');
-    divFicha.id = 'fichaImagemGerada';
-    divFicha.style.cssText = `
-            position: fixed;
-            left: -99999px;
-            top: 0;
-            width: 1100px;
-            background: #ffffff;
-            padding: 25px 30px;
-            color: #1a1a1a;
-            font-family: 'Segoe UI', Arial, sans-serif;
-            border: 6px double #0b2a57;
-border-radius: 28px;
-            box-sizing: border-box;
-            line-height: 1.5;
-        `;
+            // Criar o elemento da ficha
+            const divFicha = document.createElement('div');
+            divFicha.id = 'fichaImagemGerada';
+            divFicha.style.cssText = `
+                    position: fixed;
+                    left: -99999px;
+                    top: 0;
+                    width: 1100px;
+                    background: #ffffff;
+                    padding: 25px 30px;
+                    color: #1a1a1a;
+                    font-family: 'Segoe UI', Arial, sans-serif;
+                    border: 6px double #0b2a57;
+                    border-radius: 28px;
+                    box-sizing: border-box;
+                    line-height: 1.5;
+                `;
 
-    // Construir o HTML da ficha
-    // Construir o HTML da ficha
-let htmlFicha = `
+            let htmlFicha = `
+                <div style="background:#08264f;color:#fff;text-align:center;padding:25px;border-radius:18px 18px 0 0;margin:-25px -30px 25px -30px;">
+                    <div style="font-size:70px;font-weight:900;letter-spacing:8px;">SIGEC</div>
+                    <div style="font-size:22px;font-weight:600;">SISTEMA INTEGRADO DE GESTÃO E CONTROLE</div>
+                </div>
+                <div style="text-align:center;margin-bottom:25px;">
+                    <div style="font-size:32px;font-weight:900;color:#111;">REGISTRO DE ANOTAÇÕES CRIMINAIS</div>
+                    <div style="font-size:22px;font-weight:800;color:#c62828;margin-top:8px;">${mandadoStatus}</div>
+                </div>
+                <div style="display:flex;gap:40px;align-items:flex-start;">
+                    <div style="width:320px;text-align:center;">
+            `;
 
-<div style="
-    background:#08264f;
-    color:#fff;
-    text-align:center;
-    padding:25px;
-    border-radius:18px 18px 0 0;
-    margin:-25px -30px 25px -30px;
-">
-    <div style="
-        font-size:70px;
-        font-weight:900;
-        letter-spacing:8px;
-    ">
-        SIGEC
-    </div>
+            if (rec.FOTO) {
+                htmlFicha += `
+                        <img src="${rec.FOTO}" style="width:260px;height:330px;object-fit:cover;border:4px solid #0b2a57;border-radius:18px;">
+                    `;
+            }
 
-    <div style="
-        font-size:22px;
-        font-weight:600;
-    ">
-        SISTEMA INTEGRADO DE GESTÃO E CONTROLE
-    </div>
-</div>
+            htmlFicha += `
+                        <div style="margin-top:20px;font-size:22px;font-weight:900;">ID</div>
+                        <div style="font-size:70px;font-weight:900;">${rec.ID}</div>
+                    </div>
+                    <div style="flex:1;">
+                        <div style="display:flex;border-bottom:1px solid #cfd8dc;padding:14px 0;">
+                            <div style="width:220px;font-weight:800;color:#0b2a57;">NOME</div>
+                            <div style="flex:1;font-size:22px;">${rec.NOME || '—'}</div>
+                        </div>
+                        <div style="display:flex;border-bottom:1px solid #cfd8dc;padding:14px 0;">
+                            <div style="width:170px;font-weight:800;color:#0b2a57;">ALCUNHA</div>
+                            <div style="flex:1;font-size:18px;">${rec.ALCUNHA || '–'}</div>
+                        </div>
+                        <div style="display:flex;border-bottom:1px solid #cfd8dc;padding:14px 0;">
+                            <div style="width:170px;font-weight:800;color:#0b2a57;">FILIAÇÃO</div>
+                            <div style="flex:1;font-size:18px;line-height:1.6;">${filiacao.join('<br>')}</div>
+                        </div>
+                        <div style="display:flex;border-bottom:1px solid #cfd8dc;padding:14px 0;">
+                            <div style="width:170px;font-weight:800;color:#0b2a57;">DATA NASC.</div>
+                            <div style="flex:1;font-size:18px;">${dataNasc}</div>
+                        </div>
+                        <div style="display:flex;border-bottom:1px solid #cfd8dc;padding:14px 0;">
+                            <div style="width:170px;font-weight:800;color:#0b2a57;">CPF</div>
+                            <div style="flex:1;font-size:18px;">${rec.CPF || '—'}</div>
+                        </div>
+                        <div style="display:flex;border-bottom:1px solid #cfd8dc;padding:14px 0;">
+                            <div style="width:170px;font-weight:800;color:#0b2a57;">RG</div>
+                            <div style="flex:1;font-size:18px;">${rec.RG || '—'} ${ufRg ? `SSP ${ufRg}` : ''}</div>
+                        </div>
+                        <div style="display:flex;border-bottom:1px solid #cfd8dc;padding:14px 0;">
+                            <div style="width:170px;font-weight:800;color:#0b2a57;">ENDEREÇO</div>
+                            <div style="flex:1;font-size:18px;">${rec.ENDERECO || '—'}</div>
+                        </div>
+                        <div style="display:flex;border-bottom:1px solid #cfd8dc;padding:14px 0;">
+                            <div style="width:170px;font-weight:800;color:#0b2a57;">CIDADE</div>
+                            <div style="flex:1;font-size:18px;">${rec.CIDADE || '—'}</div>
+                        </div>
+                        <div style="display:flex;border-bottom:1px solid #cfd8dc;padding:14px 0;">
+                            <div style="width:170px;font-weight:800;color:#0b2a57;">UF</div>
+                            <div style="flex:1;font-size:18px;">${rec.UF || rec.ESTADO || '—'}</div>
+                        </div>
+                        <div style="display:flex;border-bottom:1px solid #cfd8dc;padding:14px 0;">
+                            <div style="width:170px;font-weight:800;color:#0b2a57;">TIPO PENAL</div>
+                            <div style="flex:1;font-size:18px;">${rec.TIPO_PENAL || '–'}</div>
+                        </div>
+                        <div style="display:flex;border-bottom:1px solid #cfd8dc;padding:14px 0;">
+                            <div style="width:170px;font-weight:800;color:#0b2a57;">MANDADO</div>
+                            <div style="flex:1;font-size:18px;">${rec.MANDADO || '—'}</div>
+                        </div>
+                    </div>
+                </div>
+                <div style="background:#08264f;color:#fff;margin:25px -30px -25px -30px;padding:18px 25px;display:flex;justify-content:space-between;align-items:center;font-size:14px;border-radius:0 0 18px 18px;">
+                    <div>
+                        SIGEC - SISTEMA INTEGRADO DE GESTÃO E CONTROLE
+                        <br>
+                        USO EXCLUSIVO DAS FORÇAS DE SEGURANÇA
+                    </div>
+                    <div>
+                        DATA/HORA: ${new Date().toLocaleString('pt-BR')}
+                    </div>
+                </div>
+            `;
 
-<div style="text-align:center;margin-bottom:25px;">
-    <div style="
-        font-size:32px;
-        font-weight:900;
-        color:#111;
-    ">
-        REGISTRO DE ANOTAÇÕES CRIMINAIS
-    </div>
+            divFicha.innerHTML = htmlFicha;
+            document.body.appendChild(divFicha);
 
-    <div style="
-        font-size:22px;
-        font-weight:800;
-        color:#c62828;
-        margin-top:8px;
-    ">
-        ${mandadoStatus}
-    </div>
-</div>
+            showLoading("Gerando ficha...");
 
-<div style="
-    display:flex;
-    gap:40px;
-    align-items:flex-start;
-">
+            setTimeout(() => {
+                const elemento = document.getElementById("fichaImagemGerada");
+                if (!elemento) {
+                    hideLoading();
+                    alert('Erro ao gerar ficha: elemento não encontrado.');
+                    return;
+                }
 
-    <div style="
-        width:320px;
-        text-align:center;
-    ">
-`;
+                html2canvas(elemento, {
+                    scale: 2.5,
+                    useCORS: true,
+                    backgroundColor: "#ffffff",
+                    logging: false,
+                    width: 1100,
+                    height: elemento.scrollHeight
+                }).then(canvas => {
+                    hideLoading();
 
-if (rec.FOTO) {
-    htmlFicha += `
-        <img src="${rec.FOTO}"
-             style="
-                width:260px;
-                height:330px;
-                object-fit:cover;
-                border:4px solid #0b2a57;
-                border-radius:18px;
-             ">
-    `;
-}
+                    const imagem = canvas.toDataURL("image/jpeg", 0.95);
 
-htmlFicha += `
+                    const dynamic = document.getElementById("dynamicContent");
 
-        <div style="
-            margin-top:20px;
-            font-size:22px;
-            font-weight:900;
-        ">
-            ID
-        </div>
+                    // HTML com long press para copiar
+                    dynamic.innerHTML = `
+                            <div style="display:flex;flex-direction:column;align-items:center;gap:18px;padding:20px;">
+                                <div class="ficha-image-container" id="fichaImageContainer">
+                                    <img 
+                                        id="fichaImage"
+                                        src="${imagem}" 
+                                        alt="Ficha SIGEC"
+                                        style="width:100%;max-width:420px;border-radius:10px;box-shadow:0 8px 25px rgba(0,0,0,.45);display:block;"
+                                        oncontextmenu="return false;"
+                                    >
+                                    <div class="long-press-indicator" id="longPressIndicator">📌 Mantenha pressionado para copiar</div>
+                                    <div class="copy-toast" id="copyToast">✅ IMAGEM COPIADA!</div>
+                                </div>
+                                <div style="display:flex;gap:12px;width:100%;">
+                                    <button class="btn-detail compartilhar" onclick="compartilharImagem('${imagem}','${rec.ID}')">
+                                        📤 ENVIAR
+                                    </button>
+                                    <button class="btn-detail" onclick="voltarListaCadastro()">
+                                        ← VOLTAR
+                                    </button>
+                                </div>
+                                <div style="font-size:0.7rem;color:#888;text-align:center;margin-top:4px;">
+                                    💡 Clique longo (3 segundos) na imagem para copiar
+                                </div>
+                            </div>
+                        `;
 
-        <div style="
-            font-size:70px;
-            font-weight:900;
-        ">
-            ${rec.ID}
-        </div>
+                    // Inicializar o long press
+                    iniciarLongPress();
 
-    </div>
+                    elemento.remove();
+                }).catch(err => {
+                    hideLoading();
+                    console.error('Erro ao gerar ficha:', err);
+                    alert('Erro ao gerar a ficha: ' + err.message);
+                    const el = document.getElementById("fichaImagemGerada");
+                    if (el) el.remove();
+                });
 
-    <div style="
-        flex:1;
-    ">
-
-        <div style="
-            display:flex;
-            border-bottom:1px solid #cfd8dc;
-            padding:14px 0;
-        ">
-            <div style="
-                width:220px;
-                font-weight:800;
-                color:#0b2a57;
-            ">
-                NOME
-            </div>
-
-            <div style="
-                flex:1;
-                font-size:22px;
-            ">
-                ${rec.NOME || '—'}
-            </div>
-        </div>
-
-        <div style="display:flex;border-bottom:1px solid #cfd8dc;padding:14px 0;">
-            <div style="width:170px;font-weight:800;color:#0b2a57;">ALCUNHA</div>
-            <div style="flex:1;font-size:18px;">${rec.ALCUNHA || '–'}</div>
-        </div>
-
-        <div style="display:flex;border-bottom:1px solid #cfd8dc;padding:14px 0;">
-            <div style="width:170px;font-weight:800;color:#0b2a57;">FILIAÇÃO</div>
-            <div style="flex:1;font-size:18px;line-height:1.6;">
-                ${filiacao.join('<br>')}
-            </div>
-        </div>
-
-        <div style="display:flex;border-bottom:1px solid #cfd8dc;padding:14px 0;">
-            <div style="width:170px;font-weight:800;color:#0b2a57;">DATA NASC.</div>
-            <div style="flex:1;font-size:18px;">${dataNasc}</div>
-        </div>
-
-        <div style="display:flex;border-bottom:1px solid #cfd8dc;padding:14px 0;">
-            <div style="width:170px;font-weight:800;color:#0b2a57;">CPF</div>
-            <div style="flex:1;font-size:18px;">${rec.CPF || '—'}</div>
-        </div>
-
-        <div style="display:flex;border-bottom:1px solid #cfd8dc;padding:14px 0;">
-            <div style="width:170px;font-weight:800;color:#0b2a57;">RG</div>
-            <div style="flex:1;font-size:18px;">
-                ${rec.RG || '—'} ${ufRg ? `SSP ${ufRg}` : ''}
-            </div>
-        </div>
-
-        <div style="display:flex;border-bottom:1px solid #cfd8dc;padding:14px 0;">
-            <div style="width:170px;font-weight:800;color:#0b2a57;">ENDEREÇO</div>
-            <div style="flex:1;font-size:18px;">${rec.ENDERECO || '—'}</div>
-        </div>
-
-        <div style="display:flex;border-bottom:1px solid #cfd8dc;padding:14px 0;">
-            <div style="width:170px;font-weight:800;color:#0b2a57;">CIDADE</div>
-            <div style="flex:1;font-size:18px;">${rec.CIDADE || '—'}</div>
-        </div>
-
-        <div style="display:flex;border-bottom:1px solid #cfd8dc;padding:14px 0;">
-            <div style="width:170px;font-weight:800;color:#0b2a57;">UF</div>
-            <div style="flex:1;font-size:18px;"> ${rec.UF || rec.ESTADO || '—'}</div>
-        </div>
-
-        <div style="display:flex;border-bottom:1px solid #cfd8dc;padding:14px 0;">
-            <div style="width:170px;font-weight:800;color:#0b2a57;">TIPO PENAL</div>
-            <div style="flex:1;font-size:18px;">${rec.TIPO_PENAL || '–'}</div>
-        </div>
-
-        <div style="display:flex;border-bottom:1px solid #cfd8dc;padding:14px 0;">
-            <div style="width:170px;font-weight:800;color:#0b2a57;">MANDADO</div>
-            <div style="flex:1;font-size:18px;">${rec.MANDADO || '—'}</div>
-        </div>
-
-    </div>
-
-</div>
-
-<div style="
-    background:#08264f;
-    color:#fff;
-    margin:25px -30px -25px -30px;
-    padding:18px 25px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    font-size:14px;
-    border-radius:0 0 18px 18px;
-">
-    <div>
-        SIGEC - SISTEMA INTEGRADO DE GESTÃO E CONTROLE
-        <br>
-        USO EXCLUSIVO DAS FORÇAS DE SEGURANÇA
-    </div>
-
-    <div>
-        DATA/HORA:
-        ${new Date().toLocaleString('pt-BR')}
-    </div>
-</div>
-`;
-    divFicha.innerHTML = htmlFicha;
-    document.body.appendChild(divFicha);
-
-    showLoading("Gerando ficha...");
-
-    setTimeout(() => {
-        const elemento = document.getElementById("fichaImagemGerada");
-        if (!elemento) {
-            hideLoading();
-            alert('Erro ao gerar ficha: elemento não encontrado.');
-            return;
+            }, 300);
         }
 
-        html2canvas(elemento, {
-            scale: 2.5,
-            useCORS: true,
-            backgroundColor: "#ffffff",
-            logging: false,
-            width: 1100,
-            height: elemento.scrollHeight
-        }).then(canvas => {
-            hideLoading();
+        // ============================================================
+        // FUNÇÃO DE LONG PRESS (3 SEGUNDOS) PARA COPIAR IMAGEM
+        // ============================================================
+        function iniciarLongPress() {
+            const container = document.getElementById('fichaImageContainer');
+            const img = document.getElementById('fichaImage');
+            const indicator = document.getElementById('longPressIndicator');
+            const toast = document.getElementById('copyToast');
 
-            const imagem = canvas.toDataURL("image/jpeg", 0.95);
+            if (!container || !img) return;
 
-const dynamic = document.getElementById("dynamicContent");
+            let timerId = null;
+            let isLongPress = false;
 
-dynamic.innerHTML = `
-<div
-    style="
-        display:flex;
-        flex-direction:column;
-        align-items:center;
-        gap:18px;
-        padding:20px;
-    ">
+            // Função para copiar a imagem
+            function copiarImagem() {
+                try {
+                    const src = img.src;
+                    fetch(src)
+                        .then(response => response.blob())
+                        .then(blob => {
+                            // Tentar copiar usando a Clipboard API
+                            if (navigator.clipboard && navigator.clipboard.write) {
+                                const item = new ClipboardItem({
+                                    [blob.type]: blob
+                                });
+                                navigator.clipboard.write([item])
+                                    .then(() => {
+                                        mostrarToast('✅ IMAGEM COPIADA!');
+                                    })
+                                    .catch(() => {
+                                        // Fallback: criar elemento para download
+                                        copiarComoFallback(src);
+                                    });
+                            } else {
+                                copiarComoFallback(src);
+                            }
+                        })
+                        .catch(() => {
+                            // Fallback: se fetch falhar, tenta com canvas
+                            copiarImagemViaCanvas(img);
+                        });
+                } catch (e) {
+                    alert('Não foi possível copiar a imagem. Tente usar o botão ENVIAR.');
+                }
+            }
 
-    <img
-        src="${imagem}"
-        style="
-            width:100%;
-            max-width:420px;
-            border-radius:10px;
-            box-shadow:0 8px 25px rgba(0,0,0,.45);
-        ">
+            // Fallback: criar link de download
+            function copiarComoFallback(src) {
+                try {
+                    const a = document.createElement('a');
+                    a.href = src;
+                    a.download = 'ficha_sigec.jpg';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    mostrarToast('📥 IMAGEM BAIXADA!');
+                } catch (e) {
+                    alert('Clique com o botão direito na imagem e selecione "Salvar imagem como..."');
+                }
+            }
 
-    <div
-        style="
-            display:flex;
-            gap:12px;
-            width:100%;
-        ">
+            // Fallback via Canvas (para imagens com CORS)
+            function copiarImagemViaCanvas(imgElement) {
+                try {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = imgElement.naturalWidth || imgElement.width;
+                    canvas.height = imgElement.naturalHeight || imgElement.height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(imgElement, 0, 0);
+                    canvas.toBlob(blob => {
+                        if (navigator.clipboard && navigator.clipboard.write) {
+                            const item = new ClipboardItem({
+                                [blob.type]: blob
+                            });
+                            navigator.clipboard.write([item])
+                                .then(() => mostrarToast('✅ IMAGEM COPIADA!'))
+                                .catch(() => alert('Não foi possível copiar. Use o botão ENVIAR.'));
+                        } else {
+                            // Download como fallback
+                            const a = document.createElement('a');
+                            a.href = canvas.toDataURL('image/jpeg', 0.95);
+                            a.download = 'ficha_sigec.jpg';
+                            document.body.appendChild(a);
+                            a.click();
+                            document.body.removeChild(a);
+                            mostrarToast('📥 IMAGEM BAIXADA!');
+                        }
+                    }, 'image/jpeg', 0.95);
+                } catch (e) {
+                    alert('Não foi possível copiar. Use o botão ENVIAR.');
+                }
+            }
 
-        <button
-            class="btn-detail compartilhar"
-            onclick="compartilharImagem('${imagem}','${rec.ID}')">
-            📤 ENVIAR
-        </button>
+            function mostrarToast(mensagem) {
+                if (toast) {
+                    toast.textContent = mensagem;
+                    toast.classList.add('show');
+                    setTimeout(() => {
+                        toast.classList.remove('show');
+                    }, 2500);
+                }
+            }
 
-        <button
-            class="btn-detail"
-            onclick="voltarListaCadastro()">
-            ← VOLTAR
-        </button>
+            function startTimer(e) {
+                isLongPress = false;
+                if (timerId) clearTimeout(timerId);
 
-    </div>
+                if (indicator) {
+                    indicator.classList.add('active');
+                    indicator.textContent = '⏳ Mantenha pressionado...';
+                }
 
-</div>
-`;
+                timerId = setTimeout(() => {
+                    isLongPress = true;
+                    if (indicator) {
+                        indicator.textContent = '📋 Copiando...';
+                    }
+                    copiarImagem();
+                    if (indicator) {
+                        setTimeout(() => {
+                            indicator.classList.remove('active');
+                        }, 500);
+                    }
+                }, 3000);
+            }
 
-elemento.remove();
-        }).catch(err => {
-            hideLoading();
-            console.error('Erro ao gerar ficha:', err);
-            alert('Erro ao gerar a ficha: ' + err.message);
-            const el = document.getElementById("fichaImagemGerada");
-            if (el) el.remove();
-        });
+            function endTimer() {
+                if (timerId) {
+                    clearTimeout(timerId);
+                    timerId = null;
+                }
+                if (indicator) {
+                    indicator.classList.remove('active');
+                }
+            }
 
-    }, 300);
-}
+            // Eventos para mouse
+            img.addEventListener('mousedown', startTimer);
+            img.addEventListener('mouseup', endTimer);
+            img.addEventListener('mouseleave', endTimer);
+
+            // Eventos para touch (mobile)
+            img.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                startTimer(e);
+            }, { passive: false });
+
+            img.addEventListener('touchend', function(e) {
+                e.preventDefault();
+                endTimer();
+            }, { passive: false });
+
+            img.addEventListener('touchcancel', function(e) {
+                e.preventDefault();
+                endTimer();
+            }, { passive: false });
+
+            // Prevenir menu de contexto
+            img.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                return false;
+            });
+
+            // Feedback visual ao pressionar
+            img.addEventListener('mousedown', function() {
+                this.style.opacity = '0.85';
+            });
+
+            img.addEventListener('mouseup', function() {
+                this.style.opacity = '1';
+            });
+
+            img.addEventListener('mouseleave', function() {
+                this.style.opacity = '1';
+            });
+        }
 
         // ============================================================
         // FUNÇÕES DE API - USANDO JSONP PARA GET E POST VIA JSON
@@ -1699,58 +1660,40 @@ elemento.remove();
                 backToDashboard();
             }
         }
-function voltarListaCadastro(){
 
-    if(currentListType){
-
-        openList(currentListType);
-
-    }else{
-
-        backToDashboard();
-
-    }
-
-}
-function compartilharImagem(imagem,id){
-
-    fetch(imagem)
-        .then(r=>r.blob())
-        .then(blob=>{
-
-            const arquivo = new File(
-                [blob],
-                "Ficha_"+id+".jpg",
-                {type:"image/jpeg"}
-            );
-
-            if(navigator.canShare &&
-               navigator.canShare({files:[arquivo]})){
-
-                navigator.share({
-
-                    files:[arquivo],
-
-                    title:"Ficha SIGEC"
-
-                });
-
-            }else{
-
-                const a=document.createElement("a");
-
-                a.href=imagem;
-
-                a.download="Ficha_"+id+".jpg";
-
-                a.click();
-
+        function voltarListaCadastro() {
+            if (currentListType) {
+                openList(currentListType);
+            } else {
+                backToDashboard();
             }
+        }
 
-        });
+        function compartilharImagem(imagem, id) {
+            fetch(imagem)
+                .then(r => r.blob())
+                .then(blob => {
+                    const arquivo = new File(
+                        [blob],
+                        "Ficha_" + id + ".jpg", { type: "image/jpeg" }
+                    );
 
-}     
-   function openList(tipo) {
+                    if (navigator.canShare &&
+                        navigator.canShare({ files: [arquivo] })) {
+                        navigator.share({
+                            files: [arquivo],
+                            title: "Ficha SIGEC"
+                        });
+                    } else {
+                        const a = document.createElement("a");
+                        a.href = imagem;
+                        a.download = "Ficha_" + id + ".jpg";
+                        a.click();
+                    }
+                });
+        }
+
+        function openList(tipo) {
             document.querySelector('.cards-grid').style.display = 'none';
 
             const filtered = allRecords.filter(r => {
@@ -1906,11 +1849,6 @@ function compartilharImagem(imagem,id){
                         </div>
                         <div class="detail-actions">
                             <button class="btn-detail editar" onclick="editRecord(${record.ID})">✎ EDITAR</button>
-                            <button class="btn-detail compartilhar"
-        onclick="shareRecord(${record.ID})"
-        style="display:none;">
-    📱 COMPARTILHAR
-</button>
                             <button class="btn-detail pdf" onclick="abrirFichaImagem(${record.ID})">📷 FICHA</button>
                         </div>
                         <button class="btn-back" style="margin-top:8px;" onclick="backToList()">← Voltar</button>
@@ -2232,39 +2170,6 @@ function compartilharImagem(imagem,id){
             } catch (error) {
                 document.getElementById('senhaMsg').textContent = 'Erro de comunicação: ' + error.message;
                 document.getElementById('senhaMsg').style.color = '#f66';
-            }
-        }
-
-        // ============================================================
-        // COMPARTILHAR
-        // ============================================================
-        function shareRecord(id) {
-            const rec = allRecords.find(r => r.ID == id);
-            if (!rec) return;
-
-            const dataNasc = formatarData(rec.DATA_NASC);
-
-            let msg = '*SIGEC - Registro #' + rec.ID + '*\n\n';
-            msg += '📌 *Nome:* ' + (rec.NOME || 'N/I') + '\n';
-            msg += '📌 *Alcunha:* ' + (rec.ALCUNHA || 'N/I') + '\n';
-            msg += '📌 *Mãe:* ' + (rec.MAE || 'N/I') + '\n';
-            msg += '📌 *Pai:* ' + (rec.PAI || 'N/I') + '\n';
-            msg += '📌 *Data Nasc.:* ' + dataNasc + '\n';
-            msg += '📌 *Naturalidade:* ' + (rec.NATURALIDADE || 'N/I') + '/' + (rec.UF_NAT || 'N/I') + '\n';
-            msg += '📌 *CPF:* ' + (rec.CPF || 'N/I') + '\n';
-            msg += '📌 *RG:* ' + (rec.RG || 'N/I') + ' - ' + (rec.UF_RG || 'N/I') + '\n';
-            msg += '📌 *Telefone:* ' + (rec.TELEFONE || 'N/I') + '\n';
-            msg += '📌 *Endereço:* ' + (rec.ENDERECO || 'N/I') + '\n';
-            msg += '📌 *Cidade/UF:* ' + (rec.CIDADE || 'N/I') + '/' + (rec.ESTADO || 'N/I') + '\n';
-            msg += '📌 *Tipo Penal:* ' + (rec.TIPO_PENAL || 'N/I') + '\n';
-            msg += '⚖️ *Mandado:* ' + (rec.MANDADO || 'N/I');
-
-            const url = 'https://wa.me/?text=' + encodeURIComponent(msg);
-
-            try {
-                window.open(url, '_blank');
-            } catch (e) {
-                window.location.href = url;
             }
         }
 
