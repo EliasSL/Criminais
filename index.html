@@ -451,6 +451,7 @@
             background: #25D366;
             color: #fff;
             border-color: #25D366;
+            box-shadow: 0 0 10px rgba(37, 211, 102, 0.4);
         }
 
         .btn-detail.pdf {
@@ -458,6 +459,26 @@
             color: #ffffff;
             border-color: #38bdf8;
             box-shadow: 0 0 10px rgba(56,189,248,0.6);
+        }
+
+        /* Botão ENVIAR/SALVAR especial */
+        .btn-detail.salvar-galeria {
+            background: linear-gradient(135deg, #00c853, #00e676);
+            color: #fff;
+            border-color: #00c853;
+            box-shadow: 0 0 15px rgba(0, 200, 83, 0.5);
+            font-weight: 700;
+            animation: pulseSalvar 2s infinite;
+        }
+
+        @keyframes pulseSalvar {
+            0% { box-shadow: 0 0 10px rgba(0, 200, 83, 0.4); }
+            50% { box-shadow: 0 0 25px rgba(0, 200, 83, 0.8); }
+            100% { box-shadow: 0 0 10px rgba(0, 200, 83, 0.4); }
+        }
+
+        .btn-detail.salvar-galeria:active {
+            transform: scale(0.95);
         }
 
         /* ===== FORMULÁRIO ===== */
@@ -1084,6 +1105,112 @@
         }
 
         // ============================================================
+        // FUNÇÃO PARA SALVAR IMAGEM NA GALERIA (BOTÃO ENVIAR)
+        // ============================================================
+        function salvarImagemGaleria(imagemDataUrl, idRegistro) {
+            // Mostrar loading
+            showLoading("Salvando imagem...");
+
+            try {
+                // Criar um canvas para garantir a imagem
+                const imgTemp = new Image();
+                imgTemp.crossOrigin = 'anonymous';
+                
+                imgTemp.onload = function() {
+                    try {
+                        const canvas = document.createElement('canvas');
+                        canvas.width = imgTemp.width;
+                        canvas.height = imgTemp.height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(imgTemp, 0, 0);
+                        
+                        canvas.toBlob(function(blob) {
+                            if (!blob) {
+                                hideLoading();
+                                alert('Erro ao processar imagem.');
+                                return;
+                            }
+                            
+                            const fileName = 'ficha_sigec_' + idRegistro + '_' + Date.now() + '.jpg';
+                            const file = new File([blob], fileName, { type: 'image/jpeg' });
+                            
+                            // TENTATIVA 1: Usar navigator.share (Android/iOS)
+                            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                                navigator.share({
+                                    files: [file],
+                                    title: 'Ficha SIGEC #' + idRegistro
+                                }).then(() => {
+                                    hideLoading();
+                                    mostrarToast('✅ IMAGEM SALVA NA GALERIA!');
+                                }).catch((err) => {
+                                    hideLoading();
+                                    if (err.name === 'AbortError') {
+                                        mostrarToast('✅ IMAGEM SALVA NA GALERIA!');
+                                    } else {
+                                        // Fallback para download
+                                        salvarViaDownload(canvas.toDataURL('image/jpeg', 0.95), fileName);
+                                    }
+                                });
+                            } else {
+                                hideLoading();
+                                // TENTATIVA 2: Download via link
+                                salvarViaDownload(canvas.toDataURL('image/jpeg', 0.95), fileName);
+                            }
+                        }, 'image/jpeg', 0.95);
+                    } catch (e) {
+                        hideLoading();
+                        console.error('Erro no canvas:', e);
+                        salvarViaDownload(imagemDataUrl, 'ficha_sigec_' + idRegistro + '.jpg');
+                    }
+                };
+                
+                imgTemp.onerror = function() {
+                    hideLoading();
+                    console.error('Erro ao carregar imagem');
+                    salvarViaDownload(imagemDataUrl, 'ficha_sigec_' + idRegistro + '.jpg');
+                };
+                
+                imgTemp.src = imagemDataUrl;
+                
+            } catch (e) {
+                hideLoading();
+                console.error('Erro ao salvar:', e);
+                alert('Erro ao salvar imagem. Tente novamente.');
+            }
+        }
+
+        // ===== MÉTODO DE DOWNLOAD FALLBACK =====
+        function salvarViaDownload(dataUrl, fileName) {
+            try {
+                const link = document.createElement('a');
+                link.href = dataUrl;
+                link.download = fileName || 'ficha_sigec.jpg';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                mostrarToast('📥 IMAGEM BAIXADA! Verifique a pasta Downloads.');
+            } catch (e) {
+                console.error('Erro no download:', e);
+                window.open(dataUrl, '_blank');
+                mostrarToast('🔄 Imagem aberta - Salve manualmente');
+            }
+        }
+
+        // ===== TOAST DE CONFIRMAÇÃO =====
+        function mostrarToast(mensagem) {
+            const toast = document.getElementById('copyToast');
+            if (toast) {
+                toast.textContent = mensagem;
+                toast.classList.add('show');
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 4000);
+            } else {
+                alert(mensagem);
+            }
+        }
+
+        // ============================================================
         // FUNÇÃO PARA ABRIR FICHA NO FORMATO DA IMAGEM
         // ============================================================
         function abrirFichaImagem(id) {
@@ -1246,21 +1373,22 @@
                                     <div class="copy-toast" id="copyToast">✅ IMAGEM SALVA NA GALERIA!</div>
                                 </div>
                                 <div style="display:flex;gap:12px;width:100%;">
-                                    <button class="btn-detail compartilhar" onclick="compartilharImagem('${imagem}','${rec.ID}')">
-                                        📤 ENVIAR
+                                    <button class="btn-detail salvar-galeria" onclick="salvarImagemGaleria('${imagem}', '${rec.ID}')">
+                                        💾 SALVAR NA GALERIA
                                     </button>
                                     <button class="btn-detail" onclick="voltarListaCadastro()">
                                         ← VOLTAR
                                     </button>
                                 </div>
                                 <div style="font-size:0.7rem;color:#888;text-align:center;margin-top:4px;">
-                                    💡 Clique longo (3 segundos) na imagem para salvar na galeria
+                                    💡 Clique no botão SALVAR ou mantenha pressionado a imagem
                                 </div>
                             </div>
                         `;
 
+                    // Inicializar long press
                     setTimeout(function() {
-                        iniciarLongPress();
+                        iniciarLongPress(imagem, rec.ID);
                     }, 100);
 
                     elemento.remove();
@@ -1276,9 +1404,9 @@
         }
 
         // ============================================================
-        // FUNÇÃO DE LONG PRESS - SALVAR IMAGEM NA GALERIA (CORRIGIDA)
+        // FUNÇÃO DE LONG PRESS - SALVAR IMAGEM NA GALERIA
         // ============================================================
-        function iniciarLongPress() {
+        function iniciarLongPress(imagemData, idRegistro) {
             const container = document.getElementById('fichaImageContainer');
             const img = document.getElementById('fichaImage');
             const indicator = document.getElementById('longPressIndicator');
@@ -1293,113 +1421,6 @@
             let isLongPress = false;
             let touchStartTime = 0;
 
-            // ===== FUNÇÃO PRINCIPAL: SALVAR IMAGEM NA GALERIA =====
-            function salvarImagemNaGaleria() {
-                try {
-                    const src = img.src;
-
-                    // Método 1: Usar canvas para garantir a imagem
-                    const canvasTemp = document.createElement('canvas');
-                    const imgTemp = new Image();
-                    imgTemp.crossOrigin = 'anonymous';
-                    
-                    imgTemp.onload = function() {
-                        try {
-                            canvasTemp.width = imgTemp.width;
-                            canvasTemp.height = imgTemp.height;
-                            const ctx = canvasTemp.getContext('2d');
-                            ctx.drawImage(imgTemp, 0, 0);
-                            
-                            canvasTemp.toBlob(function(blob) {
-                                if (!blob) {
-                                    salvarViaDownload(src);
-                                    return;
-                                }
-                                
-                                const fileName = 'ficha_sigec_' + Date.now() + '.jpg';
-                                const file = new File([blob], fileName, { type: 'image/jpeg' });
-                                
-                                // TENTATIVA 1: Usar navigator.share para salvar na galeria
-                                if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                                    navigator.share({
-                                        files: [file],
-                                        title: 'Ficha SIGEC'
-                                    }).then(() => {
-                                        mostrarToast('✅ IMAGEM SALVA NA GALERIA!');
-                                    }).catch((err) => {
-                                        if (err.name === 'AbortError') {
-                                            mostrarToast('✅ IMAGEM SALVA NA GALERIA!');
-                                        } else {
-                                            // TENTATIVA 2: Tentar download via URL
-                                            salvarViaDownload(canvasTemp.toDataURL('image/jpeg', 0.95));
-                                        }
-                                    });
-                                } else {
-                                    // TENTATIVA 2: Download via link
-                                    salvarViaDownload(canvasTemp.toDataURL('image/jpeg', 0.95));
-                                }
-                            }, 'image/jpeg', 0.95);
-                        } catch (e) {
-                            console.error('Erro no canvas:', e);
-                            salvarViaDownload(src);
-                        }
-                    };
-                    
-                    imgTemp.onerror = function() {
-                        console.error('Erro ao carregar imagem para canvas');
-                        salvarViaDownload(src);
-                    };
-                    
-                    imgTemp.src = src;
-                    
-                } catch (e) {
-                    console.error('Erro ao salvar:', e);
-                    alert('Não foi possível salvar a imagem. Tente usar o botão ENVIAR.');
-                }
-            }
-
-            // ===== MÉTODO 2: Download com nome específico =====
-            function salvarViaDownload(src) {
-                try {
-                    // Criar um link de download com um nome que o celular reconheça
-                    const link = document.createElement('a');
-                    link.href = src;
-                    link.download = 'ficha_sigec_' + Date.now() + '.jpg';
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                    mostrarToast('📥 IMAGEM BAIXADA! Verifique a pasta Downloads.');
-                } catch (e) {
-                    console.error('Erro no download:', e);
-                    // Último recurso: abrir em nova aba
-                    window.open(src, '_blank');
-                    mostrarToast('🔄 Imagem aberta - Salve manualmente');
-                }
-            }
-
-            function mostrarToast(mensagem) {
-                if (toast) {
-                    toast.textContent = mensagem;
-                    toast.classList.add('show');
-                    setTimeout(() => {
-                        toast.classList.remove('show');
-                    }, 4000);
-                }
-            }
-
-            function atualizarIndicador(mensagem) {
-                if (indicator) {
-                    indicator.textContent = mensagem;
-                    indicator.classList.add('active');
-                }
-            }
-
-            function esconderIndicador() {
-                if (indicator) {
-                    indicator.classList.remove('active');
-                }
-            }
-
             function startTimer(e) {
                 e.preventDefault();
                 isLongPress = false;
@@ -1410,21 +1431,24 @@
                     timerId = null;
                 }
 
-                atualizarIndicador('⏳ Mantenha pressionado...');
-
                 if (indicator) {
+                    indicator.textContent = '⏳ Mantenha pressionado...';
+                    indicator.classList.add('active');
                     indicator.classList.add('progress');
                 }
 
                 timerId = setTimeout(() => {
                     isLongPress = true;
-                    atualizarIndicador('📸 Salvando imagem...');
+                    if (indicator) {
+                        indicator.textContent = '📸 Salvando...';
+                    }
                     
-                    salvarImagemNaGaleria();
+                    // Usar a mesma função do botão
+                    salvarImagemGaleria(imagemData, idRegistro);
                     
                     setTimeout(() => {
-                        esconderIndicador();
                         if (indicator) {
+                            indicator.classList.remove('active');
                             indicator.classList.remove('progress');
                         }
                     }, 800);
@@ -1445,19 +1469,21 @@
                     if (indicator) {
                         indicator.textContent = '📌 Mantenha pressionado por 3 segundos';
                         setTimeout(() => {
-                            esconderIndicador();
+                            if (indicator) {
+                                indicator.classList.remove('active');
+                            }
                         }, 1000);
                     }
                 }
                 
-                esconderIndicador();
                 if (indicator) {
+                    indicator.classList.remove('active');
                     indicator.classList.remove('progress');
                 }
                 img.style.opacity = '1';
             }
 
-            // ====== EVENTOS PARA MOUSE ======
+            // Eventos para mouse
             img.addEventListener('mousedown', function(e) {
                 this.style.opacity = '0.85';
                 startTimer(e);
@@ -1466,7 +1492,7 @@
             img.addEventListener('mouseup', endTimer);
             img.addEventListener('mouseleave', endTimer);
 
-            // ====== EVENTOS PARA TOUCH (MOBILE) ======
+            // Eventos para touch (mobile)
             img.addEventListener('touchstart', function(e) {
                 e.preventDefault();
                 this.style.opacity = '0.85';
@@ -1491,7 +1517,6 @@
                 return false;
             });
 
-            // Prevenir seleção
             img.addEventListener('selectstart', function(e) {
                 e.preventDefault();
                 return false;
@@ -1728,30 +1753,6 @@
             } else {
                 backToDashboard();
             }
-        }
-
-        function compartilharImagem(imagem, id) {
-            fetch(imagem)
-                .then(r => r.blob())
-                .then(blob => {
-                    const arquivo = new File(
-                        [blob],
-                        "Ficha_" + id + ".jpg", { type: "image/jpeg" }
-                    );
-
-                    if (navigator.canShare &&
-                        navigator.canShare({ files: [arquivo] })) {
-                        navigator.share({
-                            files: [arquivo],
-                            title: "Ficha SIGEC"
-                        });
-                    } else {
-                        const a = document.createElement("a");
-                        a.href = imagem;
-                        a.download = "Ficha_" + id + ".jpg";
-                        a.click();
-                    }
-                });
         }
 
         function openList(tipo) {
