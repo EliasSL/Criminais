@@ -242,84 +242,145 @@ gap:20px;
             justify-content: center;
         }
 
-        /* ===== CARDS - VERSÃO MAIS COMPACTA ===== */
-.card {
-    background: #3b2b1a;
-    border-radius: 24px;
-    padding: 30px 24px;           /* ← reduzido */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    border: 2px solid #00aaff;
-    box-shadow:
-        0 0 5px #00aaff,
-        0 0 12px #00aaff,
-        0 0 20px #ffffff,
-        0 0 30px #ffffff,
-        0 0 40px #66ccff,
-        0 4px 12px rgba(0,0,0,0.5);
-    transition: all 0.3s ease;
-    cursor: pointer;
-    position: relative;
-    min-height: 200px;            /* ← reduzido de 280px */
-}
+        .card {
+            background: #3b2b1a;
+            border-radius: 24px;
+            padding: 42px 30px;
+           display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+text-align: center;
+ border: 2px solid #00aaff;
 
-.card h3 {
-    font-size: 1.5rem;            /* ← reduzido de 2rem */
+box-shadow:
+    0 0 5px #00aaff,
+    0 0 12px #00aaff,
+    0 0 20px #ffffff,
+    0 0 30px #ffffff,
+    0 0 40px #66ccff,
+    0 4px 12px rgba(0,0,0,0.5);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            min-height: 280px;
+        }
+
+        .card:active {
+            transform: scale(0.97);
+            box-shadow:
+                0 0 5px #d4af37,
+                0 0 15px #ffff00,
+                0 0 25px #ccff00,
+                0 0 35px #99ff00;
+        }
+
+        .card h3 {
+    font-size: 2rem;
     color: #f5e6c8;
     letter-spacing: 0.5px;
+
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 12px;                    /* ← reduzido de 18px */
+    gap: 18px;
+
     text-align: center;
 }
-
-.card .badge {
+        .card .badge {
     background: #f5c842;
     color: #1a1a1a;
     font-weight: 900;
     border-radius: 40px;
-    font-size: 2.5rem;            /* ← reduzido de 3.5rem */
-    padding: 8px 20px;            /* ← reduzido de 12px 30px */
-    min-width: 100px;             /* ← reduzido de 120px */
+
+    font-size: 3.5rem;
+
+    padding: 12px 30px;
+    min-width: 120px;
+
     text-align: center;
 }
-
-.card .card-sub {
-    font-size: 0.9rem;            /* ← antes era 1rem */
+        .card .card-sub {
+    font-size: 1rem;
     color: #d6d6d6;
-    margin-top: 10px;             /* ← reduzido de 15px */
+    margin-top: 15px;
+
     display: flex;
     justify-content: center;
     align-items: center;
+
     text-align: center;
 }
 
-/* ===== RESPONSIVO (celular) ===== */
-@media (max-width: 480px) {
-    .card {
-        padding: 32px 24px;       /* ← reduzido de 48px 32px */
-        min-height: 240px;        /* ← reduzido de 320px */
-    }
+        .card.mandados {
+          border: 2px solid #FFD700;
+            box-shadow:
+                0 0 4px #FFD700,
+                0 0 10px #FFD700,
+                0 0 16px #ffff00,
+                0 0 24px #ffff00,
+                0 0 32px #ff3300,
+                0 0 42px #ff0000,
+                0 4px 12px rgba(0,0,0,0.5);
+            animation: neonMandado 2s infinite;
+        }
 
-    .card h3 {
-        font-size: 1.2rem;
-    }
-
-    .card .badge {
-        font-size: 2rem;
-        padding: 6px 16px;
-        min-width: 80px;
-    }
-
-    .card .card-sub {
-        font-size: 0.8rem;
-    }
+        @keyframes neonMandado {
+            0% {
+                box-shadow:
+                    0 0 4px #FFD700,
+                    0 0 10px #FFD700,
+                    0 0 16px #ffff00,
+                    0 0 24px #ffff00,
+                    0 0 32px #ff3300;
+            }
+            50% {
+                box-shadow:
+                    0 0 8px #FFD700,
+                    0 0 18px #FFD700,
+                    0 0 28px #ffff00,
+                    0 0 38px #ff3300,
+                    0 0 50px #ff0000;
+            }
+            100% {
+                box-shadow:
+                    0 0 4px #FFD700,
+                    0 0 10px #FFD700,
+                    0 0 16px #ffff00,
+                    0 0 24px #ffff00,
+                    0 0 32px #ff3300;
+            }
+        }
+#cardAnotacoes {
+    animation: neonAzul 2s infinite;
 }
+ @keyframes neonAzul {
+
+    0% {
+        box-shadow:
+            0 0 5px #00aaff,
+            0 0 12px #00aaff,
+            0 0 20px #ffffff,
+            0 0 30px #66ccff;
+    }
+
+    50% {
+        box-shadow:
+            0 0 10px #00aaff,
+            0 0 20px #00aaff,
+            0 0 35px #ffffff,
+            0 0 50px #66ccff;
+    }
+
+    100% {
+        box-shadow:
+            0 0 5px #00aaff,
+            0 0 12px #00aaff,
+            0 0 20px #ffffff,
+            0 0 30px #66ccff;
+    }
+}   
     /* ===== PÁGINAS DE LISTA ===== */
         .list-page {
             display: none;
