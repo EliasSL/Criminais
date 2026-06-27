@@ -461,25 +461,25 @@
             box-shadow: 0 0 10px rgba(56,189,248,0.6);
         }
 
-        /* Botão SALVAR SCREENSHOT */
-        .btn-detail.salvar-screenshot {
+        /* Botão ABRIR IMAGEM */
+        .btn-detail.abrir-imagem {
             background: linear-gradient(135deg, #ff6f00, #ff9100);
             color: #fff;
             border-color: #ff6f00;
             box-shadow: 0 0 20px rgba(255, 111, 0, 0.6);
             font-weight: 700;
-            animation: pulseSalvar 2s infinite;
+            animation: pulseAbrir 2s infinite;
             padding: 12px 24px;
             font-size: 1rem;
         }
 
-        @keyframes pulseSalvar {
+        @keyframes pulseAbrir {
             0% { box-shadow: 0 0 10px rgba(255, 111, 0, 0.4); transform: scale(1); }
             50% { box-shadow: 0 0 30px rgba(255, 111, 0, 0.8); transform: scale(1.02); }
             100% { box-shadow: 0 0 10px rgba(255, 111, 0, 0.4); transform: scale(1); }
         }
 
-        .btn-detail.salvar-screenshot:active {
+        .btn-detail.abrir-imagem:active {
             transform: scale(0.95);
         }
 
@@ -1112,49 +1112,53 @@
         }
 
         // ============================================================
-        // FUNÇÃO PARA SALVAR SCREENSHOT - ABRE EM NOVA JANELA COM BOTÃO WHATSAPP
+        // FUNÇÃO PARA ABRIR IMAGEM EM NOVA JANELA COM BOTÕES FUNCIONAIS
         // ============================================================
-        function salvarScreenshot() {
+        function abrirImagemCompleta() {
             if (!currentImagemData) {
-                alert('Nenhuma ficha para salvar. Gere a ficha primeiro.');
+                alert('Nenhuma ficha para abrir. Gere a ficha primeiro.');
                 return;
             }
 
             showLoading("Abrindo imagem...");
 
             try {
-                // Abrir em nova janela com botões
                 const win = window.open('', '_blank');
                 if (win) {
                     const nomeArquivo = 'FICHA_SIGEC_' + currentRegistroId + '.jpg';
                     
-                    win.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">');
+                    // HTML completo da nova janela com botões funcionais
+                    win.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">');
                     win.document.write('<title>Ficha SIGEC #' + currentRegistroId + '</title>');
                     win.document.write('<style>');
-                    win.document.write('body { margin:0; padding:20px; background:#1a1a1a; display:flex; flex-direction:column; align-items:center; min-height:100vh; font-family:Arial,sans-serif; }');
-                    win.document.write('.container { max-width:500px; width:100%; }');
-                    win.document.write('img { width:100%; border-radius:12px; box-shadow:0 8px 30px rgba(0,0,0,0.6); }');
-                    win.document.write('.botoes { display:flex; flex-direction:column; gap:12px; margin-top:20px; width:100%; }');
-                    win.document.write('.btn-whatsapp { background:#25D366; color:#fff; border:none; padding:16px 20px; border-radius:12px; font-size:1.1rem; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:10px; transition:0.2s; }');
+                    win.document.write('* { margin:0; padding:0; box-sizing:border-box; }');
+                    win.document.write('body { background:#1a1a1a; display:flex; justify-content:center; align-items:center; min-height:100vh; font-family:Arial,sans-serif; padding:15px; }');
+                    win.document.write('.container { max-width:500px; width:100%; background:#2c2c2c; border-radius:20px; padding:20px; border:1px solid #444; }');
+                    win.document.write('h2 { color:#f5c842; text-align:center; font-size:1.1rem; margin-bottom:15px; }');
+                    win.document.write('img { width:100%; border-radius:12px; box-shadow:0 8px 30px rgba(0,0,0,0.6); display:block; }');
+                    win.document.write('.botoes { display:flex; flex-direction:column; gap:10px; margin-top:18px; }');
+                    win.document.write('.btn-whatsapp { background:#25D366; color:#fff; border:none; padding:15px; border-radius:12px; font-size:1rem; font-weight:700; cursor:pointer; transition:0.2s; }');
                     win.document.write('.btn-whatsapp:active { transform:scale(0.96); }');
-                    win.document.write('.btn-salvar { background:#ff6f00; color:#fff; border:none; padding:14px 20px; border-radius:12px; font-size:1rem; font-weight:700; cursor:pointer; transition:0.2s; }');
+                    win.document.write('.btn-salvar { background:#ff6f00; color:#fff; border:none; padding:15px; border-radius:12px; font-size:1rem; font-weight:700; cursor:pointer; transition:0.2s; }');
                     win.document.write('.btn-salvar:active { transform:scale(0.96); }');
-                    win.document.write('.btn-voltar { background:#333; color:#ccc; border:none; padding:12px 20px; border-radius:12px; font-size:0.9rem; cursor:pointer; transition:0.2s; }');
-                    win.document.write('.btn-voltar:active { transform:scale(0.96); }');
-                    win.document.write('.info { color:#888; font-size:0.8rem; margin-top:12px; text-align:center; }');
+                    win.document.write('.btn-fechar { background:#333; color:#ccc; border:none; padding:12px; border-radius:12px; font-size:0.9rem; cursor:pointer; transition:0.2s; }');
+                    win.document.write('.btn-fechar:active { transform:scale(0.96); }');
+                    win.document.write('.info { color:#666; font-size:0.7rem; text-align:center; margin-top:10px; }');
                     win.document.write('</style>');
                     win.document.write('</head><body>');
                     win.document.write('<div class="container">');
-                    win.document.write('<h2 style="color:#f5c842;text-align:center;font-size:1.2rem;margin-bottom:15px;">📋 Ficha SIGEC #' + currentRegistroId + '</h2>');
+                    win.document.write('<h2>📋 Ficha SIGEC #' + currentRegistroId + '</h2>');
                     win.document.write('<img src="' + currentImagemData + '" alt="Ficha SIGEC" id="fichaImg">');
                     win.document.write('<div class="botoes">');
                     win.document.write('<button class="btn-whatsapp" onclick="enviarWhatsApp()">📤 ENVIAR PARA WHATSAPP</button>');
-                    win.document.write('<button class="btn-salvar" onclick="salvarImagem()">💾 SALVAR IMAGEM</button>');
-                    win.document.write('<button class="btn-voltar" onclick="window.close()">✕ FECHAR</button>');
+                    win.document.write('<button class="btn-salvar" onclick="salvarImagem()">💾 BAIXAR IMAGEM</button>');
+                    win.document.write('<button class="btn-fechar" onclick="fecharJanela()">✕ FECHAR</button>');
                     win.document.write('</div>');
                     win.document.write('<div class="info">💡 Clique com o botão direito na imagem para salvar na galeria</div>');
                     win.document.write('</div>');
                     win.document.write('<script>');
+                    
+                    // Função para enviar WhatsApp
                     win.document.write('function enviarWhatsApp() {');
                     win.document.write('  var img = document.getElementById("fichaImg");');
                     win.document.write('  var canvas = document.createElement("canvas");');
@@ -1178,6 +1182,8 @@
                     win.document.write('    }');
                     win.document.write('  }, "image/jpeg", 0.95);');
                     win.document.write('}');
+                    
+                    // Função para salvar imagem
                     win.document.write('function salvarImagem() {');
                     win.document.write('  var img = document.getElementById("fichaImg");');
                     win.document.write('  var canvas = document.createElement("canvas");');
@@ -1196,6 +1202,12 @@
                     win.document.write('    setTimeout(function(){ URL.revokeObjectURL(url); }, 3000);');
                     win.document.write('  }, "image/jpeg", 0.95);');
                     win.document.write('}');
+                    
+                    // Função para fechar janela
+                    win.document.write('function fecharJanela() {');
+                    win.document.write('  window.close();');
+                    win.document.write('}');
+                    
                     win.document.write('<\/script>');
                     win.document.write('</body></html>');
                     win.document.close();
@@ -1203,8 +1215,8 @@
                     hideLoading();
                     mostrarToast('📸 IMAGEM ABERTA! Use os botões para enviar ou salvar.');
                 } else {
-                    // Fallback: download direto
                     hideLoading();
+                    // Fallback: download direto
                     downloadDireto(currentImagemData);
                 }
             } catch (e) {
@@ -1224,7 +1236,7 @@
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
-                mostrarToast('📥 SCREENSHOT SALVO! Verifique a pasta Downloads.');
+                mostrarToast('📥 IMAGEM BAIXADA! Verifique a pasta Downloads.');
             } catch (e) {
                 console.error('Erro no download:', e);
                 alert('Não foi possível salvar. Tente novamente.');
@@ -1239,7 +1251,7 @@
                 toast.classList.add('show');
                 setTimeout(() => {
                     toast.classList.remove('show');
-                }, 5000);
+                }, 4000);
             } else {
                 alert(mensagem);
             }
@@ -1411,7 +1423,7 @@
                                     <div class="copy-toast" id="copyToast">✅ IMAGEM ABERTA!</div>
                                 </div>
                                 <div style="display:flex;gap:12px;width:100%;flex-wrap:wrap;">
-                                    <button class="btn-detail salvar-screenshot" onclick="salvarScreenshot()" style="flex:2;">
+                                    <button class="btn-detail abrir-imagem" onclick="abrirImagemCompleta()" style="flex:2;">
                                         📸 ABRIR IMAGEM
                                     </button>
                                     <button class="btn-detail" onclick="voltarListaCadastro()" style="flex:1;">
@@ -1480,7 +1492,7 @@
                         indicator.textContent = '📸 Abrindo...';
                     }
                     
-                    salvarScreenshot();
+                    abrirImagemCompleta();
                     
                     setTimeout(() => {
                         if (indicator) {
