@@ -1072,6 +1072,7 @@
         let currentListType = null;
         let currentImagemData = null;
         let currentRegistroId = null;
+        let currentNome = null;
 
         // ============================================================
         // FUNÇÃO PARA FORMATAR DATA
@@ -1111,7 +1112,7 @@
         }
 
         // ============================================================
-        // FUNÇÃO DEFINITIVA PARA SALVAR SCREENSHOT - ANDROID
+        // FUNÇÃO PARA SALVAR SCREENSHOT - ABRE EM NOVA JANELA COM BOTÃO WHATSAPP
         // ============================================================
         function salvarScreenshot() {
             if (!currentImagemData) {
@@ -1119,32 +1120,96 @@
                 return;
             }
 
-            showLoading("Salvando screenshot...");
+            showLoading("Abrindo imagem...");
 
             try {
-                // Método mais confiável para Android: Abrir a imagem em uma nova guia
-                // e usar o menu "Salvar imagem" do navegador
+                // Abrir em nova janela com botões
                 const win = window.open('', '_blank');
                 if (win) {
-                    win.document.write('<!DOCTYPE html><html><head><title>Ficha SIGEC</title></head><body style="margin:0;display:flex;justify-content:center;align-items:center;min-height:100vh;background:#1a1a1a;">');
-                    win.document.write('<img src="' + currentImagemData + '" style="max-width:100%;max-height:100%;" alt="Ficha SIGEC" id="fichaImg">');
+                    const nomeArquivo = 'FICHA_SIGEC_' + currentRegistroId + '.jpg';
+                    
+                    win.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">');
+                    win.document.write('<title>Ficha SIGEC #' + currentRegistroId + '</title>');
+                    win.document.write('<style>');
+                    win.document.write('body { margin:0; padding:20px; background:#1a1a1a; display:flex; flex-direction:column; align-items:center; min-height:100vh; font-family:Arial,sans-serif; }');
+                    win.document.write('.container { max-width:500px; width:100%; }');
+                    win.document.write('img { width:100%; border-radius:12px; box-shadow:0 8px 30px rgba(0,0,0,0.6); }');
+                    win.document.write('.botoes { display:flex; flex-direction:column; gap:12px; margin-top:20px; width:100%; }');
+                    win.document.write('.btn-whatsapp { background:#25D366; color:#fff; border:none; padding:16px 20px; border-radius:12px; font-size:1.1rem; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:10px; transition:0.2s; }');
+                    win.document.write('.btn-whatsapp:active { transform:scale(0.96); }');
+                    win.document.write('.btn-salvar { background:#ff6f00; color:#fff; border:none; padding:14px 20px; border-radius:12px; font-size:1rem; font-weight:700; cursor:pointer; transition:0.2s; }');
+                    win.document.write('.btn-salvar:active { transform:scale(0.96); }');
+                    win.document.write('.btn-voltar { background:#333; color:#ccc; border:none; padding:12px 20px; border-radius:12px; font-size:0.9rem; cursor:pointer; transition:0.2s; }');
+                    win.document.write('.btn-voltar:active { transform:scale(0.96); }');
+                    win.document.write('.info { color:#888; font-size:0.8rem; margin-top:12px; text-align:center; }');
+                    win.document.write('</style>');
+                    win.document.write('</head><body>');
+                    win.document.write('<div class="container">');
+                    win.document.write('<h2 style="color:#f5c842;text-align:center;font-size:1.2rem;margin-bottom:15px;">📋 Ficha SIGEC #' + currentRegistroId + '</h2>');
+                    win.document.write('<img src="' + currentImagemData + '" alt="Ficha SIGEC" id="fichaImg">');
+                    win.document.write('<div class="botoes">');
+                    win.document.write('<button class="btn-whatsapp" onclick="enviarWhatsApp()">📤 ENVIAR PARA WHATSAPP</button>');
+                    win.document.write('<button class="btn-salvar" onclick="salvarImagem()">💾 SALVAR IMAGEM</button>');
+                    win.document.write('<button class="btn-voltar" onclick="window.close()">✕ FECHAR</button>');
+                    win.document.write('</div>');
+                    win.document.write('<div class="info">💡 Clique com o botão direito na imagem para salvar na galeria</div>');
+                    win.document.write('</div>');
                     win.document.write('<script>');
-                    win.document.write('document.getElementById("fichaImg").addEventListener("load", function() {');
-                    win.document.write('  this.style.display = "block";');
-                    win.document.write('});');
+                    win.document.write('function enviarWhatsApp() {');
+                    win.document.write('  var img = document.getElementById("fichaImg");');
+                    win.document.write('  var canvas = document.createElement("canvas");');
+                    win.document.write('  canvas.width = img.naturalWidth || img.width;');
+                    win.document.write('  canvas.height = img.naturalHeight || img.height;');
+                    win.document.write('  var ctx = canvas.getContext("2d");');
+                    win.document.write('  ctx.drawImage(img, 0, 0);');
+                    win.document.write('  canvas.toBlob(function(blob) {');
+                    win.document.write('    var file = new File([blob], "' + nomeArquivo + '", { type: "image/jpeg" });');
+                    win.document.write('    if (navigator.canShare && navigator.canShare({ files: [file] })) {');
+                    win.document.write('      navigator.share({ files: [file], title: "Ficha SIGEC #' + currentRegistroId + '" });');
+                    win.document.write('    } else {');
+                    win.document.write('      var url = URL.createObjectURL(blob);');
+                    win.document.write('      var link = document.createElement("a");');
+                    win.document.write('      link.href = url;');
+                    win.document.write('      link.download = "' + nomeArquivo + '";');
+                    win.document.write('      document.body.appendChild(link);');
+                    win.document.write('      link.click();');
+                    win.document.write('      document.body.removeChild(link);');
+                    win.document.write('      setTimeout(function(){ URL.revokeObjectURL(url); }, 3000);');
+                    win.document.write('    }');
+                    win.document.write('  }, "image/jpeg", 0.95);');
+                    win.document.write('}');
+                    win.document.write('function salvarImagem() {');
+                    win.document.write('  var img = document.getElementById("fichaImg");');
+                    win.document.write('  var canvas = document.createElement("canvas");');
+                    win.document.write('  canvas.width = img.naturalWidth || img.width;');
+                    win.document.write('  canvas.height = img.naturalHeight || img.height;');
+                    win.document.write('  var ctx = canvas.getContext("2d");');
+                    win.document.write('  ctx.drawImage(img, 0, 0);');
+                    win.document.write('  canvas.toBlob(function(blob) {');
+                    win.document.write('    var url = URL.createObjectURL(blob);');
+                    win.document.write('    var link = document.createElement("a");');
+                    win.document.write('    link.href = url;');
+                    win.document.write('    link.download = "' + nomeArquivo + '";');
+                    win.document.write('    document.body.appendChild(link);');
+                    win.document.write('    link.click();');
+                    win.document.write('    document.body.removeChild(link);');
+                    win.document.write('    setTimeout(function(){ URL.revokeObjectURL(url); }, 3000);');
+                    win.document.write('  }, "image/jpeg", 0.95);');
+                    win.document.write('}');
                     win.document.write('<\/script>');
                     win.document.write('</body></html>');
                     win.document.close();
                     
                     hideLoading();
-                    mostrarToast('📸 IMAGEM ABERTA! Clique com o botão direito e selecione "Salvar imagem como..."');
+                    mostrarToast('📸 IMAGEM ABERTA! Use os botões para enviar ou salvar.');
                 } else {
                     // Fallback: download direto
+                    hideLoading();
                     downloadDireto(currentImagemData);
                 }
             } catch (e) {
+                hideLoading();
                 console.error('Erro ao abrir janela:', e);
-                // Tentar download direto
                 downloadDireto(currentImagemData);
             }
         }
@@ -1159,10 +1224,8 @@
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
-                hideLoading();
                 mostrarToast('📥 SCREENSHOT SALVO! Verifique a pasta Downloads.');
             } catch (e) {
-                hideLoading();
                 console.error('Erro no download:', e);
                 alert('Não foi possível salvar. Tente novamente.');
             }
@@ -1176,7 +1239,7 @@
                 toast.classList.add('show');
                 setTimeout(() => {
                     toast.classList.remove('show');
-                }, 6000);
+                }, 5000);
             } else {
                 alert(mensagem);
             }
@@ -1194,6 +1257,7 @@
             }
 
             currentRegistroId = id;
+            currentNome = rec.NOME || 'Sem nome';
 
             const dataNasc = formatarData(rec.DATA_NASC);
 
@@ -1343,19 +1407,19 @@
                                         style="width:100%;max-width:420px;border-radius:10px;box-shadow:0 8px 25px rgba(0,0,0,.45);display:block;"
                                         oncontextmenu="return false;"
                                     >
-                                    <div class="long-press-indicator" id="longPressIndicator">📌 Mantenha pressionado para salvar</div>
-                                    <div class="copy-toast" id="copyToast">✅ SCREENSHOT SALVO!</div>
+                                    <div class="long-press-indicator" id="longPressIndicator">📌 Mantenha pressionado para abrir</div>
+                                    <div class="copy-toast" id="copyToast">✅ IMAGEM ABERTA!</div>
                                 </div>
                                 <div style="display:flex;gap:12px;width:100%;flex-wrap:wrap;">
                                     <button class="btn-detail salvar-screenshot" onclick="salvarScreenshot()" style="flex:2;">
-                                        📸 SALVAR SCREENSHOT
+                                        📸 ABRIR IMAGEM
                                     </button>
                                     <button class="btn-detail" onclick="voltarListaCadastro()" style="flex:1;">
                                         ← VOLTAR
                                     </button>
                                 </div>
                                 <div style="font-size:0.7rem;color:#888;text-align:center;margin-top:4px;">
-                                    💡 Clique no botão ou mantenha pressionado a imagem para salvar o screenshot
+                                    💡 Clique no botão ou mantenha pressionado a imagem para abrir e enviar via WhatsApp
                                 </div>
                             </div>
                         `;
@@ -1413,7 +1477,7 @@
                 timerId = setTimeout(() => {
                     isLongPress = true;
                     if (indicator) {
-                        indicator.textContent = '📸 Salvando...';
+                        indicator.textContent = '📸 Abrindo...';
                     }
                     
                     salvarScreenshot();
