@@ -1434,20 +1434,13 @@ dynamic.innerHTML = `
     ">
 
     <img
-    id="fichaGeradaImg"
-    src="${imagem}"
-    draggable="false"
-    style="
-        width:100%;
-        max-width:420px;
-        border-radius:10px;
-        box-shadow:0 8px 25px rgba(0,0,0,.45);
-
-        user-select:auto;
-        -webkit-user-select:auto;
-        -webkit-touch-callout:default;
-        pointer-events:auto;
-    ">
+        src="${imagem}"
+        style="
+            width:100%;
+            max-width:420px;
+            border-radius:10px;
+            box-shadow:0 8px 25px rgba(0,0,0,.45);
+        ">
 
     <div
         style="
@@ -1472,35 +1465,7 @@ dynamic.innerHTML = `
 
 </div>
 `;
-const fichaImg = document.getElementById("fichaGeradaImg");
 
-if (fichaImg) {
-
-    let pressTimer;
-
-    fichaImg.addEventListener("touchstart", () => {
-
-        pressTimer = setTimeout(() => {
-
-            try {
-                if (navigator.vibrate) {
-                    navigator.vibrate(150);
-                }
-            } catch(e){}
-
-        }, 3000);
-
-    }, { passive: true });
-
-    fichaImg.addEventListener("touchend", () => {
-        clearTimeout(pressTimer);
-    });
-
-    fichaImg.addEventListener("touchcancel", () => {
-        clearTimeout(pressTimer);
-    });
-
-}
 elemento.remove();
         }).catch(err => {
             hideLoading();
