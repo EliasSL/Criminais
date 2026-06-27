@@ -1111,7 +1111,7 @@
         }
 
         // ============================================================
-        // FUNÇÃO DEFINITIVA PARA SALVAR SCREENSHOT NO ANDROID
+        // FUNÇÃO DEFINITIVA PARA SALVAR SCREENSHOT - ANDROID
         // ============================================================
         function salvarScreenshot() {
             if (!currentImagemData) {
@@ -1122,106 +1122,49 @@
             showLoading("Salvando screenshot...");
 
             try {
-                // Criar um canvas para garantir a imagem
-                const canvas = document.createElement('canvas');
-                const img = new Image();
-                img.crossOrigin = 'anonymous';
-                
-                img.onload = function() {
-                    canvas.width = img.width;
-                    canvas.height = img.height;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0);
-                    
-                    canvas.toBlob(function(blob) {
-                        hideLoading();
-                        
-                        if (!blob) {
-                            alert('Erro ao processar a imagem.');
-                            return;
-                        }
-                        
-                        const fileName = 'FICHA_SIGEC_' + currentRegistroId + '_' + new Date().toISOString().slice(0,10) + '.jpg';
-                        
-                        // === MÉTODO 1: TENTAR SHARE API (MAIS CONFIÁVEL NO ANDROID) ===
-                        if (navigator.canShare && navigator.canShare({ files: [new File([blob], fileName, { type: 'image/jpeg' })] })) {
-                            const file = new File([blob], fileName, { type: 'image/jpeg' });
-                            navigator.share({
-                                files: [file],
-                                title: 'Ficha SIGEC #' + currentRegistroId
-                            }).then(() => {
-                                mostrarToast('✅ SCREENSHOT SALVO NA GALERIA!');
-                            }).catch((err) => {
-                                if (err.name === 'AbortError') {
-                                    mostrarToast('✅ SCREENSHOT SALVO NA GALERIA!');
-                                } else {
-                                    // Fallback: download direto
-                                    downloadDireto(blob, fileName);
-                                }
-                            });
-                        } else {
-                            // === MÉTODO 2: DOWNLOAD DIRETO (FUNCIONA NO ANDROID) ===
-                            downloadDireto(blob, fileName);
-                        }
-                    }, 'image/jpeg', 0.95);
-                };
-                
-                img.onerror = function() {
-                    hideLoading();
-                    // Tentar download direto mesmo com erro
-                    downloadDiretoFallback(currentImagemData);
-                };
-                
-                img.src = currentImagemData;
-                
-            } catch (e) {
-                hideLoading();
-                console.error('Erro ao salvar:', e);
-                // Último recurso
-                downloadDiretoFallback(currentImagemData);
-            }
-        }
-
-        // ===== MÉTODO DE DOWNLOAD DIRETO (FUNCIONA NO ANDROID) =====
-        function downloadDireto(blob, fileName) {
-            try {
-                // Criar URL do blob
-                const url = URL.createObjectURL(blob);
-                
-                // Criar link de download
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = fileName || 'ficha_sigec.jpg';
-                link.style.display = 'none';
-                document.body.appendChild(link);
-                
-                // Disparar o download
-                link.click();
-                
-                // Limpar
-                setTimeout(() => {
-                    document.body.removeChild(link);
-                    URL.revokeObjectURL(url);
-                }, 100);
-                
-                mostrarToast('📥 SCREENSHOT SALVO! Verifique a pasta Downloads.');
-            } catch (e) {
-                console.error('Erro no download:', e);
-                downloadDiretoFallback(fileName);
-            }
-        }
-
-        // ===== FALLBACK: ABRIR EM NOVA ABA =====
-        function downloadDiretoFallback(dataUrl) {
-            try {
-                const win = window.open(dataUrl, '_blank');
+                // Método mais confiável para Android: Abrir a imagem em uma nova guia
+                // e usar o menu "Salvar imagem" do navegador
+                const win = window.open('', '_blank');
                 if (win) {
-                    mostrarToast('🔄 Imagem aberta em nova aba. Clique com o botão direito e selecione "Salvar imagem como..."');
+                    win.document.write('<!DOCTYPE html><html><head><title>Ficha SIGEC</title></head><body style="margin:0;display:flex;justify-content:center;align-items:center;min-height:100vh;background:#1a1a1a;">');
+                    win.document.write('<img src="' + currentImagemData + '" style="max-width:100%;max-height:100%;" alt="Ficha SIGEC" id="fichaImg">');
+                    win.document.write('<script>');
+                    win.document.write('document.getElementById("fichaImg").addEventListener("load", function() {');
+                    win.document.write('  this.style.display = "block";');
+                    win.document.write('});');
+                    win.document.write('<\/script>');
+                    win.document.write('</body></html>');
+                    win.document.close();
+                    
+                    hideLoading();
+                    mostrarToast('📸 IMAGEM ABERTA! Clique com o botão direito e selecione "Salvar imagem como..."');
                 } else {
-                    alert('Não foi possível salvar. Tente novamente.');
+                    // Fallback: download direto
+                    downloadDireto(currentImagemData);
                 }
             } catch (e) {
-                alert('Erro ao salvar: ' + e.message);
+                console.error('Erro ao abrir janela:', e);
+                // Tentar download direto
+                downloadDireto(currentImagemData);
+            }
+        }
+
+        // ===== MÉTODO DE DOWNLOAD DIRETO (FALLBACK) =====
+        function downloadDireto(dataUrl) {
+            try {
+                const link = document.createElement('a');
+                link.href = dataUrl;
+                const fileName = 'FICHA_SIGEC_' + currentRegistroId + '_' + new Date().toISOString().slice(0,10) + '.jpg';
+                link.download = fileName;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                hideLoading();
+                mostrarToast('📥 SCREENSHOT SALVO! Verifique a pasta Downloads.');
+            } catch (e) {
+                hideLoading();
+                console.error('Erro no download:', e);
+                alert('Não foi possível salvar. Tente novamente.');
             }
         }
 
@@ -1233,7 +1176,7 @@
                 toast.classList.add('show');
                 setTimeout(() => {
                     toast.classList.remove('show');
-                }, 5000);
+                }, 6000);
             } else {
                 alert(mensagem);
             }
@@ -1401,7 +1344,7 @@
                                         oncontextmenu="return false;"
                                     >
                                     <div class="long-press-indicator" id="longPressIndicator">📌 Mantenha pressionado para salvar</div>
-                                    <div class="copy-toast" id="copyToast">✅ SCREENSHOT SALVO NA GALERIA!</div>
+                                    <div class="copy-toast" id="copyToast">✅ SCREENSHOT SALVO!</div>
                                 </div>
                                 <div style="display:flex;gap:12px;width:100%;flex-wrap:wrap;">
                                     <button class="btn-detail salvar-screenshot" onclick="salvarScreenshot()" style="flex:2;">
