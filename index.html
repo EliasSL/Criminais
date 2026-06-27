@@ -461,23 +461,23 @@
             box-shadow: 0 0 10px rgba(56,189,248,0.6);
         }
 
-        /* Botão ENVIAR/SALVAR especial */
-        .btn-detail.salvar-galeria {
-            background: linear-gradient(135deg, #00c853, #00e676);
+        /* Botão SALVAR SCREENSHOT */
+        .btn-detail.salvar-screenshot {
+            background: linear-gradient(135deg, #ff6f00, #ffab00);
             color: #fff;
-            border-color: #00c853;
-            box-shadow: 0 0 15px rgba(0, 200, 83, 0.5);
+            border-color: #ff6f00;
+            box-shadow: 0 0 15px rgba(255, 111, 0, 0.5);
             font-weight: 700;
             animation: pulseSalvar 2s infinite;
         }
 
         @keyframes pulseSalvar {
-            0% { box-shadow: 0 0 10px rgba(0, 200, 83, 0.4); }
-            50% { box-shadow: 0 0 25px rgba(0, 200, 83, 0.8); }
-            100% { box-shadow: 0 0 10px rgba(0, 200, 83, 0.4); }
+            0% { box-shadow: 0 0 10px rgba(255, 111, 0, 0.4); }
+            50% { box-shadow: 0 0 25px rgba(255, 111, 0, 0.8); }
+            100% { box-shadow: 0 0 10px rgba(255, 111, 0, 0.4); }
         }
 
-        .btn-detail.salvar-galeria:active {
+        .btn-detail.salvar-screenshot:active {
             transform: scale(0.95);
         }
 
@@ -767,7 +767,7 @@
             font-weight: 600;
         }
 
-        /* ===== ESTILO DA IMAGEM GERADA (LONG PRESS) ===== */
+        /* ===== ESTILO DA IMAGEM GERADA ===== */
         .ficha-image-container {
             position: relative;
             display: inline-block;
@@ -839,6 +839,7 @@
             text-align: center;
             border: 2px solid #f5c842;
             box-shadow: 0 0 30px rgba(245,200,66,0.3);
+            z-index: 10;
         }
 
         .ficha-image-container .copy-toast.show {
@@ -1052,7 +1053,7 @@
         <!-- ========== LOADING ========== -->
         <div class="loading-overlay" id="loadingOverlay">
             <div class="loading-spinner"></div>
-            <div class="loading-text" id="loadingText">Gerando PDF...</div>
+            <div class="loading-text" id="loadingText">Processando...</div>
         </div>
     </div>
 
@@ -1066,6 +1067,8 @@
         let allRecords = [];
         let currentView = 'dashboard';
         let currentListType = null;
+        let currentImagemData = null;
+        let currentRegistroId = null;
 
         // ============================================================
         // FUNÇÃO PARA FORMATAR DATA
@@ -1105,98 +1108,104 @@
         }
 
         // ============================================================
-        // FUNÇÃO PARA SALVAR IMAGEM NA GALERIA (BOTÃO ENVIAR)
+        // FUNÇÃO PARA SALVAR SCREENSHOT DA IMAGEM (CORRIGIDA)
         // ============================================================
-        function salvarImagemGaleria(imagemDataUrl, idRegistro) {
-            // Mostrar loading
-            showLoading("Salvando imagem...");
+        function salvarScreenshotGaleria() {
+            if (!currentImagemData) {
+                alert('Nenhuma imagem para salvar.');
+                return;
+            }
+
+            showLoading("Salvando screenshot...");
 
             try {
-                // Criar um canvas para garantir a imagem
+                // Criar um elemento img para carregar a imagem
                 const imgTemp = new Image();
                 imgTemp.crossOrigin = 'anonymous';
                 
                 imgTemp.onload = function() {
                     try {
+                        // Criar canvas para capturar a imagem
                         const canvas = document.createElement('canvas');
                         canvas.width = imgTemp.width;
                         canvas.height = imgTemp.height;
                         const ctx = canvas.getContext('2d');
                         ctx.drawImage(imgTemp, 0, 0);
                         
+                        // Converter para blob
                         canvas.toBlob(function(blob) {
+                            hideLoading();
+                            
                             if (!blob) {
-                                hideLoading();
-                                alert('Erro ao processar imagem.');
+                                alert('Erro ao processar a imagem.');
                                 return;
                             }
                             
-                            const fileName = 'ficha_sigec_' + idRegistro + '_' + Date.now() + '.jpg';
+                            const fileName = 'FICHA_SIGEC_' + currentRegistroId + '_' + Date.now() + '.jpg';
                             const file = new File([blob], fileName, { type: 'image/jpeg' });
                             
-                            // TENTATIVA 1: Usar navigator.share (Android/iOS)
+                            // TENTATIVA 1: Usar navigator.share para salvar na galeria
                             if (navigator.canShare && navigator.canShare({ files: [file] })) {
                                 navigator.share({
                                     files: [file],
-                                    title: 'Ficha SIGEC #' + idRegistro
+                                    title: 'Ficha SIGEC #' + currentRegistroId
                                 }).then(() => {
-                                    hideLoading();
-                                    mostrarToast('✅ IMAGEM SALVA NA GALERIA!');
+                                    mostrarToast('✅ SCREENSHOT SALVO NA GALERIA!');
                                 }).catch((err) => {
-                                    hideLoading();
                                     if (err.name === 'AbortError') {
-                                        mostrarToast('✅ IMAGEM SALVA NA GALERIA!');
+                                        mostrarToast('✅ SCREENSHOT SALVO NA GALERIA!');
                                     } else {
-                                        // Fallback para download
-                                        salvarViaDownload(canvas.toDataURL('image/jpeg', 0.95), fileName);
+                                        // Fallback: tentar download
+                                        downloadFallback(canvas.toDataURL('image/jpeg', 0.95), fileName);
                                     }
                                 });
                             } else {
-                                hideLoading();
                                 // TENTATIVA 2: Download via link
-                                salvarViaDownload(canvas.toDataURL('image/jpeg', 0.95), fileName);
+                                downloadFallback(canvas.toDataURL('image/jpeg', 0.95), fileName);
                             }
                         }, 'image/jpeg', 0.95);
                     } catch (e) {
                         hideLoading();
                         console.error('Erro no canvas:', e);
-                        salvarViaDownload(imagemDataUrl, 'ficha_sigec_' + idRegistro + '.jpg');
+                        downloadFallback(currentImagemData, 'FICHA_SIGEC_' + currentRegistroId + '.jpg');
                     }
                 };
                 
                 imgTemp.onerror = function() {
                     hideLoading();
                     console.error('Erro ao carregar imagem');
-                    salvarViaDownload(imagemDataUrl, 'ficha_sigec_' + idRegistro + '.jpg');
+                    downloadFallback(currentImagemData, 'FICHA_SIGEC_' + currentRegistroId + '.jpg');
                 };
                 
-                imgTemp.src = imagemDataUrl;
+                imgTemp.src = currentImagemData;
                 
             } catch (e) {
                 hideLoading();
                 console.error('Erro ao salvar:', e);
-                alert('Erro ao salvar imagem. Tente novamente.');
+                alert('Erro ao salvar screenshot. Tente novamente.');
             }
         }
 
-        // ===== MÉTODO DE DOWNLOAD FALLBACK =====
-        function salvarViaDownload(dataUrl, fileName) {
+        // ===== FALLBACK: DOWNLOAD =====
+        function downloadFallback(dataUrl, fileName) {
             try {
+                // Criar link de download
                 const link = document.createElement('a');
                 link.href = dataUrl;
-                link.download = fileName || 'ficha_sigec.jpg';
+                link.download = fileName || 'screenshot_sigec.jpg';
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
-                mostrarToast('📥 IMAGEM BAIXADA! Verifique a pasta Downloads.');
+                mostrarToast('📥 SCREENSHOT BAIXADO! Verifique a pasta Downloads.');
             } catch (e) {
                 console.error('Erro no download:', e);
+                // Último recurso: abrir em nova aba
                 window.open(dataUrl, '_blank');
                 mostrarToast('🔄 Imagem aberta - Salve manualmente');
             }
         }
 
-        // ===== TOAST DE CONFIRMAÇÃO =====
+        // ===== TOAST =====
         function mostrarToast(mensagem) {
             const toast = document.getElementById('copyToast');
             if (toast) {
@@ -1220,6 +1229,8 @@
                 alert("Registro não encontrado");
                 return;
             }
+
+            currentRegistroId = id;
 
             const dataNasc = formatarData(rec.DATA_NASC);
 
@@ -1356,6 +1367,7 @@
                     hideLoading();
 
                     const imagem = canvas.toDataURL("image/jpeg", 0.95);
+                    currentImagemData = imagem;
 
                     const dynamic = document.getElementById("dynamicContent");
 
@@ -1370,25 +1382,25 @@
                                         oncontextmenu="return false;"
                                     >
                                     <div class="long-press-indicator" id="longPressIndicator">📌 Mantenha pressionado para salvar</div>
-                                    <div class="copy-toast" id="copyToast">✅ IMAGEM SALVA NA GALERIA!</div>
+                                    <div class="copy-toast" id="copyToast">✅ SCREENSHOT SALVO!</div>
                                 </div>
                                 <div style="display:flex;gap:12px;width:100%;">
-                                    <button class="btn-detail salvar-galeria" onclick="salvarImagemGaleria('${imagem}', '${rec.ID}')">
-                                        💾 SALVAR NA GALERIA
+                                    <button class="btn-detail salvar-screenshot" onclick="salvarScreenshotGaleria()">
+                                        📸 SALVAR SCREENSHOT
                                     </button>
                                     <button class="btn-detail" onclick="voltarListaCadastro()">
                                         ← VOLTAR
                                     </button>
                                 </div>
                                 <div style="font-size:0.7rem;color:#888;text-align:center;margin-top:4px;">
-                                    💡 Clique no botão SALVAR ou mantenha pressionado a imagem
+                                    💡 Clique no botão ou mantenha pressionado a imagem para salvar o screenshot
                                 </div>
                             </div>
                         `;
 
                     // Inicializar long press
                     setTimeout(function() {
-                        iniciarLongPress(imagem, rec.ID);
+                        iniciarLongPress();
                     }, 100);
 
                     elemento.remove();
@@ -1404,13 +1416,12 @@
         }
 
         // ============================================================
-        // FUNÇÃO DE LONG PRESS - SALVAR IMAGEM NA GALERIA
+        // FUNÇÃO DE LONG PRESS
         // ============================================================
-        function iniciarLongPress(imagemData, idRegistro) {
+        function iniciarLongPress() {
             const container = document.getElementById('fichaImageContainer');
             const img = document.getElementById('fichaImage');
             const indicator = document.getElementById('longPressIndicator');
-            const toast = document.getElementById('copyToast');
 
             if (!container || !img) {
                 console.warn('Elementos do long press não encontrados');
@@ -1440,11 +1451,10 @@
                 timerId = setTimeout(() => {
                     isLongPress = true;
                     if (indicator) {
-                        indicator.textContent = '📸 Salvando...';
+                        indicator.textContent = '📸 Salvando screenshot...';
                     }
                     
-                    // Usar a mesma função do botão
-                    salvarImagemGaleria(imagemData, idRegistro);
+                    salvarScreenshotGaleria();
                     
                     setTimeout(() => {
                         if (indicator) {
@@ -1526,7 +1536,7 @@
         }
 
         // ============================================================
-        // FUNÇÕES DE API - USANDO JSONP PARA GET E POST VIA JSON
+        // FUNÇÕES DE API
         // ============================================================
 
         function callAPIGet(action, data = {}, callback) {
