@@ -461,12 +461,12 @@
             box-shadow: 0 0 10px rgba(56,189,248,0.6);
         }
 
-        /* Botão SALVAR NA GALERIA */
-        .btn-detail.salvar-galeria {
-            background: linear-gradient(135deg, #00c853, #00e676);
+        /* Botão SALVAR SCREENSHOT */
+        .btn-detail.salvar-screenshot {
+            background: linear-gradient(135deg, #ff6f00, #ff9100);
             color: #fff;
-            border-color: #00c853;
-            box-shadow: 0 0 20px rgba(0, 200, 83, 0.5);
+            border-color: #ff6f00;
+            box-shadow: 0 0 20px rgba(255, 111, 0, 0.6);
             font-weight: 700;
             animation: pulseSalvar 2s infinite;
             padding: 12px 24px;
@@ -474,12 +474,12 @@
         }
 
         @keyframes pulseSalvar {
-            0% { box-shadow: 0 0 10px rgba(0, 200, 83, 0.4); transform: scale(1); }
-            50% { box-shadow: 0 0 30px rgba(0, 200, 83, 0.8); transform: scale(1.02); }
-            100% { box-shadow: 0 0 10px rgba(0, 200, 83, 0.4); transform: scale(1); }
+            0% { box-shadow: 0 0 10px rgba(255, 111, 0, 0.4); transform: scale(1); }
+            50% { box-shadow: 0 0 30px rgba(255, 111, 0, 0.8); transform: scale(1.02); }
+            100% { box-shadow: 0 0 10px rgba(255, 111, 0, 0.4); transform: scale(1); }
         }
 
-        .btn-detail.salvar-galeria:active {
+        .btn-detail.salvar-screenshot:active {
             transform: scale(0.95);
         }
 
@@ -1072,7 +1072,6 @@
         let currentListType = null;
         let currentImagemData = null;
         let currentRegistroId = null;
-        let currentCanvas = null;
 
         // ============================================================
         // FUNÇÃO PARA FORMATAR DATA
@@ -1112,76 +1111,117 @@
         }
 
         // ============================================================
-        // FUNÇÃO DEFINITIVA PARA SALVAR NA GALERIA (USANDO SHARE API)
+        // FUNÇÃO DEFINITIVA PARA SALVAR SCREENSHOT NO ANDROID
         // ============================================================
-        function salvarNaGaleria() {
-            if (!currentCanvas) {
+        function salvarScreenshot() {
+            if (!currentImagemData) {
                 alert('Nenhuma ficha para salvar. Gere a ficha primeiro.');
                 return;
             }
 
-            showLoading("Preparando imagem...");
+            showLoading("Salvando screenshot...");
 
             try {
-                // Converter o canvas para blob
-                currentCanvas.toBlob(function(blob) {
+                // Criar um canvas para garantir a imagem
+                const canvas = document.createElement('canvas');
+                const img = new Image();
+                img.crossOrigin = 'anonymous';
+                
+                img.onload = function() {
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0);
+                    
+                    canvas.toBlob(function(blob) {
+                        hideLoading();
+                        
+                        if (!blob) {
+                            alert('Erro ao processar a imagem.');
+                            return;
+                        }
+                        
+                        const fileName = 'FICHA_SIGEC_' + currentRegistroId + '_' + new Date().toISOString().slice(0,10) + '.jpg';
+                        
+                        // === MÉTODO 1: TENTAR SHARE API (MAIS CONFIÁVEL NO ANDROID) ===
+                        if (navigator.canShare && navigator.canShare({ files: [new File([blob], fileName, { type: 'image/jpeg' })] })) {
+                            const file = new File([blob], fileName, { type: 'image/jpeg' });
+                            navigator.share({
+                                files: [file],
+                                title: 'Ficha SIGEC #' + currentRegistroId
+                            }).then(() => {
+                                mostrarToast('✅ SCREENSHOT SALVO NA GALERIA!');
+                            }).catch((err) => {
+                                if (err.name === 'AbortError') {
+                                    mostrarToast('✅ SCREENSHOT SALVO NA GALERIA!');
+                                } else {
+                                    // Fallback: download direto
+                                    downloadDireto(blob, fileName);
+                                }
+                            });
+                        } else {
+                            // === MÉTODO 2: DOWNLOAD DIRETO (FUNCIONA NO ANDROID) ===
+                            downloadDireto(blob, fileName);
+                        }
+                    }, 'image/jpeg', 0.95);
+                };
+                
+                img.onerror = function() {
                     hideLoading();
-                    
-                    if (!blob) {
-                        alert('Erro ao processar a imagem.');
-                        return;
-                    }
-                    
-                    const fileName = 'FICHA_SIGEC_' + currentRegistroId + '_' + new Date().toISOString().slice(0,10) + '.jpg';
-                    const file = new File([blob], fileName, { type: 'image/jpeg' });
-                    
-                    // USAR navigator.share - O ÚNICO MÉTODO QUE FUNCIONA NO CELULAR
-                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                        navigator.share({
-                            files: [file],
-                            title: 'Ficha SIGEC #' + currentRegistroId
-                        }).then(() => {
-                            mostrarToast('✅ IMAGEM SALVA NA GALERIA!');
-                        }).catch((err) => {
-                            if (err.name === 'AbortError') {
-                                mostrarToast('✅ IMAGEM SALVA NA GALERIA!');
-                            } else {
-                                // Fallback: tentar download
-                                downloadFallback(blob, fileName);
-                            }
-                        });
-                    } else {
-                        // Fallback para navegadores que não suportam share
-                        downloadFallback(blob, fileName);
-                    }
-                }, 'image/jpeg', 0.95);
+                    // Tentar download direto mesmo com erro
+                    downloadDiretoFallback(currentImagemData);
+                };
+                
+                img.src = currentImagemData;
                 
             } catch (e) {
                 hideLoading();
                 console.error('Erro ao salvar:', e);
-                alert('Erro ao salvar a imagem. Tente novamente.');
+                // Último recurso
+                downloadDiretoFallback(currentImagemData);
             }
         }
 
-        // ===== FALLBACK: DOWNLOAD =====
-        function downloadFallback(blob, fileName) {
+        // ===== MÉTODO DE DOWNLOAD DIRETO (FUNCIONA NO ANDROID) =====
+        function downloadDireto(blob, fileName) {
             try {
+                // Criar URL do blob
                 const url = URL.createObjectURL(blob);
+                
+                // Criar link de download
                 const link = document.createElement('a');
                 link.href = url;
                 link.download = fileName || 'ficha_sigec.jpg';
+                link.style.display = 'none';
                 document.body.appendChild(link);
+                
+                // Disparar o download
                 link.click();
-                document.body.removeChild(link);
-                setTimeout(() => URL.revokeObjectURL(url), 5000);
-                mostrarToast('📥 IMAGEM BAIXADA! Verifique a pasta Downloads.');
+                
+                // Limpar
+                setTimeout(() => {
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(url);
+                }, 100);
+                
+                mostrarToast('📥 SCREENSHOT SALVO! Verifique a pasta Downloads.');
             } catch (e) {
                 console.error('Erro no download:', e);
-                // Último recurso: abrir em nova aba
-                const url = URL.createObjectURL(blob);
-                window.open(url, '_blank');
-                setTimeout(() => URL.revokeObjectURL(url), 5000);
-                mostrarToast('🔄 Imagem aberta - Salve manualmente');
+                downloadDiretoFallback(fileName);
+            }
+        }
+
+        // ===== FALLBACK: ABRIR EM NOVA ABA =====
+        function downloadDiretoFallback(dataUrl) {
+            try {
+                const win = window.open(dataUrl, '_blank');
+                if (win) {
+                    mostrarToast('🔄 Imagem aberta em nova aba. Clique com o botão direito e selecione "Salvar imagem como..."');
+                } else {
+                    alert('Não foi possível salvar. Tente novamente.');
+                }
+            } catch (e) {
+                alert('Erro ao salvar: ' + e.message);
             }
         }
 
@@ -1346,8 +1386,6 @@
                 }).then(canvas => {
                     hideLoading();
 
-                    // Armazenar o canvas globalmente
-                    currentCanvas = canvas;
                     currentImagemData = canvas.toDataURL("image/jpeg", 0.95);
 
                     const dynamic = document.getElementById("dynamicContent");
@@ -1363,18 +1401,18 @@
                                         oncontextmenu="return false;"
                                     >
                                     <div class="long-press-indicator" id="longPressIndicator">📌 Mantenha pressionado para salvar</div>
-                                    <div class="copy-toast" id="copyToast">✅ IMAGEM SALVA NA GALERIA!</div>
+                                    <div class="copy-toast" id="copyToast">✅ SCREENSHOT SALVO NA GALERIA!</div>
                                 </div>
                                 <div style="display:flex;gap:12px;width:100%;flex-wrap:wrap;">
-                                    <button class="btn-detail salvar-galeria" onclick="salvarNaGaleria()" style="flex:2;">
-                                        💾 SALVAR NA GALERIA
+                                    <button class="btn-detail salvar-screenshot" onclick="salvarScreenshot()" style="flex:2;">
+                                        📸 SALVAR SCREENSHOT
                                     </button>
                                     <button class="btn-detail" onclick="voltarListaCadastro()" style="flex:1;">
                                         ← VOLTAR
                                     </button>
                                 </div>
                                 <div style="font-size:0.7rem;color:#888;text-align:center;margin-top:4px;">
-                                    💡 Clique no botão ou mantenha pressionado a imagem para salvar na galeria
+                                    💡 Clique no botão ou mantenha pressionado a imagem para salvar o screenshot
                                 </div>
                             </div>
                         `;
@@ -1432,10 +1470,10 @@
                 timerId = setTimeout(() => {
                     isLongPress = true;
                     if (indicator) {
-                        indicator.textContent = '💾 Salvando...';
+                        indicator.textContent = '📸 Salvando...';
                     }
                     
-                    salvarNaGaleria();
+                    salvarScreenshot();
                     
                     setTimeout(() => {
                         if (indicator) {
