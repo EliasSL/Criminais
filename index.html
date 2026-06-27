@@ -483,6 +483,96 @@
             transform: scale(0.95);
         }
 
+        /* ===== MODAL DE VISUALIZAÇÃO DA IMAGEM ===== */
+        .image-preview-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.95);
+            z-index: 99999;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .image-preview-modal .modal-content {
+            max-width: 500px;
+            width: 100%;
+            background: #2c2c2c;
+            border-radius: 20px;
+            padding: 20px;
+            border: 1px solid #444;
+            max-height: 95vh;
+            overflow-y: auto;
+        }
+
+        .image-preview-modal .modal-content h2 {
+            color: #f5c842;
+            text-align: center;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+        }
+
+        .image-preview-modal .modal-content img {
+            width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+            display: block;
+        }
+
+        .image-preview-modal .modal-content .botoes-modal {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .image-preview-modal .modal-content .botoes-modal button {
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+            width: 100%;
+        }
+
+        .image-preview-modal .modal-content .botoes-modal button:active {
+            transform: scale(0.96);
+        }
+
+        .image-preview-modal .modal-content .btn-whatsapp-modal {
+            background: #25D366;
+            color: #fff;
+        }
+
+        .image-preview-modal .modal-content .btn-salvar-modal {
+            background: #ff6f00;
+            color: #fff;
+        }
+
+        .image-preview-modal .modal-content .btn-fechar-modal {
+            background: #333;
+            color: #ccc;
+        }
+
+        .image-preview-modal .modal-content .info-modal {
+            color: #666;
+            font-size: 0.7rem;
+            text-align: center;
+            margin-top: 10px;
+        }
+
         /* ===== FORMULÁRIO ===== */
         .form-page {
             display: none;
@@ -961,6 +1051,11 @@
             .card .card-sub {
                 font-size: 0.8rem;
             }
+
+            .image-preview-modal .modal-content {
+                padding: 15px;
+                max-height: 98vh;
+            }
         }
 
         @media (max-width: 380px) {
@@ -1058,6 +1153,20 @@
             <div class="loading-spinner"></div>
             <div class="loading-text" id="loadingText">Processando...</div>
         </div>
+
+        <!-- ========== MODAL DE VISUALIZAÇÃO DA IMAGEM ========== -->
+        <div class="image-preview-modal" id="imagePreviewModal">
+            <div class="modal-content">
+                <h2 id="modalTitle">📋 Ficha SIGEC</h2>
+                <img id="modalPreviewImage" src="" alt="Ficha SIGEC">
+                <div class="botoes-modal">
+                    <button class="btn-whatsapp-modal" onclick="enviarWhatsAppModal()">📤 ENVIAR PARA WHATSAPP</button>
+                    <button class="btn-salvar-modal" onclick="salvarImagemModal()">💾 BAIXAR IMAGEM</button>
+                    <button class="btn-fechar-modal" onclick="fecharModalImagem()">✕ FECHAR</button>
+                </div>
+                <div class="info-modal">💡 Clique com o botão direito na imagem para salvar na galeria</div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -1112,134 +1221,85 @@
         }
 
         // ============================================================
-        // FUNÇÃO PARA ABRIR IMAGEM EM NOVA JANELA COM BOTÕES FUNCIONAIS
+        // FUNÇÕES DO MODAL DE IMAGEM
         // ============================================================
-        function abrirImagemCompleta() {
+        
+        // Abrir modal com a imagem
+        function abrirModalImagem() {
             if (!currentImagemData) {
-                alert('Nenhuma ficha para abrir. Gere a ficha primeiro.');
+                alert('Nenhuma ficha para visualizar. Gere a ficha primeiro.');
                 return;
             }
-
-            showLoading("Abrindo imagem...");
-
-            try {
-                const win = window.open('', '_blank');
-                if (win) {
-                    const nomeArquivo = 'FICHA_SIGEC_' + currentRegistroId + '.jpg';
-                    
-                    // HTML completo da nova janela com botões funcionais
-                    win.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">');
-                    win.document.write('<title>Ficha SIGEC #' + currentRegistroId + '</title>');
-                    win.document.write('<style>');
-                    win.document.write('* { margin:0; padding:0; box-sizing:border-box; }');
-                    win.document.write('body { background:#1a1a1a; display:flex; justify-content:center; align-items:center; min-height:100vh; font-family:Arial,sans-serif; padding:15px; }');
-                    win.document.write('.container { max-width:500px; width:100%; background:#2c2c2c; border-radius:20px; padding:20px; border:1px solid #444; }');
-                    win.document.write('h2 { color:#f5c842; text-align:center; font-size:1.1rem; margin-bottom:15px; }');
-                    win.document.write('img { width:100%; border-radius:12px; box-shadow:0 8px 30px rgba(0,0,0,0.6); display:block; }');
-                    win.document.write('.botoes { display:flex; flex-direction:column; gap:10px; margin-top:18px; }');
-                    win.document.write('.btn-whatsapp { background:#25D366; color:#fff; border:none; padding:15px; border-radius:12px; font-size:1rem; font-weight:700; cursor:pointer; transition:0.2s; }');
-                    win.document.write('.btn-whatsapp:active { transform:scale(0.96); }');
-                    win.document.write('.btn-salvar { background:#ff6f00; color:#fff; border:none; padding:15px; border-radius:12px; font-size:1rem; font-weight:700; cursor:pointer; transition:0.2s; }');
-                    win.document.write('.btn-salvar:active { transform:scale(0.96); }');
-                    win.document.write('.btn-fechar { background:#333; color:#ccc; border:none; padding:12px; border-radius:12px; font-size:0.9rem; cursor:pointer; transition:0.2s; }');
-                    win.document.write('.btn-fechar:active { transform:scale(0.96); }');
-                    win.document.write('.info { color:#666; font-size:0.7rem; text-align:center; margin-top:10px; }');
-                    win.document.write('</style>');
-                    win.document.write('</head><body>');
-                    win.document.write('<div class="container">');
-                    win.document.write('<h2>📋 Ficha SIGEC #' + currentRegistroId + '</h2>');
-                    win.document.write('<img src="' + currentImagemData + '" alt="Ficha SIGEC" id="fichaImg">');
-                    win.document.write('<div class="botoes">');
-                    win.document.write('<button class="btn-whatsapp" onclick="enviarWhatsApp()">📤 ENVIAR PARA WHATSAPP</button>');
-                    win.document.write('<button class="btn-salvar" onclick="salvarImagem()">💾 BAIXAR IMAGEM</button>');
-                    win.document.write('<button class="btn-fechar" onclick="fecharJanela()">✕ FECHAR</button>');
-                    win.document.write('</div>');
-                    win.document.write('<div class="info">💡 Clique com o botão direito na imagem para salvar na galeria</div>');
-                    win.document.write('</div>');
-                    win.document.write('<script>');
-                    
-                    // Função para enviar WhatsApp
-                    win.document.write('function enviarWhatsApp() {');
-                    win.document.write('  var img = document.getElementById("fichaImg");');
-                    win.document.write('  var canvas = document.createElement("canvas");');
-                    win.document.write('  canvas.width = img.naturalWidth || img.width;');
-                    win.document.write('  canvas.height = img.naturalHeight || img.height;');
-                    win.document.write('  var ctx = canvas.getContext("2d");');
-                    win.document.write('  ctx.drawImage(img, 0, 0);');
-                    win.document.write('  canvas.toBlob(function(blob) {');
-                    win.document.write('    var file = new File([blob], "' + nomeArquivo + '", { type: "image/jpeg" });');
-                    win.document.write('    if (navigator.canShare && navigator.canShare({ files: [file] })) {');
-                    win.document.write('      navigator.share({ files: [file], title: "Ficha SIGEC #' + currentRegistroId + '" });');
-                    win.document.write('    } else {');
-                    win.document.write('      var url = URL.createObjectURL(blob);');
-                    win.document.write('      var link = document.createElement("a");');
-                    win.document.write('      link.href = url;');
-                    win.document.write('      link.download = "' + nomeArquivo + '";');
-                    win.document.write('      document.body.appendChild(link);');
-                    win.document.write('      link.click();');
-                    win.document.write('      document.body.removeChild(link);');
-                    win.document.write('      setTimeout(function(){ URL.revokeObjectURL(url); }, 3000);');
-                    win.document.write('    }');
-                    win.document.write('  }, "image/jpeg", 0.95);');
-                    win.document.write('}');
-                    
-                    // Função para salvar imagem
-                    win.document.write('function salvarImagem() {');
-                    win.document.write('  var img = document.getElementById("fichaImg");');
-                    win.document.write('  var canvas = document.createElement("canvas");');
-                    win.document.write('  canvas.width = img.naturalWidth || img.width;');
-                    win.document.write('  canvas.height = img.naturalHeight || img.height;');
-                    win.document.write('  var ctx = canvas.getContext("2d");');
-                    win.document.write('  ctx.drawImage(img, 0, 0);');
-                    win.document.write('  canvas.toBlob(function(blob) {');
-                    win.document.write('    var url = URL.createObjectURL(blob);');
-                    win.document.write('    var link = document.createElement("a");');
-                    win.document.write('    link.href = url;');
-                    win.document.write('    link.download = "' + nomeArquivo + '";');
-                    win.document.write('    document.body.appendChild(link);');
-                    win.document.write('    link.click();');
-                    win.document.write('    document.body.removeChild(link);');
-                    win.document.write('    setTimeout(function(){ URL.revokeObjectURL(url); }, 3000);');
-                    win.document.write('  }, "image/jpeg", 0.95);');
-                    win.document.write('}');
-                    
-                    // Função para fechar janela
-                    win.document.write('function fecharJanela() {');
-                    win.document.write('  window.close();');
-                    win.document.write('}');
-                    
-                    win.document.write('<\/script>');
-                    win.document.write('</body></html>');
-                    win.document.close();
-                    
-                    hideLoading();
-                    mostrarToast('📸 IMAGEM ABERTA! Use os botões para enviar ou salvar.');
-                } else {
-                    hideLoading();
-                    // Fallback: download direto
-                    downloadDireto(currentImagemData);
-                }
-            } catch (e) {
-                hideLoading();
-                console.error('Erro ao abrir janela:', e);
-                downloadDireto(currentImagemData);
-            }
+            
+            document.getElementById('modalPreviewImage').src = currentImagemData;
+            document.getElementById('modalTitle').textContent = '📋 Ficha SIGEC #' + currentRegistroId;
+            document.getElementById('imagePreviewModal').style.display = 'flex';
         }
 
-        // ===== MÉTODO DE DOWNLOAD DIRETO (FALLBACK) =====
-        function downloadDireto(dataUrl) {
-            try {
-                const link = document.createElement('a');
-                link.href = dataUrl;
+        // Fechar modal
+        function fecharModalImagem() {
+            document.getElementById('imagePreviewModal').style.display = 'none';
+        }
+
+        // Enviar para WhatsApp via modal
+        function enviarWhatsAppModal() {
+            const img = document.getElementById('modalPreviewImage');
+            const canvas = document.createElement('canvas');
+            canvas.width = img.naturalWidth || img.width || 800;
+            canvas.height = img.naturalHeight || img.height || 600;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0);
+            
+            canvas.toBlob(function(blob) {
+                const fileName = 'FICHA_SIGEC_' + currentRegistroId + '.jpg';
+                const file = new File([blob], fileName, { type: 'image/jpeg' });
+                
+                if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                    navigator.share({
+                        files: [file],
+                        title: 'Ficha SIGEC #' + currentRegistroId
+                    }).catch(function(err) {
+                        if (err.name !== 'AbortError') {
+                            // Fallback: download
+                            downloadImage(blob, fileName);
+                        }
+                    });
+                } else {
+                    downloadImage(blob, fileName);
+                }
+            }, 'image/jpeg', 0.95);
+        }
+
+        // Salvar imagem via modal
+        function salvarImagemModal() {
+            const img = document.getElementById('modalPreviewImage');
+            const canvas = document.createElement('canvas');
+            canvas.width = img.naturalWidth || img.width || 800;
+            canvas.height = img.naturalHeight || img.height || 600;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0);
+            
+            canvas.toBlob(function(blob) {
                 const fileName = 'FICHA_SIGEC_' + currentRegistroId + '_' + new Date().toISOString().slice(0,10) + '.jpg';
-                link.download = fileName;
+                downloadImage(blob, fileName);
+            }, 'image/jpeg', 0.95);
+        }
+
+        // Função de download
+        function downloadImage(blob, fileName) {
+            try {
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = fileName || 'ficha_sigec.jpg';
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
+                setTimeout(function() { URL.revokeObjectURL(url); }, 3000);
                 mostrarToast('📥 IMAGEM BAIXADA! Verifique a pasta Downloads.');
             } catch (e) {
                 console.error('Erro no download:', e);
-                alert('Não foi possível salvar. Tente novamente.');
+                alert('Não foi possível baixar a imagem. Tente novamente.');
             }
         }
 
@@ -1249,7 +1309,7 @@
             if (toast) {
                 toast.textContent = mensagem;
                 toast.classList.add('show');
-                setTimeout(() => {
+                setTimeout(function() {
                     toast.classList.remove('show');
                 }, 4000);
             } else {
@@ -1423,7 +1483,7 @@
                                     <div class="copy-toast" id="copyToast">✅ IMAGEM ABERTA!</div>
                                 </div>
                                 <div style="display:flex;gap:12px;width:100%;flex-wrap:wrap;">
-                                    <button class="btn-detail abrir-imagem" onclick="abrirImagemCompleta()" style="flex:2;">
+                                    <button class="btn-detail abrir-imagem" onclick="abrirModalImagem()" style="flex:2;">
                                         📸 ABRIR IMAGEM
                                     </button>
                                     <button class="btn-detail" onclick="voltarListaCadastro()" style="flex:1;">
@@ -1486,15 +1546,15 @@
                     indicator.classList.add('progress');
                 }
 
-                timerId = setTimeout(() => {
+                timerId = setTimeout(function() {
                     isLongPress = true;
                     if (indicator) {
                         indicator.textContent = '📸 Abrindo...';
                     }
                     
-                    abrirImagemCompleta();
+                    abrirModalImagem();
                     
-                    setTimeout(() => {
+                    setTimeout(function() {
                         if (indicator) {
                             indicator.classList.remove('active');
                             indicator.classList.remove('progress');
@@ -1516,7 +1576,7 @@
                 if (!isLongPress && Date.now() - touchStartTime > 500) {
                     if (indicator) {
                         indicator.textContent = '📌 Mantenha pressionado por 3 segundos';
-                        setTimeout(() => {
+                        setTimeout(function() {
                             if (indicator) {
                                 indicator.classList.remove('active');
                             }
@@ -1607,7 +1667,7 @@
         }
 
         function callAPIPost(action, data = {}) {
-            return new Promise((resolve, reject) => {
+            return new Promise(function(resolve, reject) {
                 const payload = {
                     action: action,
                     ...data
@@ -1623,10 +1683,10 @@
                 };
 
                 fetch(API_URL, options)
-                    .then(response => {
+                    .then(function(response) {
                         resolve({ success: true, message: 'Operação realizada com sucesso!' });
                     })
-                    .catch(error => {
+                    .catch(function(error) {
                         console.error('Erro no POST:', error);
                         resolve({ success: false, message: 'Erro na comunicação: ' + error.message });
                     });
@@ -1635,7 +1695,7 @@
 
         function callAPI(action, data = {}) {
             if (action === 'getRecords' || action === 'getLogin') {
-                return new Promise((resolve) => {
+                return new Promise(function(resolve) {
                     callAPIGet(action, data, function(response) {
                         resolve(response);
                     });
@@ -1649,7 +1709,7 @@
         // FUNÇÃO PARA REDIMENSIONAR IMAGEM
         // ============================================================
         function resizeImage(file, maxWidth, maxHeight, quality) {
-            return new Promise((resolve, reject) => {
+            return new Promise(function(resolve, reject) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     const img = new Image();
@@ -1712,11 +1772,15 @@
         }
 
         function updateBadges() {
-            const nao = allRecords.filter(r => (r.MANDADO || '')
-                .normalize('NFD')
-                .replace(/[\u0300-\u036f]/g, '')
-                .toUpperCase() === 'NAO').length;
-            const sim = allRecords.filter(r => (r.MANDADO || '').toUpperCase() === 'SIM').length;
+            const nao = allRecords.filter(function(r) {
+                return (r.MANDADO || '')
+                    .normalize('NFD')
+                    .replace(/[\u0300-\u036f]/g, '')
+                    .toUpperCase() === 'NAO';
+            }).length;
+            const sim = allRecords.filter(function(r) {
+                return (r.MANDADO || '').toUpperCase() === 'SIM';
+            }).length;
             document.getElementById('badgeNao').textContent = nao;
             document.getElementById('badgeSim').textContent = sim;
         }
@@ -1735,7 +1799,9 @@
             try {
                 const result = await callAPI('getLogin');
                 if (result.success) {
-                    const found = result.users.find(u => u.usuario === user && u.senha === pass && u.ativo === 'SIM');
+                    const found = result.users.find(function(u) {
+                        return u.usuario === user && u.senha === pass && u.ativo === 'SIM';
+                    });
                     if (found) {
                         currentUser = user;
                         document.getElementById('loginScreen').style.display = 'none';
@@ -1806,7 +1872,7 @@
         function openList(tipo) {
             document.querySelector('.cards-grid').style.display = 'none';
 
-            const filtered = allRecords.filter(r => {
+            const filtered = allRecords.filter(function(r) {
                 const mandado = (r.MANDADO || '')
                     .normalize('NFD')
                     .replace(/[\u0300-\u036f]/g, '')
@@ -1855,14 +1921,14 @@
                         </div>
                         <div class="scroll-area">
                 `;
-            filtered.forEach(rec => {
+            filtered.forEach(function(rec) {
                 const searchable = Object.values(rec)
                     .join(' ')
                     .normalize('NFD')
                     .replace(/[\u0300-\u036f]/g, '')
                     .toUpperCase();
                 const foto = rec.FOTO || '';
-                const imgHtml = foto ? `<img src="${foto}" alt="foto" style="width:100%;height:100%;object-fit:cover;">` :
+                const imgHtml = foto ? '<img src="' + foto + '" alt="foto" style="width:100%;height:100%;object-fit:cover;">' :
                     '📷';
                 html += `
                         <div class="list-item" data-search="${searchable}">
@@ -1875,7 +1941,7 @@
                         </div>
                     `;
             });
-            html += `</div></div>`;
+            html += '</div></div>';
             document.getElementById('dynamicContent').innerHTML = html;
             document.getElementById('dynamicContent').scrollTop = 0;
             currentView = 'list';
@@ -1889,7 +1955,7 @@
                 .replace(/[\u0300-\u036f]/g, '')
                 .toUpperCase();
             const items = document.querySelectorAll('.list-item');
-            items.forEach(item => {
+            items.forEach(function(item) {
                 const searchData = item.getAttribute('data-search') || '';
                 if (searchData.includes(filter)) {
                     item.style.display = 'flex';
@@ -1900,9 +1966,9 @@
         }
 
         function openDetail(id) {
-            const record = allRecords.find(r =>
-                String(r.ID).trim() === String(id).trim()
-            );
+            const record = allRecords.find(function(r) {
+                return String(r.ID).trim() === String(id).trim();
+            });
 
             if (!record) {
                 alert('Registro não encontrado.');
@@ -1950,9 +2016,10 @@
                 ['TIPO PENAL', record.TIPO_PENAL || '—'],
                 ['MANDADO', record.MANDADO || '—']
             ];
-            fields.forEach(([label, val]) => {
+            fields.forEach(function([label, val]) {
                 html +=
-                    `<div class="detail-field"><span class="label">${label}</span><span class="value">${val}</span></div>`;
+                    '<div class="detail-field"><span class="label">' + label + '</span><span class="value">' + val +
+                    '</span></div>';
             });
 
             html += `
@@ -1974,7 +2041,8 @@
         // ============================================================
         function openCadastro() {
             document.querySelector('.cards-grid').style.display = 'none';
-            const nextId = allRecords.length > 0 ? Math.max(...allRecords.map(r => Number(r.ID) || 0)) + 1 : 1;
+            const nextId = allRecords.length > 0 ? Math.max.apply(null, allRecords.map(function(r) { return Number(r
+                    .ID) || 0; })) + 1 : 1;
             let html = `
                     <div class="form-page" style="display:flex;">
                         <div class="list-header">
@@ -2034,7 +2102,8 @@
                 try {
                     const resizedDataUrl = await resizeImage(file, 150, 150, 0.4);
                     document.getElementById('fotoPreview').innerHTML =
-                        `<img src="${resizedDataUrl}" style="max-width:100px;border-radius:8px;border:1px solid #555;">`;
+                        '<img src="' + resizedDataUrl +
+                        '" style="max-width:100px;border-radius:8px;border:1px solid #555;">';
                     document.getElementById('f_foto').value = resizedDataUrl;
                 } catch (error) {
                     alert('Erro ao processar imagem: ' + error.message);
@@ -2091,7 +2160,7 @@
         // ============================================================
         function editRecord(id) {
             document.querySelector('.cards-grid').style.display = 'none';
-            const rec = allRecords.find(r => r.ID == id);
+            const rec = allRecords.find(function(r) { return r.ID == id; });
             if (!rec) return;
 
             let dataNasc = rec.DATA_NASC || '';
@@ -2117,7 +2186,7 @@
                                     <input type="file" id="editFotoInput" accept="image/*" onchange="previewEditFoto(event)">
                                 </div>
                                 <input type="hidden" id="e_foto" value="${rec.FOTO || ''}">
-                                <div id="editFotoPreview" style="margin-top:6px;">${rec.FOTO ? `<img src="${rec.FOTO}" style="max-width:100px;border-radius:8px;border:1px solid #555;">` : ''}</div>
+                                <div id="editFotoPreview" style="margin-top:6px;">${rec.FOTO ? '<img src="' + rec.FOTO + '" style="max-width:100px;border-radius:8px;border:1px solid #555;">' : ''}</div>
                             </div>
                 `;
 
@@ -2139,8 +2208,8 @@
                 { id: 'e_tipo_penal', label: 'TIPO PENAL', key: 'TIPO_PENAL' }
             ];
 
-            campos.forEach(campo => {
-                let valor = campo.value !== undefined ? campo.value : (rec[campo.key] || '');
+            campos.forEach(function(campo) {
+                var valor = campo.value !== undefined ? campo.value : (rec[campo.key] || '');
                 html += `
                         <div class="form-group">
                             <label>${campo.label}</label>
@@ -2175,7 +2244,8 @@
                 try {
                     const resizedDataUrl = await resizeImage(file, 150, 150, 0.4);
                     document.getElementById('editFotoPreview').innerHTML =
-                        `<img src="${resizedDataUrl}" style="max-width:100px;border-radius:8px;border:1px solid #555;">`;
+                        '<img src="' + resizedDataUrl +
+                        '" style="max-width:100px;border-radius:8px;border:1px solid #555;">';
                     document.getElementById('e_foto').value = resizedDataUrl;
                 } catch (error) {
                     alert('Erro ao processar imagem: ' + error.message);
@@ -2326,13 +2396,13 @@
         // ============================================================
         // INICIALIZAÇÃO
         // ============================================================
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('loginScreen').style.display = 'flex';
             document.getElementById('dashboard').style.display = 'none';
             document.querySelector('.cards-grid').style.display = 'flex';
         });
 
-        window.addEventListener("load", () => {
+        window.addEventListener("load", function() {
             if (typeof html2canvas === "undefined") {
                 console.warn("html2canvas não carregou.");
             }
