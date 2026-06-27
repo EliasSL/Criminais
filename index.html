@@ -1450,8 +1450,37 @@ dynamic.innerHTML = `
         ">
 
         <button
+            dynamic.innerHTML = `
+<div
+    style="
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        gap:18px;
+        padding:20px;
+    ">
+
+    <img
+        src="${imagem}"
+        style="
+            width:100%;
+            max-width:420px;
+            border-radius:10px;
+            box-shadow:0 8px 25px rgba(0,0,0,.45);
+        ">
+
+    <div
+        style="
+            display:flex;
+            gap:12px;
+            width:100%;
+        ">
+
+        <!-- Botão ENVIAR oculto -->
+        <button
             class="btn-detail compartilhar"
-            onclick="compartilharImagem('${imagem}','${rec.ID}')">
+            onclick="compartilharImagem('${imagem}','${rec.ID}')"
+            style="display:none;">
             📤 ENVIAR
         </button>
 
