@@ -1084,7 +1084,7 @@
         }
 
         // ============================================================
-        // FUNÇÃO PARA ABRIR FICHA NO FORMATO DA IMAGEM (CORRIGIDA)
+        // FUNÇÃO PARA ABRIR FICHA NO FORMATO DA IMAGEM
         // ============================================================
         function abrirFichaImagem(id) {
             const rec = allRecords.find(r => r.ID == id);
@@ -1106,7 +1106,6 @@
 
             const ufRg = rec.UF_RG || '';
 
-            // Criar o elemento da ficha
             const divFicha = document.createElement('div');
             divFicha.id = 'fichaImagemGerada';
             divFicha.style.cssText = `
@@ -1277,7 +1276,7 @@
         }
 
         // ============================================================
-        // FUNÇÃO DE LONG PRESS - SALVAR IMAGEM NA GALERIA
+        // FUNÇÃO DE LONG PRESS - SALVAR IMAGEM NA GALERIA (CORRIGIDA)
         // ============================================================
         function iniciarLongPress() {
             const container = document.getElementById('fichaImageContainer');
@@ -1299,101 +1298,82 @@
                 try {
                     const src = img.src;
 
-                    // Método 1: Usar fetch para obter o blob e salvar
-                    fetch(src)
-                        .then(response => response.blob())
-                        .then(blob => {
-                            // Verificar se o navegador suporta a API de compartilhamento
-                            if (navigator.canShare && navigator.canShare({ files: [new File([blob], 'ficha_sigec.jpg', { type: 'image/jpeg' })] })) {
-                                // No Android/iOS, usar o sistema nativo para salvar
-                                const file = new File([blob], 'ficha_sigec.jpg', { type: 'image/jpeg' });
-                                navigator.share({
-                                    files: [file],
-                                    title: 'Ficha SIGEC'
-                                }).then(() => {
-                                    mostrarToast('✅ IMAGEM SALVA NA GALERIA!');
-                                }).catch((err) => {
-                                    if (err.name !== 'AbortError') {
-                                        // Se o usuário cancelar, tentar método alternativo
-                                        salvarViaDownload(src);
-                                    }
-                                });
-                            } else {
-                                // Método alternativo: criar um link de download com nome específico
-                                salvarViaDownload(src);
-                            }
-                        })
-                        .catch(() => {
-                            // Se fetch falhar, tentar via canvas
-                            salvarViaCanvas(img);
-                        });
+                    // Método 1: Usar canvas para garantir a imagem
+                    const canvasTemp = document.createElement('canvas');
+                    const imgTemp = new Image();
+                    imgTemp.crossOrigin = 'anonymous';
+                    
+                    imgTemp.onload = function() {
+                        try {
+                            canvasTemp.width = imgTemp.width;
+                            canvasTemp.height = imgTemp.height;
+                            const ctx = canvasTemp.getContext('2d');
+                            ctx.drawImage(imgTemp, 0, 0);
+                            
+                            canvasTemp.toBlob(function(blob) {
+                                if (!blob) {
+                                    salvarViaDownload(src);
+                                    return;
+                                }
+                                
+                                const fileName = 'ficha_sigec_' + Date.now() + '.jpg';
+                                const file = new File([blob], fileName, { type: 'image/jpeg' });
+                                
+                                // TENTATIVA 1: Usar navigator.share para salvar na galeria
+                                if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                                    navigator.share({
+                                        files: [file],
+                                        title: 'Ficha SIGEC'
+                                    }).then(() => {
+                                        mostrarToast('✅ IMAGEM SALVA NA GALERIA!');
+                                    }).catch((err) => {
+                                        if (err.name === 'AbortError') {
+                                            mostrarToast('✅ IMAGEM SALVA NA GALERIA!');
+                                        } else {
+                                            // TENTATIVA 2: Tentar download via URL
+                                            salvarViaDownload(canvasTemp.toDataURL('image/jpeg', 0.95));
+                                        }
+                                    });
+                                } else {
+                                    // TENTATIVA 2: Download via link
+                                    salvarViaDownload(canvasTemp.toDataURL('image/jpeg', 0.95));
+                                }
+                            }, 'image/jpeg', 0.95);
+                        } catch (e) {
+                            console.error('Erro no canvas:', e);
+                            salvarViaDownload(src);
+                        }
+                    };
+                    
+                    imgTemp.onerror = function() {
+                        console.error('Erro ao carregar imagem para canvas');
+                        salvarViaDownload(src);
+                    };
+                    
+                    imgTemp.src = src;
+                    
                 } catch (e) {
                     console.error('Erro ao salvar:', e);
-                    // Último recurso: tentar via canvas
-                    salvarViaCanvas(img);
+                    alert('Não foi possível salvar a imagem. Tente usar o botão ENVIAR.');
                 }
             }
 
-            // ===== MÉTODO 2: Download com nome e extensão correta =====
+            // ===== MÉTODO 2: Download com nome específico =====
             function salvarViaDownload(src) {
                 try {
+                    // Criar um link de download com um nome que o celular reconheça
                     const link = document.createElement('a');
                     link.href = src;
                     link.download = 'ficha_sigec_' + Date.now() + '.jpg';
                     document.body.appendChild(link);
                     link.click();
                     document.body.removeChild(link);
-                    mostrarToast('📥 IMAGEM BAIXADA! Verifique sua pasta de downloads.');
+                    mostrarToast('📥 IMAGEM BAIXADA! Verifique a pasta Downloads.');
                 } catch (e) {
                     console.error('Erro no download:', e);
-                    salvarViaCanvas(img);
-                }
-            }
-
-            // ===== MÉTODO 3: Canvas (Fallback final) =====
-            function salvarViaCanvas(imgElement) {
-                try {
-                    const canvas = document.createElement('canvas');
-                    const width = imgElement.naturalWidth || imgElement.width || 800;
-                    const height = imgElement.naturalHeight || imgElement.height || 600;
-                    canvas.width = width;
-                    canvas.height = height;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(imgElement, 0, 0, width, height);
-                    
-                    canvas.toBlob(function(blob) {
-                        if (navigator.canShare && navigator.canShare({ files: [new File([blob], 'ficha_sigec.jpg', { type: 'image/jpeg' })] })) {
-                            const file = new File([blob], 'ficha_sigec.jpg', { type: 'image/jpeg' });
-                            navigator.share({
-                                files: [file],
-                                title: 'Ficha SIGEC'
-                            }).then(() => {
-                                mostrarToast('✅ IMAGEM SALVA NA GALERIA!');
-                            }).catch(() => {
-                                // Se não conseguir compartilhar, baixar
-                                const link = document.createElement('a');
-                                link.href = canvas.toDataURL('image/jpeg', 0.95);
-                                link.download = 'ficha_sigec_' + Date.now() + '.jpg';
-                                document.body.appendChild(link);
-                                link.click();
-                                document.body.removeChild(link);
-                                mostrarToast('📥 IMAGEM SALVA!');
-                            });
-                        } else {
-                            const link = document.createElement('a');
-                            link.href = canvas.toDataURL('image/jpeg', 0.95);
-                            link.download = 'ficha_sigec_' + Date.now() + '.jpg';
-                            document.body.appendChild(link);
-                            link.click();
-                            document.body.removeChild(link);
-                            mostrarToast('📥 IMAGEM SALVA!');
-                        }
-                    }, 'image/jpeg', 0.95);
-                } catch (e) {
-                    console.error('Erro no canvas:', e);
-                    // Se tudo falhar, abrir em nova aba para salvar manualmente
-                    window.open(imgElement.src, '_blank');
-                    mostrarToast('🔄 Abrindo imagem - Salve manualmente');
+                    // Último recurso: abrir em nova aba
+                    window.open(src, '_blank');
+                    mostrarToast('🔄 Imagem aberta - Salve manualmente');
                 }
             }
 
@@ -1403,7 +1383,7 @@
                     toast.classList.add('show');
                     setTimeout(() => {
                         toast.classList.remove('show');
-                    }, 3500);
+                    }, 4000);
                 }
             }
 
