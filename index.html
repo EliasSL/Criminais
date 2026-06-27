@@ -1233,7 +1233,6 @@
 
                     const dynamic = document.getElementById("dynamicContent");
 
-                    // HTML com long press para copiar - CORRIGIDO PARA MOBILE
                     dynamic.innerHTML = `
                             <div style="display:flex;flex-direction:column;align-items:center;gap:18px;padding:20px;">
                                 <div class="ficha-image-container" id="fichaImageContainer">
@@ -1244,8 +1243,8 @@
                                         style="width:100%;max-width:420px;border-radius:10px;box-shadow:0 8px 25px rgba(0,0,0,.45);display:block;"
                                         oncontextmenu="return false;"
                                     >
-                                    <div class="long-press-indicator" id="longPressIndicator">📌 Mantenha pressionado para copiar</div>
-                                    <div class="copy-toast" id="copyToast">✅ IMAGEM COPIADA!</div>
+                                    <div class="long-press-indicator" id="longPressIndicator">📌 Mantenha pressionado para salvar</div>
+                                    <div class="copy-toast" id="copyToast">✅ IMAGEM SALVA NA GALERIA!</div>
                                 </div>
                                 <div style="display:flex;gap:12px;width:100%;">
                                     <button class="btn-detail compartilhar" onclick="compartilharImagem('${imagem}','${rec.ID}')">
@@ -1256,12 +1255,11 @@
                                     </button>
                                 </div>
                                 <div style="font-size:0.7rem;color:#888;text-align:center;margin-top:4px;">
-                                    💡 Clique longo (3 segundos) na imagem para copiar
+                                    💡 Clique longo (3 segundos) na imagem para salvar na galeria
                                 </div>
                             </div>
                         `;
 
-                    // Aguardar o DOM ser renderizado antes de inicializar o long press
                     setTimeout(function() {
                         iniciarLongPress();
                     }, 100);
@@ -1279,7 +1277,7 @@
         }
 
         // ============================================================
-        // FUNÇÃO DE LONG PRESS (3 SEGUNDOS) PARA COPIAR IMAGEM - CORRIGIDA PARA MOBILE
+        // FUNÇÃO DE LONG PRESS - SALVAR IMAGEM NA GALERIA
         // ============================================================
         function iniciarLongPress() {
             const container = document.getElementById('fichaImageContainer');
@@ -1296,80 +1294,106 @@
             let isLongPress = false;
             let touchStartTime = 0;
 
-            // Função para copiar a imagem
-            function copiarImagem() {
+            // ===== FUNÇÃO PRINCIPAL: SALVAR IMAGEM NA GALERIA =====
+            function salvarImagemNaGaleria() {
                 try {
                     const src = img.src;
-                    
-                    // Tentar copiar via fetch + Clipboard API
+
+                    // Método 1: Usar fetch para obter o blob e salvar
                     fetch(src)
                         .then(response => response.blob())
                         .then(blob => {
-                            if (navigator.clipboard && navigator.clipboard.write) {
-                                const item = new ClipboardItem({
-                                    [blob.type]: blob
+                            // Verificar se o navegador suporta a API de compartilhamento
+                            if (navigator.canShare && navigator.canShare({ files: [new File([blob], 'ficha_sigec.jpg', { type: 'image/jpeg' })] })) {
+                                // No Android/iOS, usar o sistema nativo para salvar
+                                const file = new File([blob], 'ficha_sigec.jpg', { type: 'image/jpeg' });
+                                navigator.share({
+                                    files: [file],
+                                    title: 'Ficha SIGEC'
+                                }).then(() => {
+                                    mostrarToast('✅ IMAGEM SALVA NA GALERIA!');
+                                }).catch((err) => {
+                                    if (err.name !== 'AbortError') {
+                                        // Se o usuário cancelar, tentar método alternativo
+                                        salvarViaDownload(src);
+                                    }
                                 });
-                                navigator.clipboard.write([item])
-                                    .then(() => {
-                                        mostrarToast('✅ IMAGEM COPIADA!');
-                                    })
-                                    .catch(() => {
-                                        copiarComoFallback(src);
-                                    });
                             } else {
-                                copiarComoFallback(src);
+                                // Método alternativo: criar um link de download com nome específico
+                                salvarViaDownload(src);
                             }
                         })
                         .catch(() => {
-                            copiarImagemViaCanvas(img);
+                            // Se fetch falhar, tentar via canvas
+                            salvarViaCanvas(img);
                         });
                 } catch (e) {
-                    console.error('Erro ao copiar:', e);
-                    alert('Não foi possível copiar a imagem. Tente usar o botão ENVIAR.');
+                    console.error('Erro ao salvar:', e);
+                    // Último recurso: tentar via canvas
+                    salvarViaCanvas(img);
                 }
             }
 
-            function copiarComoFallback(src) {
+            // ===== MÉTODO 2: Download com nome e extensão correta =====
+            function salvarViaDownload(src) {
                 try {
-                    const a = document.createElement('a');
-                    a.href = src;
-                    a.download = 'ficha_sigec.jpg';
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                    mostrarToast('📥 IMAGEM BAIXADA!');
+                    const link = document.createElement('a');
+                    link.href = src;
+                    link.download = 'ficha_sigec_' + Date.now() + '.jpg';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    mostrarToast('📥 IMAGEM BAIXADA! Verifique sua pasta de downloads.');
                 } catch (e) {
-                    alert('Clique com o botão direito na imagem e selecione "Salvar imagem como..."');
+                    console.error('Erro no download:', e);
+                    salvarViaCanvas(img);
                 }
             }
 
-            function copiarImagemViaCanvas(imgElement) {
+            // ===== MÉTODO 3: Canvas (Fallback final) =====
+            function salvarViaCanvas(imgElement) {
                 try {
                     const canvas = document.createElement('canvas');
-                    canvas.width = imgElement.naturalWidth || imgElement.width || 800;
-                    canvas.height = imgElement.naturalHeight || imgElement.height || 600;
+                    const width = imgElement.naturalWidth || imgElement.width || 800;
+                    const height = imgElement.naturalHeight || imgElement.height || 600;
+                    canvas.width = width;
+                    canvas.height = height;
                     const ctx = canvas.getContext('2d');
-                    ctx.drawImage(imgElement, 0, 0);
-                    canvas.toBlob(blob => {
-                        if (navigator.clipboard && navigator.clipboard.write) {
-                            const item = new ClipboardItem({
-                                [blob.type]: blob
+                    ctx.drawImage(imgElement, 0, 0, width, height);
+                    
+                    canvas.toBlob(function(blob) {
+                        if (navigator.canShare && navigator.canShare({ files: [new File([blob], 'ficha_sigec.jpg', { type: 'image/jpeg' })] })) {
+                            const file = new File([blob], 'ficha_sigec.jpg', { type: 'image/jpeg' });
+                            navigator.share({
+                                files: [file],
+                                title: 'Ficha SIGEC'
+                            }).then(() => {
+                                mostrarToast('✅ IMAGEM SALVA NA GALERIA!');
+                            }).catch(() => {
+                                // Se não conseguir compartilhar, baixar
+                                const link = document.createElement('a');
+                                link.href = canvas.toDataURL('image/jpeg', 0.95);
+                                link.download = 'ficha_sigec_' + Date.now() + '.jpg';
+                                document.body.appendChild(link);
+                                link.click();
+                                document.body.removeChild(link);
+                                mostrarToast('📥 IMAGEM SALVA!');
                             });
-                            navigator.clipboard.write([item])
-                                .then(() => mostrarToast('✅ IMAGEM COPIADA!'))
-                                .catch(() => alert('Não foi possível copiar. Use o botão ENVIAR.'));
                         } else {
-                            const a = document.createElement('a');
-                            a.href = canvas.toDataURL('image/jpeg', 0.95);
-                            a.download = 'ficha_sigec.jpg';
-                            document.body.appendChild(a);
-                            a.click();
-                            document.body.removeChild(a);
-                            mostrarToast('📥 IMAGEM BAIXADA!');
+                            const link = document.createElement('a');
+                            link.href = canvas.toDataURL('image/jpeg', 0.95);
+                            link.download = 'ficha_sigec_' + Date.now() + '.jpg';
+                            document.body.appendChild(link);
+                            link.click();
+                            document.body.removeChild(link);
+                            mostrarToast('📥 IMAGEM SALVA!');
                         }
                     }, 'image/jpeg', 0.95);
                 } catch (e) {
-                    alert('Não foi possível copiar. Use o botão ENVIAR.');
+                    console.error('Erro no canvas:', e);
+                    // Se tudo falhar, abrir em nova aba para salvar manualmente
+                    window.open(imgElement.src, '_blank');
+                    mostrarToast('🔄 Abrindo imagem - Salve manualmente');
                 }
             }
 
@@ -1379,7 +1403,7 @@
                     toast.classList.add('show');
                     setTimeout(() => {
                         toast.classList.remove('show');
-                    }, 2500);
+                    }, 3500);
                 }
             }
 
@@ -1408,17 +1432,15 @@
 
                 atualizarIndicador('⏳ Mantenha pressionado...');
 
-                // Adicionar feedback visual de progresso
                 if (indicator) {
                     indicator.classList.add('progress');
                 }
 
                 timerId = setTimeout(() => {
                     isLongPress = true;
-                    atualizarIndicador('📋 Copiando...');
+                    atualizarIndicador('📸 Salvando imagem...');
                     
-                    // Tentar copiar com força
-                    copiarImagem();
+                    salvarImagemNaGaleria();
                     
                     setTimeout(() => {
                         esconderIndicador();
@@ -1439,7 +1461,6 @@
                     timerId = null;
                 }
                 
-                // Se não for long press e já passou 500ms, mostrar dica
                 if (!isLongPress && Date.now() - touchStartTime > 500) {
                     if (indicator) {
                         indicator.textContent = '📌 Mantenha pressionado por 3 segundos';
@@ -1466,7 +1487,6 @@
             img.addEventListener('mouseleave', endTimer);
 
             // ====== EVENTOS PARA TOUCH (MOBILE) ======
-            // Usando touchstart com passive: false para permitir preventDefault
             img.addEventListener('touchstart', function(e) {
                 e.preventDefault();
                 this.style.opacity = '0.85';
