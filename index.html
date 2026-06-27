@@ -111,76 +111,55 @@
             min-height: 0;
         }
 
-.header-dash{
+        .header-dash {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #3a3a3a;
+        }
 
-display:flex;
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+            min-width: 120px;
+        }
 
-justify-content:space-between;
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: #f5c842;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.6rem;
+            color: #1a1a1a;
+            box-shadow: 0 0 0 2px #f5c84266;
+            flex-shrink: 0;
+        }
 
-align-items:center;
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: #eee;
+            white-space: nowrap;
+        }
+        .logo-text span {
+            color: #f5c842;
+        }
 
-padding:10px 8px;
-
-gap:20px;
-
-}
-.header-dash{
-
-    position:relative;
-
-}
-.header-dash::after{
-
-    content:"";
-
-    position:absolute;
-
-    bottom:-2px;
-
-    left:0;
-
-    width:100%;
-
-    height:2px;
-
-    background:linear-gradient(
-
-        90deg,
-
-        #0b4b8a,
-
-        #f5c842,
-
-        #0b4b8a
-
-    );
-
-}
-.logo-area{
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:flex-start;
-
-    gap:18px;
-
-    flex:1;
-
-    min-width:0;
-
-}
-
-.header-actions{
-
-    display:flex;
-
-    flex-direction:column;
-
-    gap:8px;
-
-}
+        .header-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-left: auto;
+        }
 
         .btn-header {
             background: transparent;
@@ -200,34 +179,7 @@ gap:20px;
         .btn-header:active {
             transform: scale(0.94);
         }
-      .cadastrar-btn {
-    background: linear-gradient(135deg,#00ff88,#00ccff);
-    color: #111;
-    border: 2px solid #ffffff;
-    font-weight: 800;
-
-    box-shadow:
-        0 0 8px #00ff88,
-        0 0 18px #00ccff,
-        0 0 28px #ffffff;
-
-    animation: pulseCadastro 1.5s infinite;
-}
-@keyframes pulseCadastro {
-
-    0% {
-        transform: scale(1);
-    }
-
-    50% {
-        transform: scale(1.08);
-    }
-
-    100% {
-        transform: scale(1);
-    }
-}
-  .btn-header.sair {
+        .btn-header.sair {
             border-color: #b33;
             color: #f66;
         }
@@ -246,20 +198,14 @@ gap:20px;
             background: #3b2b1a;
             border-radius: 24px;
             padding: 42px 30px;
-           display: flex;
-flex-direction: column;
-justify-content: center;
-align-items: center;
-text-align: center;
- border: 2px solid #00aaff;
-
-box-shadow:
-    0 0 5px #00aaff,
-    0 0 12px #00aaff,
-    0 0 20px #ffffff,
-    0 0 30px #ffffff,
-    0 0 40px #66ccff,
-    0 4px 12px rgba(0,0,0,0.5);
+            border: 2px solid #d4af37;
+            box-shadow:
+                0 0 3px #d4af37,
+                0 0 8px #d4af37,
+                0 0 12px #ffff00,
+                0 0 18px #ccff00,
+                0 0 25px rgba(204,255,0,0.7),
+                0 4px 12px rgba(0,0,0,0.5);
             transition: all 0.3s ease;
             cursor: pointer;
             position: relative;
@@ -276,45 +222,33 @@ box-shadow:
         }
 
         .card h3 {
-    font-size: 2rem;
-    color: #f5e6c8;
-    letter-spacing: 0.5px;
+            font-size: 2rem;
+            color: #f5e6c8;
+            letter-spacing: 0.5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 18px;
-
-    text-align: center;
-}
         .card .badge {
-    background: #f5c842;
-    color: #1a1a1a;
-    font-weight: 900;
-    border-radius: 40px;
+            background: #f5c842;
+            color: #1a1a1a;
+            font-weight: 700;
+            border-radius: 40px;
+            font-size: 2rem;
+            padding: 8px 24px;
+        }
 
-    font-size: 3.5rem;
-
-    padding: 12px 30px;
-    min-width: 120px;
-
-    text-align: center;
-}
         .card .card-sub {
-    font-size: 1rem;
-    color: #d6d6d6;
-    margin-top: 15px;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    text-align: center;
-}
+            font-size: 0.9rem;
+            color: #b99f7a;
+            margin-top: 10px;
+            display: flex;
+            gap: 12px;
+        }
 
         .card.mandados {
-          border: 2px solid #00ff66;
+            border: 2px solid #00ff66;
             box-shadow:
                 0 0 4px #00ff66,
                 0 0 10px #00ff66,
@@ -352,36 +286,8 @@ box-shadow:
                     0 0 32px #ff3300;
             }
         }
-#cardAnotacoes {
-    animation: neonAzul 2s infinite;
-}
- @keyframes neonAzul {
 
-    0% {
-        box-shadow:
-            0 0 5px #00aaff,
-            0 0 12px #00aaff,
-            0 0 20px #ffffff,
-            0 0 30px #66ccff;
-    }
-
-    50% {
-        box-shadow:
-            0 0 10px #00aaff,
-            0 0 20px #00aaff,
-            0 0 35px #ffffff,
-            0 0 50px #66ccff;
-    }
-
-    100% {
-        box-shadow:
-            0 0 5px #00aaff,
-            0 0 12px #00aaff,
-            0 0 20px #ffffff,
-            0 0 30px #66ccff;
-    }
-}   
-    /* ===== PÁGINAS DE LISTA ===== */
+        /* ===== PÁGINAS DE LISTA ===== */
         .list-page {
             display: none;
             flex-direction: column;
@@ -410,39 +316,14 @@ box-shadow:
         }
 
         .btn-back {
+            background: none;
+            border: none;
+            color: #f5c842;
+            font-size: 1.6rem;
+            cursor: pointer;
+            padding: 0 6px;
+        }
 
-    background: #f5c842;
-
-    color: #1a1a1a;
-
-    border: none;
-
-    border-radius: 12px;
-
-    width: 46px;
-    height: 46px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    font-size: 1.4rem;
-    font-weight: bold;
-
-    cursor: pointer;
-
-    box-shadow:
-        0 4px 12px rgba(245,200,66,.45);
-
-    transition: .2s;
-}
-.btn-back:hover {
-    transform: translateY(-2px);
-}
-
-.btn-back:active {
-    transform: scale(.95);
-}
         .list-title {
             font-size: 1.3rem;
             font-weight: 600;
@@ -566,11 +447,10 @@ box-shadow:
             border-color: #25D366;
         }
         .btn-detail.pdf {
-    background: #38bdf8;
-    color: #ffffff;
-    border-color: #38bdf8;
-    box-shadow: 0 0 10px rgba(56,189,248,0.6);
-}
+            background: #c0392b;
+            color: #fff;
+            border-color: #c0392b;
+        }
 
         /* ===== FORMULÁRIO ===== */
         .form-page {
@@ -846,123 +726,11 @@ box-shadow:
                 gap: 12px;
             }
 
-.logo-area{
+            .logo-area {
+                justify-content: center;
+            }
 
-    justify-content:center;
-
-}
-.logo-brasao{
-
-    width:92px;
-
-    height:92px;
-
-    object-fit:contain;
-
-    flex-shrink:0;
-
-}
-
-.logo-title{
-
-font-size:42px;
-
-font-weight:900;
-
-letter-spacing:3px;
-
-color:white;
-
-line-height:1;
-
-text-shadow:
-
-0 0 8px rgba(255,255,255,.35);
-
-}
-.logo-title span{
-
-color:#f5c842;
-
-}
-.logo-subtitle{
-
-margin-top:5px;
-
-font-size:15px;
-
-font-weight:700;
-
-line-height:1.25;
-
-color:#f5c842;
-
-letter-spacing:1px;
-
-text-transform:uppercase;
-
-}
-.logo-brasao{
-
-    width:82px;
-
-    height:auto;
-
-    flex-shrink:0;
-
-    filter:
-
-        drop-shadow(0 0 6px rgba(255,215,0,.6))
-
-        drop-shadow(0 0 10px rgba(0,153,255,.35));
-
-}
-      .logo-info{
-
-    display:flex;
-
-    flex-direction:column;
-
-    justify-content:center;
-
-}
-.logo-title{
-
-    font-size:2.3rem;
-
-    font-weight:900;
-
-    letter-spacing:2px;
-
-    color:#ffffff;
-
-    line-height:1;
-
-}
-.logo-title span{
-
-    color:#f5c842;
-
-}
-.logo-subtitle{
-
-    margin-top:6px;
-
-    font-size:.82rem;
-
-    line-height:1.25;
-
-    color:#f5c842;
-
-    font-weight:700;
-
-    letter-spacing:.8px;
-
-    text-transform:uppercase;
-
-}
-
-      .header-actions {
+            .header-actions {
                 justify-content: center;
                 margin-left: 0;
             }
@@ -1034,32 +802,11 @@ text-transform:uppercase;
             <!-- HEADER -->
             <div class="header-dash">
                 <div class="logo-area">
-
-    <img
-    src="brasao_sigec.png"
-    class="logo-brasao"
-    alt="Brasão SIGEC">
-
-    <div class="logo-info">
-
-        <div class="logo-title">
-
-            SIG<span>EC</span>
-
-        </div>
-
-        <div class="logo-subtitle">
-
-            SISTEMA INTEGRADO<br>
-            DE GESTÃO E CONTROLE
-
-        </div>
-
-    </div>
-
-</div>
+                    <div class="logo-icon">⚔</div>
+                    <div class="logo-text">SIG<span>EC</span></div>
+                </div>
                 <div class="header-actions">
-                    <button class="btn-header cadastrar-btn" onclick="openCadastro()">CADASTRAR</button>
+                    <button class="btn-header" onclick="openCadastro()">CADASTRAR</button>
                     <button class="btn-header" onclick="openSenha()">SENHA</button>
                     <button class="btn-header sair" onclick="logout()">SAIR</button>
                 </div>
@@ -1120,7 +867,18 @@ text-transform:uppercase;
         let allRecords = [];
         let currentView = 'dashboard';
         let currentListType = null;
+// ============================================================
+// VOLTAR PARA O DASHBOARD
+// ============================================================
+function voltarDashboard() {
 
+    document.getElementById('dynamicContent').innerHTML = '';
+
+    document.querySelector('.cards-grid').style.display = 'flex';
+
+    currentView = 'dashboard';
+
+}
         // ============================================================
         // FUNÇÃO PARA FORMATAR DATA
         // ============================================================
@@ -1421,52 +1179,125 @@ htmlFicha += `
 
             const imagem = canvas.toDataURL("image/jpeg", 0.95);
 
-const dynamic = document.getElementById("dynamicContent");
+            const novaJanela = window.open("", "_blank");
+            if (novaJanela) {
+                novaJanela.document.write(`
+                        <!DOCTYPE html>
+                        <html>
+                        <head>
+                            <title>Ficha - ${rec.NOME || 'Registro'}</title>
+                            <style>
+                                * { margin: 0; padding: 0; box-sizing: border-box; }
+                                body { 
+                                    background: #1a1a1a; 
+                                    display: flex; 
+                                    justify-content: center; 
+                                    align-items: center; 
+                                    min-height: 100vh;
+                                    padding: 20px;
+                                }
+                                img {
+                                    max-width: 100%;
+                                    max-height: 100vh;
+                                    border-radius: 4px;
+                                    box-shadow: 0 8px 32px rgba(0,0,0,0.8);
+                                }
+                                .container {
+                                    display: flex;
+                                    flex-direction: column;
+                                    align-items: center;
+                                    gap: 16px;
+                                }
+                                .btn-download {
+                                    background: #f5c842;
+                                    border: none;
+                                    padding: 12px 32px;
+                                    border-radius: 30px;
+                                    font-weight: 700;
+                                    font-size: 1rem;
+                                    cursor: pointer;
+                                    transition: 0.2s;
+                                    color: #1a1a1a;
+                                    box-shadow: 0 4px 12px rgba(245,200,66,0.3);
+                                }
+                                .btn-download:hover {
+                                    transform: scale(1.02);
+                                    box-shadow: 0 6px 20px rgba(245,200,66,0.5);
+                                }
+                                .btn-download:active {
+                                    transform: scale(0.96);
+                                }
+                                .btn-fechar {
+                                    background: #444;
+                                    border: none;
+                                    padding: 12px 32px;
+                                    border-radius: 30px;
+                                    font-weight: 700;
+                                    font-size: 1rem;
+                                    cursor: pointer;
+                                    transition: 0.2s;
+                                    color: #fff;
+                                }
+                                .btn-fechar:hover {
+                                    background: #555;
+                                }
+                                .btn-group {
+                                    display: flex;
+                                    gap: 12px;
+                                    flex-wrap: wrap;
+                                    justify-content: center;
+                                }
+                            </style>
+                        </head>
+                        <body>
+                            <div class="container">
+                                <img src="${imagem}" alt="Ficha Criminal">
+                                <div class="btn-group">
+                                    <button class="btn-download" onclick="downloadImage()">📥 ENVIAR</button>
+                                    <button class="btn-fechar" onclick="fecharFicha()">✕ FECHAR</button>
+                                </div>
+                            </div>
+                            <script>
 
-dynamic.innerHTML = `
-<div
-    style="
-        display:flex;
-        flex-direction:column;
-        align-items:center;
-        gap:18px;
-        padding:20px;
-    ">
+function downloadImage() {
+    const link = document.createElement('a');
+    link.download = 'ficha_${rec.ID || 'registro'}.jpg';
+    link.href = '${imagem}';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
 
-    <img
-        src="${imagem}"
-        style="
-            width:100%;
-            max-width:420px;
-            border-radius:10px;
-            box-shadow:0 8px 25px rgba(0,0,0,.45);
-        ">
+function fecharFicha() {
 
-    <div
-        style="
-            display:flex;
-            gap:12px;
-            width:100%;
-        ">
+    try {
 
-        <button
-            class="btn-detail compartilhar"
-            onclick="compartilharImagem('${imagem}','${rec.ID}')">
-            📤 ENVIAR
-        </button>
+        if (window.opener && !window.opener.closed) {
 
-        <button
-            class="btn-detail"
-            onclick="voltarListaCadastro()">
-            ← VOLTAR
-        </button>
+            if (typeof window.opener.voltarDashboard === 'function') {
+                window.opener.voltarDashboard();
+            }
 
-    </div>
+        }
 
-</div>
-`;
+    } catch(e) {
+        console.log(e);
+    }
 
-elemento.remove();
+    window.close();
+}
+
+<\/script>
+                        </body>
+                        </html>
+                    `);
+                novaJanela.document.close();
+            } else {
+                alert('Por favor, permita pop-ups para visualizar a ficha.');
+            }
+
+            elemento.remove();
+
         }).catch(err => {
             hideLoading();
             console.error('Erro ao gerar ficha:', err);
@@ -1699,58 +1530,8 @@ elemento.remove();
                 backToDashboard();
             }
         }
-function voltarListaCadastro(){
 
-    if(currentListType){
-
-        openList(currentListType);
-
-    }else{
-
-        backToDashboard();
-
-    }
-
-}
-function compartilharImagem(imagem,id){
-
-    fetch(imagem)
-        .then(r=>r.blob())
-        .then(blob=>{
-
-            const arquivo = new File(
-                [blob],
-                "Ficha_"+id+".jpg",
-                {type:"image/jpeg"}
-            );
-
-            if(navigator.canShare &&
-               navigator.canShare({files:[arquivo]})){
-
-                navigator.share({
-
-                    files:[arquivo],
-
-                    title:"Ficha SIGEC"
-
-                });
-
-            }else{
-
-                const a=document.createElement("a");
-
-                a.href=imagem;
-
-                a.download="Ficha_"+id+".jpg";
-
-                a.click();
-
-            }
-
-        });
-
-}     
-   function openList(tipo) {
+        function openList(tipo) {
             document.querySelector('.cards-grid').style.display = 'none';
 
             const filtered = allRecords.filter(r => {
