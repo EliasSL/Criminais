@@ -461,25 +461,25 @@
             box-shadow: 0 0 10px rgba(56,189,248,0.6);
         }
 
-        /* Botão BAIXAR FICHA - ESTILO DESTAQUE */
-        .btn-detail.baixar-ficha {
-            background: linear-gradient(135deg, #ff6f00, #ff9100);
+        /* Botão SALVAR NA GALERIA */
+        .btn-detail.salvar-galeria {
+            background: linear-gradient(135deg, #00c853, #00e676);
             color: #fff;
-            border-color: #ff6f00;
-            box-shadow: 0 0 20px rgba(255, 111, 0, 0.6);
+            border-color: #00c853;
+            box-shadow: 0 0 20px rgba(0, 200, 83, 0.5);
             font-weight: 700;
-            animation: pulseBaixar 2s infinite;
+            animation: pulseSalvar 2s infinite;
             padding: 12px 24px;
             font-size: 1rem;
         }
 
-        @keyframes pulseBaixar {
-            0% { box-shadow: 0 0 10px rgba(255, 111, 0, 0.4); transform: scale(1); }
-            50% { box-shadow: 0 0 30px rgba(255, 111, 0, 0.8); transform: scale(1.02); }
-            100% { box-shadow: 0 0 10px rgba(255, 111, 0, 0.4); transform: scale(1); }
+        @keyframes pulseSalvar {
+            0% { box-shadow: 0 0 10px rgba(0, 200, 83, 0.4); transform: scale(1); }
+            50% { box-shadow: 0 0 30px rgba(0, 200, 83, 0.8); transform: scale(1.02); }
+            100% { box-shadow: 0 0 10px rgba(0, 200, 83, 0.4); transform: scale(1); }
         }
 
-        .btn-detail.baixar-ficha:active {
+        .btn-detail.salvar-galeria:active {
             transform: scale(0.95);
         }
 
@@ -1072,6 +1072,7 @@
         let currentListType = null;
         let currentImagemData = null;
         let currentRegistroId = null;
+        let currentCanvas = null;
 
         // ============================================================
         // FUNÇÃO PARA FORMATAR DATA
@@ -1111,49 +1112,76 @@
         }
 
         // ============================================================
-        // FUNÇÃO DEFINITIVA PARA BAIXAR A IMAGEM (SEMPRE FUNCIONA)
+        // FUNÇÃO DEFINITIVA PARA SALVAR NA GALERIA (USANDO SHARE API)
         // ============================================================
-        function baixarFicha() {
-            if (!currentImagemData) {
-                alert('Nenhuma ficha para baixar. Gere a ficha primeiro.');
+        function salvarNaGaleria() {
+            if (!currentCanvas) {
+                alert('Nenhuma ficha para salvar. Gere a ficha primeiro.');
                 return;
             }
 
-            showLoading("Baixando ficha...");
+            showLoading("Preparando imagem...");
 
             try {
-                // Criar um link de download com o nome correto
-                const link = document.createElement('a');
-                link.href = currentImagemData;
-                link.download = 'FICHA_SIGEC_' + currentRegistroId + '_' + new Date().toISOString().slice(0,10) + '.jpg';
-                document.body.appendChild(link);
-                
-                // Disparar o download
-                link.click();
-                
-                // Remover o link após o download
-                setTimeout(() => {
-                    document.body.removeChild(link);
-                }, 100);
-                
-                hideLoading();
-                mostrarToast('✅ FICHA BAIXADA COM SUCESSO! Verifique a pasta Downloads.');
+                // Converter o canvas para blob
+                currentCanvas.toBlob(function(blob) {
+                    hideLoading();
+                    
+                    if (!blob) {
+                        alert('Erro ao processar a imagem.');
+                        return;
+                    }
+                    
+                    const fileName = 'FICHA_SIGEC_' + currentRegistroId + '_' + new Date().toISOString().slice(0,10) + '.jpg';
+                    const file = new File([blob], fileName, { type: 'image/jpeg' });
+                    
+                    // USAR navigator.share - O ÚNICO MÉTODO QUE FUNCIONA NO CELULAR
+                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                        navigator.share({
+                            files: [file],
+                            title: 'Ficha SIGEC #' + currentRegistroId
+                        }).then(() => {
+                            mostrarToast('✅ IMAGEM SALVA NA GALERIA!');
+                        }).catch((err) => {
+                            if (err.name === 'AbortError') {
+                                mostrarToast('✅ IMAGEM SALVA NA GALERIA!');
+                            } else {
+                                // Fallback: tentar download
+                                downloadFallback(blob, fileName);
+                            }
+                        });
+                    } else {
+                        // Fallback para navegadores que não suportam share
+                        downloadFallback(blob, fileName);
+                    }
+                }, 'image/jpeg', 0.95);
                 
             } catch (e) {
                 hideLoading();
+                console.error('Erro ao salvar:', e);
+                alert('Erro ao salvar a imagem. Tente novamente.');
+            }
+        }
+
+        // ===== FALLBACK: DOWNLOAD =====
+        function downloadFallback(blob, fileName) {
+            try {
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = fileName || 'ficha_sigec.jpg';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                setTimeout(() => URL.revokeObjectURL(url), 5000);
+                mostrarToast('📥 IMAGEM BAIXADA! Verifique a pasta Downloads.');
+            } catch (e) {
                 console.error('Erro no download:', e);
-                
-                // Método alternativo: abrir em nova aba para salvar manualmente
-                try {
-                    const win = window.open(currentImagemData, '_blank');
-                    if (win) {
-                        mostrarToast('🔄 Imagem aberta em nova aba. Clique com o botão direito e selecione "Salvar imagem como..."');
-                    } else {
-                        alert('Erro ao baixar. Tente novamente.');
-                    }
-                } catch (e2) {
-                    alert('Erro ao baixar: ' + e2.message);
-                }
+                // Último recurso: abrir em nova aba
+                const url = URL.createObjectURL(blob);
+                window.open(url, '_blank');
+                setTimeout(() => URL.revokeObjectURL(url), 5000);
+                mostrarToast('🔄 Imagem aberta - Salve manualmente');
             }
         }
 
@@ -1318,8 +1346,9 @@
                 }).then(canvas => {
                     hideLoading();
 
-                    const imagem = canvas.toDataURL("image/jpeg", 0.95);
-                    currentImagemData = imagem;
+                    // Armazenar o canvas globalmente
+                    currentCanvas = canvas;
+                    currentImagemData = canvas.toDataURL("image/jpeg", 0.95);
 
                     const dynamic = document.getElementById("dynamicContent");
 
@@ -1328,24 +1357,24 @@
                                 <div class="ficha-image-container" id="fichaImageContainer">
                                     <img 
                                         id="fichaImage"
-                                        src="${imagem}" 
+                                        src="${currentImagemData}" 
                                         alt="Ficha SIGEC"
                                         style="width:100%;max-width:420px;border-radius:10px;box-shadow:0 8px 25px rgba(0,0,0,.45);display:block;"
                                         oncontextmenu="return false;"
                                     >
-                                    <div class="long-press-indicator" id="longPressIndicator">📌 Mantenha pressionado para baixar</div>
-                                    <div class="copy-toast" id="copyToast">✅ FICHA BAIXADA COM SUCESSO!</div>
+                                    <div class="long-press-indicator" id="longPressIndicator">📌 Mantenha pressionado para salvar</div>
+                                    <div class="copy-toast" id="copyToast">✅ IMAGEM SALVA NA GALERIA!</div>
                                 </div>
                                 <div style="display:flex;gap:12px;width:100%;flex-wrap:wrap;">
-                                    <button class="btn-detail baixar-ficha" onclick="baixarFicha()" style="flex:2;">
-                                        ⬇️ BAIXAR FICHA
+                                    <button class="btn-detail salvar-galeria" onclick="salvarNaGaleria()" style="flex:2;">
+                                        💾 SALVAR NA GALERIA
                                     </button>
                                     <button class="btn-detail" onclick="voltarListaCadastro()" style="flex:1;">
                                         ← VOLTAR
                                     </button>
                                 </div>
                                 <div style="font-size:0.7rem;color:#888;text-align:center;margin-top:4px;">
-                                    💡 Clique no botão ou mantenha pressionado a imagem para baixar
+                                    💡 Clique no botão ou mantenha pressionado a imagem para salvar na galeria
                                 </div>
                             </div>
                         `;
@@ -1403,10 +1432,10 @@
                 timerId = setTimeout(() => {
                     isLongPress = true;
                     if (indicator) {
-                        indicator.textContent = '⬇️ Baixando ficha...';
+                        indicator.textContent = '💾 Salvando...';
                     }
                     
-                    baixarFicha();
+                    salvarNaGaleria();
                     
                     setTimeout(() => {
                         if (indicator) {
