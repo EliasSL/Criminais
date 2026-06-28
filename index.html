@@ -1209,208 +1209,196 @@ function abrirFichaImagem(id) {
             color: #1a1a1a;
             font-family: 'Segoe UI', Arial, sans-serif;
             border: 6px double #0b2a57;
-border-radius: 28px;
+            border-radius: 28px;
             box-sizing: border-box;
             line-height: 1.5;
         `;
 
     // Construir o HTML da ficha
-    // Construir o HTML da ficha
-let htmlFicha = `
-
-<div style="
-    background:#08264f;
-    color:#fff;
-    text-align:center;
-    padding:25px;
-    border-radius:18px 18px 0 0;
-    margin:-25px -30px 25px -30px;
-">
+    let htmlFicha = `
     <div style="
-        font-size:70px;
-        font-weight:900;
-        letter-spacing:8px;
-    ">
-        SIGEC
-    </div>
-
-    <div style="
-        font-size:22px;
-        font-weight:600;
-    ">
-        SISTEMA INTEGRADO DE GESTÃO E CONTROLE
-    </div>
-</div>
-
-<div style="text-align:center;margin-bottom:25px;">
-    <div style="
-        font-size:32px;
-        font-weight:900;
-        color:#111;
-    ">
-        REGISTRO DE ANOTAÇÕES CRIMINAIS
-    </div>
-
-    <div style="
-        font-size:22px;
-        font-weight:800;
-        color:#c62828;
-        margin-top:8px;
-    ">
-        ${mandadoStatus}
-    </div>
-</div>
-
-<div style="
-    display:flex;
-    gap:40px;
-    align-items:flex-start;
-">
-
-    <div style="
-        width:320px;
+        background:#08264f;
+        color:#fff;
         text-align:center;
+        padding:25px;
+        border-radius:18px 18px 0 0;
+        margin:-25px -30px 25px -30px;
     ">
-`;
-
-if (rec.FOTO) {
-    htmlFicha += `
-        <img src="${rec.FOTO}"
-             style="
-                width:260px;
-                height:330px;
-                object-fit:cover;
-                border:4px solid #0b2a57;
-                border-radius:18px;
-             ">
-    `;
-}
-
-htmlFicha += `
-
-        <div style="
-            margin-top:20px;
-            font-size:22px;
-            font-weight:900;
-        ">
-            ID
-        </div>
-
         <div style="
             font-size:70px;
             font-weight:900;
+            letter-spacing:8px;
         ">
-            ${rec.ID}
+            SIGEC
         </div>
+        <div style="
+            font-size:22px;
+            font-weight:600;
+        ">
+            SISTEMA INTEGRADO DE GESTÃO E CONTROLE
+        </div>
+    </div>
 
+    <div style="text-align:center;margin-bottom:25px;">
+        <div style="
+            font-size:32px;
+            font-weight:900;
+            color:#111;
+        ">
+            REGISTRO DE ANOTAÇÕES CRIMINAIS
+        </div>
+        <div style="
+            font-size:22px;
+            font-weight:800;
+            color:#c62828;
+            margin-top:8px;
+        ">
+            ${mandadoStatus}
+        </div>
     </div>
 
     <div style="
-        flex:1;
+        display:flex;
+        gap:40px;
+        align-items:flex-start;
     ">
+        <div style="
+            width:320px;
+            text-align:center;
+        ">
+    `;
+
+    if (rec.FOTO) {
+        htmlFicha += `
+            <img src="${rec.FOTO}"
+                 style="
+                    width:260px;
+                    height:330px;
+                    object-fit:cover;
+                    border:4px solid #0b2a57;
+                    border-radius:18px;
+                 ">
+        `;
+    }
+
+    htmlFicha += `
+            <div style="
+                margin-top:20px;
+                font-size:22px;
+                font-weight:900;
+            ">
+                ID
+            </div>
+            <div style="
+                font-size:70px;
+                font-weight:900;
+            ">
+                ${rec.ID}
+            </div>
+        </div>
 
         <div style="
-            display:flex;
-            border-bottom:1px solid #cfd8dc;
-            padding:14px 0;
+            flex:1;
         ">
             <div style="
-                width:220px;
-                font-weight:800;
-                color:#0b2a57;
+                display:flex;
+                border-bottom:1px solid #cfd8dc;
+                padding:14px 0;
             ">
-                NOME
+                <div style="
+                    width:220px;
+                    font-weight:800;
+                    color:#0b2a57;
+                ">
+                    NOME
+                </div>
+                <div style="
+                    flex:1;
+                    font-size:22px;
+                ">
+                    ${rec.NOME || '—'}
+                </div>
             </div>
 
-            <div style="
-                flex:1;
-                font-size:22px;
-            ">
-                ${rec.NOME || '—'}
+            <div style="display:flex;border-bottom:1px solid #cfd8dc;padding:14px 0;">
+                <div style="width:170px;font-weight:800;color:#0b2a57;">ALCUNHA</div>
+                <div style="flex:1;font-size:18px;">${rec.ALCUNHA || '–'}</div>
+            </div>
+
+            <div style="display:flex;border-bottom:1px solid #cfd8dc;padding:14px 0;">
+                <div style="width:170px;font-weight:800;color:#0b2a57;">FILIAÇÃO</div>
+                <div style="flex:1;font-size:18px;line-height:1.6;">
+                    ${filiacao.join('<br>')}
+                </div>
+            </div>
+
+            <div style="display:flex;border-bottom:1px solid #cfd8dc;padding:14px 0;">
+                <div style="width:170px;font-weight:800;color:#0b2a57;">DATA NASC.</div>
+                <div style="flex:1;font-size:18px;">${dataNasc}</div>
+            </div>
+
+            <div style="display:flex;border-bottom:1px solid #cfd8dc;padding:14px 0;">
+                <div style="width:170px;font-weight:800;color:#0b2a57;">CPF</div>
+                <div style="flex:1;font-size:18px;">${rec.CPF || '—'}</div>
+            </div>
+
+            <div style="display:flex;border-bottom:1px solid #cfd8dc;padding:14px 0;">
+                <div style="width:170px;font-weight:800;color:#0b2a57;">RG</div>
+                <div style="flex:1;font-size:18px;">
+                    ${rec.RG || '—'} ${ufRg ? `SSP ${ufRg}` : ''}
+                </div>
+            </div>
+
+            <div style="display:flex;border-bottom:1px solid #cfd8dc;padding:14px 0;">
+                <div style="width:170px;font-weight:800;color:#0b2a57;">ENDEREÇO</div>
+                <div style="flex:1;font-size:18px;">${rec.ENDERECO || '—'}</div>
+            </div>
+
+            <div style="display:flex;border-bottom:1px solid #cfd8dc;padding:14px 0;">
+                <div style="width:170px;font-weight:800;color:#0b2a57;">CIDADE</div>
+                <div style="flex:1;font-size:18px;">${rec.CIDADE || '—'}</div>
+            </div>
+
+            <div style="display:flex;border-bottom:1px solid #cfd8dc;padding:14px 0;">
+                <div style="width:170px;font-weight:800;color:#0b2a57;">UF</div>
+                <div style="flex:1;font-size:18px;"> ${rec.UF || rec.ESTADO || '—'}</div>
+            </div>
+
+            <div style="display:flex;border-bottom:1px solid #cfd8dc;padding:14px 0;">
+                <div style="width:170px;font-weight:800;color:#0b2a57;">TIPO PENAL</div>
+                <div style="flex:1;font-size:18px;">${rec.TIPO_PENAL || '–'}</div>
+            </div>
+
+            <div style="display:flex;border-bottom:1px solid #cfd8dc;padding:14px 0;">
+                <div style="width:170px;font-weight:800;color:#0b2a57;">MANDADO</div>
+                <div style="flex:1;font-size:18px;">${rec.MANDADO || '—'}</div>
             </div>
         </div>
-
-        <div style="display:flex;border-bottom:1px solid #cfd8dc;padding:14px 0;">
-            <div style="width:170px;font-weight:800;color:#0b2a57;">ALCUNHA</div>
-            <div style="flex:1;font-size:18px;">${rec.ALCUNHA || '–'}</div>
-        </div>
-
-        <div style="display:flex;border-bottom:1px solid #cfd8dc;padding:14px 0;">
-            <div style="width:170px;font-weight:800;color:#0b2a57;">FILIAÇÃO</div>
-            <div style="flex:1;font-size:18px;line-height:1.6;">
-                ${filiacao.join('<br>')}
-            </div>
-        </div>
-
-        <div style="display:flex;border-bottom:1px solid #cfd8dc;padding:14px 0;">
-            <div style="width:170px;font-weight:800;color:#0b2a57;">DATA NASC.</div>
-            <div style="flex:1;font-size:18px;">${dataNasc}</div>
-        </div>
-
-        <div style="display:flex;border-bottom:1px solid #cfd8dc;padding:14px 0;">
-            <div style="width:170px;font-weight:800;color:#0b2a57;">CPF</div>
-            <div style="flex:1;font-size:18px;">${rec.CPF || '—'}</div>
-        </div>
-
-        <div style="display:flex;border-bottom:1px solid #cfd8dc;padding:14px 0;">
-            <div style="width:170px;font-weight:800;color:#0b2a57;">RG</div>
-            <div style="flex:1;font-size:18px;">
-                ${rec.RG || '—'} ${ufRg ? `SSP ${ufRg}` : ''}
-            </div>
-        </div>
-
-        <div style="display:flex;border-bottom:1px solid #cfd8dc;padding:14px 0;">
-            <div style="width:170px;font-weight:800;color:#0b2a57;">ENDEREÇO</div>
-            <div style="flex:1;font-size:18px;">${rec.ENDERECO || '—'}</div>
-        </div>
-
-        <div style="display:flex;border-bottom:1px solid #cfd8dc;padding:14px 0;">
-            <div style="width:170px;font-weight:800;color:#0b2a57;">CIDADE</div>
-            <div style="flex:1;font-size:18px;">${rec.CIDADE || '—'}</div>
-        </div>
-
-        <div style="display:flex;border-bottom:1px solid #cfd8dc;padding:14px 0;">
-            <div style="width:170px;font-weight:800;color:#0b2a57;">UF</div>
-            <div style="flex:1;font-size:18px;"> ${rec.UF || rec.ESTADO || '—'}</div>
-        </div>
-
-        <div style="display:flex;border-bottom:1px solid #cfd8dc;padding:14px 0;">
-            <div style="width:170px;font-weight:800;color:#0b2a57;">TIPO PENAL</div>
-            <div style="flex:1;font-size:18px;">${rec.TIPO_PENAL || '–'}</div>
-        </div>
-
-        <div style="display:flex;border-bottom:1px solid #cfd8dc;padding:14px 0;">
-            <div style="width:170px;font-weight:800;color:#0b2a57;">MANDADO</div>
-            <div style="flex:1;font-size:18px;">${rec.MANDADO || '—'}</div>
-        </div>
-
     </div>
 
-</div>
-
-<div style="
-    background:#08264f;
-    color:#fff;
-    margin:25px -30px -25px -30px;
-    padding:18px 25px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    font-size:14px;
-    border-radius:0 0 18px 18px;
-">
-    <div>
-        SIGEC - SISTEMA INTEGRADO DE GESTÃO E CONTROLE
-        <br>
-        USO EXCLUSIVO DAS FORÇAS DE SEGURANÇA
+    <div style="
+        background:#08264f;
+        color:#fff;
+        margin:25px -30px -25px -30px;
+        padding:18px 25px;
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        font-size:14px;
+        border-radius:0 0 18px 18px;
+    ">
+        <div>
+            SIGEC - SISTEMA INTEGRADO DE GESTÃO E CONTROLE
+            <br>
+            USO EXCLUSIVO DAS FORÇAS DE SEGURANÇA
+        </div>
+        <div>
+            DATA/HORA:
+            ${new Date().toLocaleString('pt-BR')}
+        </div>
     </div>
+    `;
 
-    <div>
-        DATA/HORA:
-        ${new Date().toLocaleString('pt-BR')}
-    </div>
-</div>
-`;
     divFicha.innerHTML = htmlFicha;
     document.body.appendChild(divFicha);
 
@@ -1433,49 +1421,362 @@ htmlFicha += `
             height: elemento.scrollHeight
         }).then(canvas => {
             hideLoading();
-
+            
             const imagem = canvas.toDataURL("image/jpeg", 0.95);
+            elemento.remove();
 
-const dynamic = document.getElementById("dynamicContent");
+            // Criar overlay de tela cheia
+            const fullscreenOverlay = document.createElement('div');
+            fullscreenOverlay.id = 'fullscreenOverlay';
+            fullscreenOverlay.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                background: rgba(0,0,0,0.92);
+                z-index: 99999;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                overflow: hidden;
+                touch-action: none;
+            `;
 
-dynamic.innerHTML = `
-<div
-    style="
-        display:flex;
-        flex-direction:column;
-        align-items:center;
-        gap:18px;
-        padding:20px;
-    ">
+            // Container para zoom/pan
+            const zoomContainer = document.createElement('div');
+            zoomContainer.id = 'zoomContainer';
+            zoomContainer.style.cssText = `
+                position: relative;
+                width: 100%;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                overflow: hidden;
+                touch-action: none;
+            `;
 
-    <img
-        src="${imagem}"
-        style="
-            width:100%;
-            max-width:420px;
-            border-radius:10px;
-            box-shadow:0 8px 25px rgba(0,0,0,.45);
-        ">
+            // Container da imagem com transform
+            const imageWrapper = document.createElement('div');
+            imageWrapper.id = 'imageWrapper';
+            imageWrapper.style.cssText = `
+                position: relative;
+                transform: scale(1);
+                transform-origin: center center;
+                touch-action: none;
+                cursor: grab;
+                width: fit-content;
+                height: fit-content;
+                max-width: 95%;
+                max-height: 85%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            `;
 
-    <div
-        style="
-            display:flex;
-            gap:12px;
-            width:100%;
-        ">
+            const imgElement = document.createElement('img');
+            imgElement.src = imagem;
+            imgElement.style.cssText = `
+                max-width: 100%;
+                max-height: 100%;
+                width: auto;
+                height: auto;
+                border-radius: 10px;
+                box-shadow: 0 8px 30px rgba(0,0,0,0.7);
+                pointer-events: none;
+                user-select: none;
+                -webkit-user-drag: none;
+            `;
 
-                <button
-            class="btn-detail"
-            onclick="voltarListaCadastro()">
-            ← VOLTAR
-        </button>
+            imageWrapper.appendChild(imgElement);
+            zoomContainer.appendChild(imageWrapper);
 
-    </div>
+            // Botão voltar
+            const btnVoltar = document.createElement('button');
+            btnVoltar.textContent = '← VOLTAR';
+            btnVoltar.style.cssText = `
+                position: fixed;
+                bottom: 30px;
+                left: 50%;
+                transform: translateX(-50%);
+                z-index: 100000;
+                background: rgba(8,38,79,0.9);
+                color: #fff;
+                border: 2px solid rgba(255,255,255,0.3);
+                border-radius: 50px;
+                padding: 14px 40px;
+                font-size: 18px;
+                font-weight: 700;
+                font-family: 'Segoe UI', Arial, sans-serif;
+                cursor: pointer;
+                backdrop-filter: blur(10px);
+                box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+                transition: all 0.3s ease;
+                letter-spacing: 1px;
+            `;
+            
+            btnVoltar.addEventListener('mouseenter', () => {
+                btnVoltar.style.background = 'rgba(8,38,79,1)';
+                btnVoltar.style.transform = 'translateX(-50%) scale(1.05)';
+            });
+            
+            btnVoltar.addEventListener('mouseleave', () => {
+                btnVoltar.style.background = 'rgba(8,38,79,0.9)';
+                btnVoltar.style.transform = 'translateX(-50%) scale(1)';
+            });
 
-</div>
-`;
+            btnVoltar.addEventListener('click', () => {
+                // Sair do fullscreen
+                if (document.fullscreenElement) {
+                    document.exitFullscreen().catch(() => {});
+                }
+                if (document.webkitFullscreenElement) {
+                    document.webkitExitFullscreen().catch(() => {});
+                }
+                document.body.removeChild(fullscreenOverlay);
+                document.body.style.overflow = '';
+                // Restaurar interface
+                const header = document.querySelector('header, .header, .navbar, .app-header');
+                if (header) header.style.display = '';
+                const mainContent = document.querySelector('main, .content, .app-content');
+                if (mainContent) mainContent.style.display = '';
+            });
 
-elemento.remove();
+            zoomContainer.appendChild(btnVoltar);
+            fullscreenOverlay.appendChild(zoomContainer);
+            document.body.appendChild(fullscreenOverlay);
+
+            // Ocultar interface
+            const header = document.querySelector('header, .header, .navbar, .app-header');
+            if (header) header.style.display = 'none';
+            const mainContent = document.querySelector('main, .content, .app-content');
+            if (mainContent) mainContent.style.display = 'none';
+            
+            // Esconder scroll
+            document.body.style.overflow = 'hidden';
+
+            // Tentar fullscreen nativo
+            if (fullscreenOverlay.requestFullscreen) {
+                fullscreenOverlay.requestFullscreen().catch(() => {});
+            } else if (fullscreenOverlay.webkitRequestFullscreen) {
+                fullscreenOverlay.webkitRequestFullscreen().catch(() => {});
+            }
+
+            // === IMPLEMENTAÇÃO DE ZOOM E PAN (GESTOS) ===
+            let scale = 1;
+            let posX = 0;
+            let posY = 0;
+            let startX = 0;
+            let startY = 0;
+            let startScale = 1;
+            let lastTouchDist = 0;
+            let isDragging = false;
+            let isPinching = false;
+            
+            // Estado atual do transform
+            let currentTransform = { scale: 1, x: 0, y: 0 };
+
+            function updateTransform(animate = false) {
+                const wrapper = imageWrapper;
+                wrapper.style.transition = animate ? 'transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94)' : 'none';
+                wrapper.style.transform = `translate(${currentTransform.x}px, ${currentTransform.y}px) scale(${currentTransform.scale})`;
+            }
+
+            // Reset da imagem
+            function resetImage(animate = true) {
+                currentTransform.scale = 1;
+                currentTransform.x = 0;
+                currentTransform.y = 0;
+                updateTransform(animate);
+                scale = 1;
+                posX = 0;
+                posY = 0;
+                imageWrapper.style.cursor = 'grab';
+            }
+
+            // Zoom com scroll do mouse
+            zoomContainer.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                const delta = e.deltaY > 0 ? -0.1 : 0.1;
+                const newScale = Math.min(Math.max(currentTransform.scale + delta, 0.5), 4);
+                
+                // Calcular ponto de zoom em relação ao centro da imagem
+                const rect = imageWrapper.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+                const mouseX = e.clientX - centerX;
+                const mouseY = e.clientY - centerY;
+                
+                const scaleFactor = newScale / currentTransform.scale;
+                currentTransform.x = mouseX - (mouseX - currentTransform.x) * scaleFactor;
+                currentTransform.y = mouseY - (mouseY - currentTransform.y) * scaleFactor;
+                currentTransform.scale = newScale;
+                
+                updateTransform(false);
+            }, { passive: false });
+
+            // Eventos de toque (mobile)
+            let touchStartTime = 0;
+            let initialTouches = [];
+
+            zoomContainer.addEventListener('touchstart', (e) => {
+                if (e.touches.length === 1) {
+                    // Toque único - arraste
+                    isDragging = true;
+                    const touch = e.touches[0];
+                    startX = touch.clientX - currentTransform.x;
+                    startY = touch.clientY - currentTransform.y;
+                    imageWrapper.style.cursor = 'grabbing';
+                    touchStartTime = Date.now();
+                } else if (e.touches.length === 2) {
+                    // Dois toques - pinch
+                    isPinching = true;
+                    isDragging = false;
+                    const t1 = e.touches[0];
+                    const t2 = e.touches[1];
+                    lastTouchDist = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
+                    startScale = currentTransform.scale;
+                    
+                    // Ponto central dos toques
+                    const centerX = (t1.clientX + t2.clientX) / 2;
+                    const centerY = (t1.clientY + t2.clientY) / 2;
+                    const rect = imageWrapper.getBoundingClientRect();
+                    const wrapperCenterX = rect.left + rect.width / 2;
+                    const wrapperCenterY = rect.top + rect.height / 2;
+                    
+                    initialTouches = [
+                        t1.clientX - wrapperCenterX - currentTransform.x,
+                        t1.clientY - wrapperCenterY - currentTransform.y,
+                        t2.clientX - wrapperCenterX - currentTransform.x,
+                        t2.clientY - wrapperCenterY - currentTransform.y
+                    ];
+                }
+            }, { passive: true });
+
+            zoomContainer.addEventListener('touchmove', (e) => {
+                e.preventDefault();
+                
+                if (isDragging && e.touches.length === 1) {
+                    const touch = e.touches[0];
+                    currentTransform.x = touch.clientX - startX;
+                    currentTransform.y = touch.clientY - startY;
+                    updateTransform(false);
+                } else if (isPinching && e.touches.length === 2) {
+                    const t1 = e.touches[0];
+                    const t2 = e.touches[1];
+                    const dist = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
+                    const scaleFactor = dist / lastTouchDist;
+                    const newScale = Math.min(Math.max(startScale * scaleFactor, 0.5), 4);
+                    
+                    // Centro dos toques
+                    const centerX = (t1.clientX + t2.clientX) / 2;
+                    const centerY = (t1.clientY + t2.clientY) / 2;
+                    const rect = imageWrapper.getBoundingClientRect();
+                    const wrapperCenterX = rect.left + rect.width / 2;
+                    const wrapperCenterY = rect.top + rect.height / 2;
+                    
+                    const relativeX = centerX - wrapperCenterX;
+                    const relativeY = centerY - wrapperCenterY;
+                    
+                    const scaleChange = newScale / startScale;
+                    currentTransform.x = relativeX - (relativeX - currentTransform.x) * scaleChange;
+                    currentTransform.y = relativeY - (relativeY - currentTransform.y) * scaleChange;
+                    currentTransform.scale = newScale;
+                    
+                    updateTransform(false);
+                }
+            }, { passive: false });
+
+            zoomContainer.addEventListener('touchend', (e) => {
+                isDragging = false;
+                isPinching = false;
+                imageWrapper.style.cursor = 'grab';
+                
+                // Double tap para reset
+                if (e.changedTouches.length === 1 && Date.now() - touchStartTime < 300) {
+                    resetImage(true);
+                }
+            }, { passive: true });
+
+            // Eventos de mouse para arraste
+            let isMouseDown = false;
+            let mouseStartX = 0;
+            let mouseStartY = 0;
+            let mouseOffsetX = 0;
+            let mouseOffsetY = 0;
+
+            imageWrapper.addEventListener('mousedown', (e) => {
+                if (e.button === 0) {
+                    isMouseDown = true;
+                    mouseStartX = e.clientX;
+                    mouseStartY = e.clientY;
+                    mouseOffsetX = currentTransform.x;
+                    mouseOffsetY = currentTransform.y;
+                    imageWrapper.style.cursor = 'grabbing';
+                    e.preventDefault();
+                }
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (isMouseDown) {
+                    currentTransform.x = mouseOffsetX + (e.clientX - mouseStartX);
+                    currentTransform.y = mouseOffsetY + (e.clientY - mouseStartY);
+                    updateTransform(false);
+                }
+            });
+
+            document.addEventListener('mouseup', () => {
+                if (isMouseDown) {
+                    isMouseDown = false;
+                    imageWrapper.style.cursor = 'grab';
+                }
+            });
+
+            // Double click para reset
+            imageWrapper.addEventListener('dblclick', (e) => {
+                e.preventDefault();
+                resetImage(true);
+            });
+
+            // Keyboard shortcuts
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    btnVoltar.click();
+                }
+                if (e.key === 'r' || e.key === 'R') {
+                    resetImage(true);
+                }
+            });
+
+            // Inicializar
+            resetImage(false);
+
+            // Remover overlay ao sair do fullscreen nativo
+            const handleFullscreenChange = () => {
+                if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+                    if (document.body.contains(fullscreenOverlay)) {
+                        document.body.removeChild(fullscreenOverlay);
+                        document.body.style.overflow = '';
+                        const header = document.querySelector('header, .header, .navbar, .app-header');
+                        if (header) header.style.display = '';
+                        const mainContent = document.querySelector('main, .content, .app-content');
+                        if (mainContent) mainContent.style.display = '';
+                    }
+                }
+            };
+
+            document.addEventListener('fullscreenchange', handleFullscreenChange);
+            document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+
+            // Salvar referência para limpeza
+            fullscreenOverlay._cleanup = () => {
+                document.removeEventListener('fullscreenchange', handleFullscreenChange);
+                document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
+            };
+
         }).catch(err => {
             hideLoading();
             console.error('Erro ao gerar ficha:', err);
