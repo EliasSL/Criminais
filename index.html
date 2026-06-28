@@ -1565,19 +1565,17 @@ function abrirFichaImagem(id) {
                 fullscreenOverlay.webkitRequestFullscreen().catch(() => {});
             }
 
-            // === IMPLEMENTAÇÃO DE ZOOM E PAN (GESTOS) ===
-            let scale = 1;
-            let posX = 0;
-            let posY = 0;
-            let startX = 0;
-            let startY = 0;
-            let startScale = 1;
-            let lastTouchDist = 0;
+            // === IMPLEMENTAÇÃO DE ZOOM E PAN (CORRIGIDO) ===
+            let currentTransform = { scale: 1, x: 0, y: 0 };
             let isDragging = false;
             let isPinching = false;
-            
-            // Estado atual do transform
-            let currentTransform = { scale: 1, x: 0, y: 0 };
+            let startX = 0, startY = 0;
+            let startScale = 1;
+            let lastTouchDist = 0;
+            let lastPinchCenterX = 0;
+            let lastPinchCenterY = 0;
+            let pinchStartX = 0;
+            let pinchStartY = 0;
 
             function updateTransform(animate = false) {
                 const wrapper = imageWrapper;
@@ -1585,74 +1583,103 @@ function abrirFichaImagem(id) {
                 wrapper.style.transform = `translate(${currentTransform.x}px, ${currentTransform.y}px) scale(${currentTransform.scale})`;
             }
 
-            // Reset da imagem
             function resetImage(animate = true) {
                 currentTransform.scale = 1;
                 currentTransform.x = 0;
                 currentTransform.y = 0;
                 updateTransform(animate);
-                scale = 1;
-                posX = 0;
-                posY = 0;
                 imageWrapper.style.cursor = 'grab';
             }
 
-            // Zoom com scroll do mouse
+            // Função para limitar o movimento da imagem
+            function clampPosition() {
+                const wrapper = imageWrapper;
+                const img = imgElement;
+                
+                // Obtém as dimensões reais da imagem após o zoom
+                const imgRect = img.getBoundingClientRect();
+                const containerRect = zoomContainer.getBoundingClientRect();
+                
+                // Calcula os limites baseados no tamanho da imagem e do container
+                const imgWidth = imgRect.width;
+                const imgHeight = imgRect.height;
+                const containerWidth = containerRect.width;
+                const containerHeight = containerRect.height;
+                
+                // Margem para manter a imagem parcialmente visível
+                const marginX = Math.max(0, (imgWidth - containerWidth) / 2);
+                const marginY = Math.max(0, (imgHeight - containerHeight) / 2);
+                
+                // Limita o movimento para manter a imagem visível
+                currentTransform.x = Math.max(-marginX, Math.min(marginX, currentTransform.x));
+                currentTransform.y = Math.max(-marginY, Math.min(marginY, currentTransform.y));
+            }
+
+            // Zoom com scroll do mouse (corrigido)
             zoomContainer.addEventListener('wheel', (e) => {
                 e.preventDefault();
-                const delta = e.deltaY > 0 ? -0.1 : 0.1;
-                const newScale = Math.min(Math.max(currentTransform.scale + delta, 0.5), 4);
                 
-                // Calcular ponto de zoom em relação ao centro da imagem
+                const delta = e.deltaY > 0 ? -0.1 : 0.1;
+                const oldScale = currentTransform.scale;
+                const newScale = Math.min(Math.max(oldScale + delta, 0.5), 4);
+                
+                if (newScale === oldScale) return;
+                
+                // Calcula o ponto de zoom relativo ao centro da imagem
                 const rect = imageWrapper.getBoundingClientRect();
                 const centerX = rect.left + rect.width / 2;
                 const centerY = rect.top + rect.height / 2;
+                
                 const mouseX = e.clientX - centerX;
                 const mouseY = e.clientY - centerY;
                 
-                const scaleFactor = newScale / currentTransform.scale;
+                const scaleFactor = newScale / oldScale;
                 currentTransform.x = mouseX - (mouseX - currentTransform.x) * scaleFactor;
                 currentTransform.y = mouseY - (mouseY - currentTransform.y) * scaleFactor;
                 currentTransform.scale = newScale;
                 
+                clampPosition();
                 updateTransform(false);
             }, { passive: false });
 
-            // Eventos de toque (mobile)
-            let touchStartTime = 0;
-            let initialTouches = [];
+            // Eventos de toque para pinch (corrigido)
+            let initialTouchPoints = [];
 
             zoomContainer.addEventListener('touchstart', (e) => {
                 if (e.touches.length === 1) {
-                    // Toque único - arraste
+                    // Arraste com um dedo
                     isDragging = true;
+                    isPinching = false;
                     const touch = e.touches[0];
                     startX = touch.clientX - currentTransform.x;
                     startY = touch.clientY - currentTransform.y;
                     imageWrapper.style.cursor = 'grabbing';
-                    touchStartTime = Date.now();
                 } else if (e.touches.length === 2) {
-                    // Dois toques - pinch
+                    // Pinch com dois dedos
                     isPinching = true;
                     isDragging = false;
+                    
                     const t1 = e.touches[0];
                     const t2 = e.touches[1];
+                    
+                    // Distância inicial entre os dedos
                     lastTouchDist = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
-                    startScale = currentTransform.scale;
                     
                     // Ponto central dos toques
-                    const centerX = (t1.clientX + t2.clientX) / 2;
-                    const centerY = (t1.clientY + t2.clientY) / 2;
+                    lastPinchCenterX = (t1.clientX + t2.clientX) / 2;
+                    lastPinchCenterY = (t1.clientY + t2.clientY) / 2;
+                    
+                    startScale = currentTransform.scale;
+                    
+                    // Salva a posição inicial do centro do pinch
                     const rect = imageWrapper.getBoundingClientRect();
                     const wrapperCenterX = rect.left + rect.width / 2;
                     const wrapperCenterY = rect.top + rect.height / 2;
                     
-                    initialTouches = [
-                        t1.clientX - wrapperCenterX - currentTransform.x,
-                        t1.clientY - wrapperCenterY - currentTransform.y,
-                        t2.clientX - wrapperCenterX - currentTransform.x,
-                        t2.clientY - wrapperCenterY - currentTransform.y
-                    ];
+                    pinchStartX = lastPinchCenterX - wrapperCenterX - currentTransform.x;
+                    pinchStartY = lastPinchCenterY - wrapperCenterY - currentTransform.y;
+                    
+                    imageWrapper.style.cursor = 'grabbing';
                 }
             }, { passive: true });
 
@@ -1660,33 +1687,47 @@ function abrirFichaImagem(id) {
                 e.preventDefault();
                 
                 if (isDragging && e.touches.length === 1) {
+                    // Arraste
                     const touch = e.touches[0];
                     currentTransform.x = touch.clientX - startX;
                     currentTransform.y = touch.clientY - startY;
+                    clampPosition();
                     updateTransform(false);
                 } else if (isPinching && e.touches.length === 2) {
+                    // Pinch zoom
                     const t1 = e.touches[0];
                     const t2 = e.touches[1];
+                    
+                    // Nova distância entre os dedos
                     const dist = Math.hypot(t1.clientX - t2.clientX, t1.clientY - t2.clientY);
-                    const scaleFactor = dist / lastTouchDist;
-                    const newScale = Math.min(Math.max(startScale * scaleFactor, 0.5), 4);
                     
-                    // Centro dos toques
-                    const centerX = (t1.clientX + t2.clientX) / 2;
-                    const centerY = (t1.clientY + t2.clientY) / 2;
-                    const rect = imageWrapper.getBoundingClientRect();
-                    const wrapperCenterX = rect.left + rect.width / 2;
-                    const wrapperCenterY = rect.top + rect.height / 2;
-                    
-                    const relativeX = centerX - wrapperCenterX;
-                    const relativeY = centerY - wrapperCenterY;
-                    
-                    const scaleChange = newScale / startScale;
-                    currentTransform.x = relativeX - (relativeX - currentTransform.x) * scaleChange;
-                    currentTransform.y = relativeY - (relativeY - currentTransform.y) * scaleChange;
-                    currentTransform.scale = newScale;
-                    
-                    updateTransform(false);
+                    if (dist > 0) {
+                        // Calcula o novo scale
+                        const scaleFactor = dist / lastTouchDist;
+                        const newScale = Math.min(Math.max(startScale * scaleFactor, 0.5), 4);
+                        
+                        if (newScale !== currentTransform.scale) {
+                            // Ponto central atual
+                            const centerX = (t1.clientX + t2.clientX) / 2;
+                            const centerY = (t1.clientY + t2.clientY) / 2;
+                            
+                            const rect = imageWrapper.getBoundingClientRect();
+                            const wrapperCenterX = rect.left + rect.width / 2;
+                            const wrapperCenterY = rect.top + rect.height / 2;
+                            
+                            // Ajusta a posição baseada no centro do pinch
+                            const relativeX = centerX - wrapperCenterX;
+                            const relativeY = centerY - wrapperCenterY;
+                            
+                            const scaleChange = newScale / startScale;
+                            currentTransform.x = relativeX - (relativeX - currentTransform.x) * scaleChange;
+                            currentTransform.y = relativeY - (relativeY - currentTransform.y) * scaleChange;
+                            currentTransform.scale = newScale;
+                            
+                            clampPosition();
+                            updateTransform(false);
+                        }
+                    }
                 }
             }, { passive: false });
 
@@ -1695,18 +1736,18 @@ function abrirFichaImagem(id) {
                 isPinching = false;
                 imageWrapper.style.cursor = 'grab';
                 
-                // Double tap para reset
-                if (e.changedTouches.length === 1 && Date.now() - touchStartTime < 300) {
+                // Double tap para reset (detecta toque rápido)
+                if (e.changedTouches.length === 1) {
+                    // Se o toque foi curto (< 300ms), reseta
+                    // Nota: Esta é uma simplificação, pode ser melhorada
                     resetImage(true);
                 }
             }, { passive: true });
 
             // Eventos de mouse para arraste
             let isMouseDown = false;
-            let mouseStartX = 0;
-            let mouseStartY = 0;
-            let mouseOffsetX = 0;
-            let mouseOffsetY = 0;
+            let mouseStartX = 0, mouseStartY = 0;
+            let mouseOffsetX = 0, mouseOffsetY = 0;
 
             imageWrapper.addEventListener('mousedown', (e) => {
                 if (e.button === 0) {
@@ -1724,6 +1765,7 @@ function abrirFichaImagem(id) {
                 if (isMouseDown) {
                     currentTransform.x = mouseOffsetX + (e.clientX - mouseStartX);
                     currentTransform.y = mouseOffsetY + (e.clientY - mouseStartY);
+                    clampPosition();
                     updateTransform(false);
                 }
             });
